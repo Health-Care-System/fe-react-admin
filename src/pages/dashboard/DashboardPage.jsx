@@ -1,0 +1,7 @@
+// Arrow function
+export const DashboardPage = () => {
+  return (
+    <div>DashboardPage</div>
+  )
+}
+
