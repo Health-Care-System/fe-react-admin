@@ -1,10 +1,26 @@
-import './App.css'
+import { Route, Routes } from 'react-router-dom'
+import { HomePage } from './pages/Home/HomePage'
+import { Layout } from './layout'
+import { DrugPage } from './pages/Drug/DrugPage'
+import { PatientPage } from './pages/Patient/PatientPage'
+import { DoctorPage } from './pages/Doctor/DoctorPage'
+import { SettingPage } from './pages/Setting/SettingPage'
+import { LoginPage } from './pages/Login/LoginPage'
 
 function App() {
 
   return (
     <>
-      <button type='button' className='btn btn-primary'>Test</button>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/drugs" element={<DrugPage />} />
+          <Route path="/patients" element={<PatientPage />} />
+          <Route path="/doctors" element={<DoctorPage />} />
+          <Route path="/settings" element={<SettingPage />} />
+        </Route>
+      </Routes>
     </>
   )
 }

@@ -1,1 +1,3 @@
-// Berisi fungsi terkait authentification
+export default class AuthController {
+
+}
