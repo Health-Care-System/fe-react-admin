@@ -1,0 +1,5 @@
+.backdropBlur {
+	position: fixed;
+	z-index: 40;
+	opacity: 0.5;
+}

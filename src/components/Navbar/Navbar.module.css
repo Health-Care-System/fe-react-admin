@@ -1,0 +1,19 @@
+.navbar {
+    width: 100%;
+}
+
+.iconSize {
+  width: 30px;
+  margin:0;
+}
+  
+@media (min-width: 768px) {
+  .navbar{
+    padding: 1.5rem 2.25rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+  }
+  .iconSize {
+    width: 36px;
+  }
+    
+}

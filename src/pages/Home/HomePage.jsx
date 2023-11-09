@@ -1,5 +1,5 @@
 // Arrow function
-export const DashboardPage = () => {
+export const HomePage = () => {
   return (
     <div>DashboardPage</div>
   )
