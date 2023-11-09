@@ -1,0 +1,53 @@
+// Color
+$primary: #008772;
+$success: #199E50;
+$info: #1766D7;
+$warning: #FCD200;
+$danger: #D8243C;
+
+// Typography
+$font-family-base: 'Inter', sans-serif;
+
+h1 {
+  font-size: 6rem !important;
+}
+
+h2 {
+  font-size: 4rem !important;
+}
+
+h3 {
+  font-size: 3rem !important;
+}
+
+h4 {
+  font-size: 2rem !important;
+}
+
+h5 {
+  font-size: 1.5rem !important;
+}
+
+h6 {
+  font-size: 1rem !important;
+}
+
+$font-weight-bold: 800;
+
+$font-sizes: (
+  1: 1.5rem,
+  2: 1.25rem,
+  3: 1rem,
+  4: 0.75rem,
+  5: 0.5rem,
+  6: 0.25rem
+);
+
+$border-radius: .375rem;
+$border-radius-sm: .25rem;
+$border-radius-lg: .5rem;
+$border-radius-xl: 1rem;
+$border-radius-xxl: 2rem;
+$border-radius-pill: 50rem;
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss"
