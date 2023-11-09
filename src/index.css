@@ -28,8 +28,11 @@ p {
 	width: auto;
 	max-width: 16.5rem;
 }
-
-
+/* Hover button logout di sidebar */
+.logoutBtn:hover {
+  background-color: #ccc;
+  color: #000000;
+}
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) { 

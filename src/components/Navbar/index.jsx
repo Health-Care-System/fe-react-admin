@@ -1,21 +1,12 @@
-import searchIcon from '../../assets/icon/search.svg';
 import notifIcon from '../../assets/icon/notif.svg';
 import styles from './Navbar.module.css'
 import { useLocation } from 'react-router-dom';
 import { navbarTitle } from '../../utils/dataObject';
+import { Avatar } from '../Avatar';
 
 export const Navbar = () => {
-
-  // Buat dapetin jam saat ini
-  const currentTime = new Date();
-  const hours = currentTime.getHours();
-  const minutes = currentTime.getMinutes();
-  
-  // Buat nyari lokasi route active saat ini, kalau routenya di /chat maka return null/kosongan
-  const location = useLocation();
-  if (location.pathname === '/chat') return null;
-  
   // Buat render title dan content secara dinamis berdasarkan rute
+  const location = useLocation(); 
   const currentRoute = location.pathname;
   const currentNavItem = navbarTitle.find((item) => item.route === currentRoute);
 
@@ -30,21 +21,17 @@ export const Navbar = () => {
                 : null
             }
           </h5>
-          <p className='fw-medium'>
-            {
-              currentNavItem
-                ? currentNavItem.content
-                : null
-            }
-          </p>
         </div>
+        <div className='d-flex gap-2 align-items-center'>
+          {
+            location.pathname === '/' &&
+            <input type='text' className='form-control shadow border-0 py-3 px-4 rounded-4' style={{ width: '539px' }} placeholder='Search' />
+          }
 
-        <div className='d-flex flex-row-reverse  flex-md-column pe-3 pe-md-0'>
-          <div className='d-flex align-items-center gap-3'>
-            <img src={searchIcon} className={styles.iconSize} alt='Search' />
+          <div className='d-flex align-items-center pe-3 pe-md-0 gap-2'>
             <img src={notifIcon} className={styles.iconSize} alt='Notification' />
+            <Avatar />
           </div>
-          <p className='d-none d-md-block fs-2 m-0 fw-semibold text-end'>{`${hours}:${minutes} WIB`}</p>
         </div>
 
       </nav>

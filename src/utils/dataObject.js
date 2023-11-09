@@ -23,7 +23,7 @@ export const menus = [
     icon: medicineIcon,
     icon2: medicineIconWhite,
     label: 'Obat - obatan',
-    link: '/drug'
+    link: '/drugs'
   },
   {
     icon: patientIcon,
@@ -49,26 +49,21 @@ export const navbarTitle = [
   {
     route: '/',
     title: 'Dashboard',
-    content: 'You Have Following appointments today'
+  },
+  {
+    route: '/drugs',
+    title: 'Manage Obat - obatan',
   },
   {
     route: '/patients',
     title: 'Manage Pasien',
-    content: 'Simpan perubahan pasien'
   },
   {
-    route: '/article',
-    title: 'Manage Artikel',
-    content: 'Kelola informasi kesehatan'
-  },
-  {
-    route: '/feedback',
-    title: 'Feedback',
-    content: 'Saran dan Masukan'
+    route: '/doctors',
+    title: 'Manage Dokter',
   },
   {
     route: '/settings',
     title: 'Pengaturan',
-    content: 'Kelola pengaturan'
   },
 ]

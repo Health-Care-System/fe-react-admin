@@ -31,23 +31,17 @@
   gap: 0.94rem;
 }
 
+.btnWrapper {
+  width: fit-content;
+  list-style: none;
+  bottom: 2rem;
+}
 .logoutBtn {
   display: flex;
   width: 15rem;
   margin-top: 0.6rem;
   justify-content: space-between;
   padding: 2 1rem;
-}
-
-.logoutBtn:hover {
-  background-color: #ccc;
-  color: #000000;
-}
-
-.btnWrapper {
-  width: fit-content;
-  list-style: none;
-  bottom: 2rem;
 }
 
 /* Buat responsive tata letak logout button jika tinggi layar kecil */
