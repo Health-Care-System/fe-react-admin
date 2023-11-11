@@ -6,6 +6,9 @@ import { PatientPage } from './pages/Patient/PatientPage'
 import { DoctorPage } from './pages/Doctor/DoctorPage'
 import { SettingPage } from './pages/Setting/SettingPage'
 import { LoginPage } from './pages/Login/LoginPage'
+import { CreatePatient } from './pages/Patient/CreatePatient'
+import { EditPatient } from './pages/Patient/EditPatient'
+import { DetailPatient } from './pages/Patient/DetailPatient'
 
 function App() {
 
@@ -17,6 +20,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/drugs" element={<DrugPage />} />
           <Route path="/patients" element={<PatientPage />} />
+            <Route path="/patients/create-patient" element={<CreatePatient/>} />
+            <Route path="/patients/edit-patient" element={<EditPatient/>} />
+            <Route path="/patients/detail-patient" element={<DetailPatient/>} />
           <Route path="/doctors" element={<DoctorPage />} />
           <Route path="/settings" element={<SettingPage />} />
         </Route>
