@@ -1,4 +1,4 @@
-import React from 'react';
+import { Button } from "../Button";
 
 export const LoginForm = () => {
   return (
@@ -16,7 +16,7 @@ export const LoginForm = () => {
         <input type="password" className="form-control" id="exampleInputPassword1" />
       </div>
       <div className="d-flex justify-content-between mb-3">
-        <div className="form-check p-3 g-col-6">
+        <div className="form-check ms-2 p-3 g-col-6">
           <input type="checkbox" className="form-check-input" id="exampleCheck1" />
           <label className="form-check-label"> Ingatkan Saya</label>
         </div>
@@ -29,8 +29,8 @@ export const LoginForm = () => {
         <p className="text-center"> or </p>
       </div>
       <div className="mb-3 d-flex flex-column gap-3 ">
-        <button className="btn btn-outline-primary fw-medium">Masuk dengan Google </button>
-        <button className="btn btn-outline-primary fw-medium">Masuk dengan Facebook</button>
+        <Button className="btn-outline-primary fw-medium">Masuk dengan Google </Button>
+        <Button className="btn-outline-primary fw-medium">Masuk dengan Facebook</Button>
       </div>
     </form>
   );
