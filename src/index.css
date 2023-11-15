@@ -11,6 +11,13 @@ p {
   margin: 0;
 }
 
+.btn-outline-primary {
+	--bs-btn-active-color: #fff;
+}
+.btn-outline-primary:hover {
+	color: #fff;
+}
+
 .drawer-content {
 	display: flex;
 	flex-direction: column;
@@ -36,6 +43,28 @@ p {
   background-color: #ccc;
   color: #000000;
 }
+
+.divider:before, 
+.divider:after {
+  background-color: #ccc;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 45%;
+}
+
+.divider:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+.divider:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) { 
