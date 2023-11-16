@@ -8,6 +8,7 @@ $danger: #D8243C;
 // Typography
 $font-family-base: 'Inter', sans-serif;
 
+@media (min-width: 768px) { 
 h1 {
   font-size: 6rem !important;
 }
@@ -30,6 +31,7 @@ h5 {
 
 h6 {
   font-size: 1rem !important;
+}
 }
 
 $font-weight-bold: 800;
