@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { useState } from 'react';
+import { CircleProgressBar } from '../../components/Chart/CircleProgressBar';
+import circleMan from '../../assets/icon/circleMan.svg'
+import circleWoman from '../../assets/icon/circleWoman.svg'
 
 
 export const PatientPage = () => {
@@ -10,7 +13,6 @@ export const PatientPage = () => {
   const [showSelectButtons, setShowSelectButtons] = useState(false);
 
   const yourDataArray = [
-    // Replace this with your actual data array
     { name: 'Joshua Kristin', 
       gender: 'Laki-Laki', 
       age: '21 Thn', 
@@ -78,17 +80,37 @@ export const PatientPage = () => {
 
       <div className="row d-flex justify-content-center align-content-between flex-wrap" style={{ marginBottom: "50px", marginLeft:'30px', marginTop: '15px'}}>
           <div className="col-md-4 mb-3" style={{ marginBottom: 15 }}>
-            <div className="card" style={{ width: "80%", backgroundColor: '#EBEBEB' }}>
-              <div className="card-body">
-                <h3 className="fw-bold text-center">
-                  784
-                </h3>
+            <div className="card" style={{ width: "80%", maxWidth: "400px", backgroundColor: '#EBEBEB' }}>
+              <div className='d-flex gap-4 align-items-center'>
+                <div className="card-body">
+                  <div className="custom-circle-progress" style={{ width: '90px', height: '90px', marginLeft:'20px' }}>
+                    <CircleProgressBar total={784} percentage={40} />
+                  </div>
+                </div>
+                <div className="d-grid gap-1" style={{marginRight: '60px'}}>
+                  <div className="d-flex gap-1 align-items-center justify-content-start ">
+                    <img
+                      src={circleWoman}
+                      alt="circle"
+                      className="chart_gender_circle"
+                    />
+                    <p className="fs-4 ">Wanita</p>
+                    <span className="fs-4 ">40%</span>
+                  </div>
+
+                  <div className="d-flex gap-1 align-items-center justify-content-start ">
+                    <img src={circleMan} alt="circle" className="chart_gender_circle" />
+                    <p className="fs-4">Pria</p>
+                    <span className="fs-4 ">60%</span>
+                  </div>
+                </div>
               </div>
-              <div className="footer" style={{ textAlign: "center" }}>
-                Chart
-              </div>
+              {/* <div className="footer" style={{ textAlign: "center" }}>
+                  Chart
+              </div> */}
             </div>
           </div>
+
 
           <div className="col-md-4 mb-3" style={{ marginBottom: 15 }}>
             <div className="card" style={{ width: "80%", backgroundColor: '#EBEBEB' }}>
