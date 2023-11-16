@@ -1,10 +1,10 @@
-
+import { Button } from "../../components/ui/Button"
 
 export const CreatePatient = () => {
     
     return(
         <div className="create" style={{marginTop: '20px'}}>
-            <form className=" needs-validation" novalidate>
+            <form className=" needs-validation" noValidate>
                 <div className="col-md-11 mb-3 row ">
                     <label htmlFor="Nama" className="col-2 col-form-label text-end">
                     Nama
@@ -171,8 +171,8 @@ export const CreatePatient = () => {
                     </div>
                 </div>
                 <div className=" d-flex justify-content-center col-12 ">
-                <button type="button" class="btn btn-dark" style={{marginRight:'10px'}}>Batal</button>
-                <button type="button" class="btn btn-secondary">Simpan</button>
+                <Button className="btn btn-dark" onClick={() => { }}>Batal</Button> 
+                <Button className="btn btn-secondary" onClick={() => { }} >Simpan</Button> 
                 </div>
             </form>
         </div>
