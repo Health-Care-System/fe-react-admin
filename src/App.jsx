@@ -1,14 +1,13 @@
-import { Route, Routes } from 'react-router-dom'
-import { HomePage } from './pages/Home/HomePage'
-import { Layout } from './layout'
-import { DrugPage } from './pages/Drug/DrugPage'
-import { PatientPage } from './pages/Patient/PatientPage'
-import { DoctorPage } from './pages/Doctor/DoctorPage'
-import { SettingPage } from './pages/Setting/SettingPage'
-import { LoginPage } from './pages/Login/LoginPage'
+import { Route, Routes } from "react-router-dom";
+import { HomePage } from "./pages/Home/HomePage";
+import { Layout } from "./layout";
+import { DrugPage } from "./pages/Drug/DrugPage";
+import { PatientPage } from "./pages/Patient/PatientPage";
+import { DoctorPage } from "./pages/Doctor/DoctorPage";
+import { SettingPage } from "./pages/Setting/SettingPage";
+import { LoginPage } from "./pages/Login/LoginPage";
 
 function App() {
-
   return (
     <>
       <Routes>
@@ -22,7 +21,7 @@ function App() {
         </Route>
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
