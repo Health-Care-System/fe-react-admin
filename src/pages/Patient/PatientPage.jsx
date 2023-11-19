@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { useState } from 'react';
 import { CircleProgressBar } from '../../components/Chart/CircleProgressBar';
-import circleMan from '../../assets/icon/circleMan.svg'
-import circleWoman from '../../assets/icon/circleWoman.svg'
+import circleMan from '../../assets/icon/CircleMan.svg'
+import circleWoman from '../../assets/icon/CircleWoman.svg'
 
 
 export const PatientPage = () => {

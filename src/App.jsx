@@ -9,6 +9,10 @@ import { LoginPage } from './pages/Login/LoginPage'
 import { CreatePatient } from './pages/Patient/CreatePatient'
 import { EditPatient } from './pages/Patient/EditPatient'
 import { DetailPatient } from './pages/Patient/DetailPatient'
+import { CreateDoctor } from './pages/Doctor/CreateDoctor'
+import { DetailDoctor } from './pages/Doctor/DetailDoctor'
+import { EditDoctor } from './pages/Doctor/EditDoctor'
+
 
 function App() {
 
@@ -24,6 +28,9 @@ function App() {
             <Route path="/patients/edit-patient" element={<EditPatient/>} />
             <Route path="/patients/detail-patient" element={<DetailPatient/>} />
           <Route path="/doctors" element={<DoctorPage />} />
+            <Route path="/doctors/create-doctor" element={<CreateDoctor/>} />
+            <Route path="/doctors/detail-doctor" element={<DetailDoctor/>} />
+            <Route path="/doctors/edit-doctor" element={<EditDoctor/>} />
           <Route path="/settings" element={<SettingPage />} />
         </Route>
       </Routes>
