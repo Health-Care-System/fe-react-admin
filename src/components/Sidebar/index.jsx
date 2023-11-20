@@ -1,10 +1,9 @@
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { menus } from '../../utils/dataObject';
 import './Sidebar.css'
 import brandLogo from '../../assets/icon/brandLogo.png';
 import logoutIcon from '../../assets/icon/logout.svg';
 export const Sidebar = () => {
-  const location = useLocation();
 
   return (
     <>
@@ -17,24 +16,24 @@ export const Sidebar = () => {
         {/* Container list navigasi */}
         <ul className='list-group gap-2 mt-4'>
           {menus?.map((item, index) => {
-            const active = item.link === location.pathname && 'btn-primary text-white';
-
             return (
               <li key={index} className={`list-unstyled`}>
-                <Link to={item.link} className='text-decoration-none'>
-                  <div className={`${active} d-flex navBtn btn`}>
-                    <img
-                      src={
-                        item.link === location.pathname
-                          ? item.icon2
-                          : item.icon
-                      }
-                      width={'24'}
-                      alt={item.label}
-                    />
-                    {item.label}
-                  </div>
-                </Link>
+              <NavLink to={item.link} className='text-decoration-none'>
+                  {({ isActive }) => (
+                    <div className={`${isActive && 'btn-primary text-white'} d-flex navBtn btn`}>
+                      <img
+                        src={
+                          isActive
+                            ? item.icon2
+                            : item.icon
+                        }
+                        width={'24'}
+                        alt={item.label}
+                      />
+                      {item.label}
+                    </div>
+                  )}
+                </NavLink>
               </li>
             )
           })}

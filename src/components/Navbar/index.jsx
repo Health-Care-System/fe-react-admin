@@ -6,8 +6,8 @@ import { Avatar } from '../Avatar';
 
 export const Navbar = () => {
   // Buat render title dan content secara dinamis berdasarkan rute
-  const location = useLocation(); 
-  const currentRoute = location.pathname;
+  const location = useLocation();
+  const currentRoute = location.pathname.split('/')[1];
   const currentNavItem = navbarTitle.find((item) => item.route === currentRoute);
 
   return (
