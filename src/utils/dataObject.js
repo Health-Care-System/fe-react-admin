@@ -47,23 +47,23 @@ export const menus = [
 
 export const navbarTitle = [
   {
-    route: '/',
+    route: '',
     title: 'Dashboard',
   },
   {
-    route: '/drugs',
+    route: 'drugs',
     title: 'Manage Obat - obatan',
   },
   {
-    route: '/patients',
-    title: 'Manage Pasien',
+    route: 'patients',
+    title: 'Kelola Pasien',
   },
   {
-    route: '/doctors',
-    title: 'Manage Dokter',
+    route: 'doctors',
+    title: 'Kelola Dokter',
   },
   {
-    route: '/settings',
+    route: 'settings',
     title: 'Pengaturan',
   },
 ]

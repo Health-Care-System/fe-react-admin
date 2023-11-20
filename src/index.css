@@ -64,7 +64,11 @@ p {
   left: 0.5em;
   margin-right: -50%;
 }
-
+.searchIcon {
+  top: 8px;
+  left: 1rem;
+  width: 24px;
+}
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) { 
@@ -75,6 +79,6 @@ p {
  
  @media (min-width: 768px) {
   .drawer-content {
-		margin-left: 17rem;
+		margin-left: 16.3rem;
 	}
  }
