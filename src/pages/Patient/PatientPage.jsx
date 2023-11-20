@@ -1,10 +1,17 @@
-import { NavLink, Outlet } from "react-router-dom"
+import { useEffect } from "react"
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
 
 export const PatientPage = () => {
   const subMenu = [
     { title: 'Data Transaksi', link: '/patients/transactions' },
     { title: 'Data Pasien', link: '/patients/datas' },
   ]
+  const location = useLocation()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (location.pathname === '/patients') navigate('/patients/transactions')
+  }, [location.pathname, navigate])
+
 
   return (
     <>

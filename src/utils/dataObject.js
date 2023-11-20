@@ -29,7 +29,7 @@ export const menus = [
     icon: patientIcon,
     icon2: patientIconWhite,
     label: 'Pasien',
-    link: '/patients/transactions'
+    link: '/patients'
   },
   {
     icon: doctorIcon,

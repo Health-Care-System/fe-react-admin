@@ -10,17 +10,17 @@ export const Sidebar = () => {
       <aside className='sidebar'>
         {/* Container porfile doctor */}
         <figure className='figure d-flex'>
-          <img src={brandLogo} width={'231'} alt='Healthify' />
+          <img src={brandLogo} width={'200'} alt='Healthify' />
         </figure>
 
         {/* Container list navigasi */}
-        <ul className='list-group gap-2 mt-4'>
+        <ul className='list-group gap-2 mt-3'>
           {menus?.map((item, index) => {
             return (
               <li key={index} className={`list-unstyled`}>
               <NavLink to={item.link} className='text-decoration-none'>
                   {({ isActive }) => (
-                    <div className={`${isActive && 'btn-primary text-white'} d-flex navBtn btn`}>
+                    <div className={`${isActive && 'btn-primary text-white'} text-primary d-flex navBtn btn`}>
                       <img
                         src={
                           isActive
