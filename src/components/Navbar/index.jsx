@@ -30,7 +30,9 @@ export const Navbar = () => {
 
           <div className='d-flex align-items-center pe-3 pe-md-0 gap-3'>
             <img src={notifIcon} className={styles.iconSize} alt='Notification' />
-            <Avatar />
+            <div className=' d-none d-lg-block'>
+              <Avatar />
+            </div>
           </div>
         </div>
 
