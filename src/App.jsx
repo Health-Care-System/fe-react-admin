@@ -15,7 +15,6 @@ import { EditDoctor } from './pages/Doctor/EditDoctor'
 
 
 function App() {
-
   return (
     <>
       <Routes>
@@ -35,7 +34,7 @@ function App() {
         </Route>
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
