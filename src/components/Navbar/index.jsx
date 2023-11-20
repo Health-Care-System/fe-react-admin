@@ -14,7 +14,7 @@ export const Navbar = () => {
     <header className={styles.navbar}>
       <nav className='d-flex w-100 justify-content-between align-items-center'>
         <div>
-          <h5 className='fw-bold m-0'>
+          <h5 className='fw-semibold m-0'>
             {
               currentNavItem
                 ? currentNavItem.title
@@ -28,7 +28,7 @@ export const Navbar = () => {
             <input type='text' className='form-control shadow border-0 py-3 px-4 rounded-4' style={{ width: '539px' }} placeholder='Search' />
           }
 
-          <div className='d-flex align-items-center pe-3 pe-md-0 gap-2'>
+          <div className='d-flex align-items-center pe-3 pe-md-0 gap-3'>
             <img src={notifIcon} className={styles.iconSize} alt='Notification' />
             <Avatar />
           </div>

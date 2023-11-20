@@ -56,11 +56,11 @@ export const navbarTitle = [
   },
   {
     route: 'patients',
-    title: 'Manage Pasien',
+    title: 'Kelola Pasien',
   },
   {
     route: 'doctors',
-    title: 'Manage Dokter',
+    title: 'Kelola Dokter',
   },
   {
     route: 'settings',
