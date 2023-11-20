@@ -12,6 +12,8 @@ import { DetailPatient } from './pages/Patient/DetailPatient'
 import { CreateDoctor } from './pages/Doctor/CreateDoctor'
 import { DetailDoctor } from './pages/Doctor/DetailDoctor'
 import { EditDoctor } from './pages/Doctor/EditDoctor'
+import { PatientData } from './pages/Patient/Patient/PatientData'
+import { PatientTransaction } from './pages/Patient/Transaction/PatientTransaction'
 
 
 function App() {
@@ -23,13 +25,15 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/drugs" element={<DrugPage />} />
           <Route path="/patients" element={<PatientPage />} />
-            <Route path="/patients/create-patient" element={<CreatePatient/>} />
-            <Route path="/patients/edit-patient" element={<EditPatient/>} />
-            <Route path="/patients/detail-patient" element={<DetailPatient/>} />
+          <Route path="/patients/create-patient" element={<CreatePatient />} />
+          <Route path="/patients/edit-patient" element={<EditPatient />} />
+          <Route path="/patients/detail-patient" element={<DetailPatient />} />
+          <Route path="/patients/datas" element={<PatientData />} />
+          <Route path="/patients/transactions" element={<PatientTransaction />} />
           <Route path="/doctors" element={<DoctorPage />} />
-            <Route path="/doctors/create-doctor" element={<CreateDoctor/>} />
-            <Route path="/doctors/detail-doctor" element={<DetailDoctor/>} />
-            <Route path="/doctors/edit-doctor" element={<EditDoctor/>} />
+          <Route path="/doctors/create-doctor" element={<CreateDoctor />} />
+          <Route path="/doctors/detail-doctor" element={<DetailDoctor />} />
+          <Route path="/doctors/edit-doctor" element={<EditDoctor />} />
           <Route path="/settings" element={<SettingPage />} />
         </Route>
       </Routes>
