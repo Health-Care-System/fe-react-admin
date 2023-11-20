@@ -8,21 +8,23 @@ export const PatientPage = () => {
 
   return (
     <>
-      <nav className="d-inline-flex gap-5 mx-4">
-        {subMenu?.map((menu, index) => (
-          <NavLink
-            key={index}
-            to={menu.link}
-            className="text-decoration-none text-black-50 fs-2 fw-semibold"
-          >
-            {({ isActive }) => (
-              <span className={`${isActive ? "text-black border-bottom border-2" : ""}`}>{menu.title}</span>
-            )}
-          </NavLink>
-        ))
-        }
-      </nav>
-      <Outlet />
+      <section className="m-4 d-flex flex-column gap-4">
+        <nav className="d-inline-flex gap-5">
+          {subMenu?.map((menu, index) => (
+            <NavLink
+              key={index}
+              to={menu.link}
+              className="text-decoration-none text-black-50 fs-2 fw-semibold"
+            >
+              {({ isActive }) => (
+                <span className={`${isActive && "text-black pb-2 border-bottom border-2"}`}>{menu.title}</span>
+              )}
+            </NavLink>
+          ))
+          }
+        </nav>
+        <Outlet />
+      </section>
     </>
   )
 }
