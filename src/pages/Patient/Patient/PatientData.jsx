@@ -24,6 +24,156 @@ export const PatientData = () => {
       birthdate: '17 Oktober 2002',
       blood: 'A',
       weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
+      height: '170cm'
+    },
+    {
+      id: '123',
+      name: 'Joshua Kristin',
+      email: 'joshua@gmail.com',
+      gender: 'Laki-Laki',
+      birthdate: '17 Oktober 2002',
+      blood: 'A',
+      weight: '70Kg',
       height: '160cm'
     },
   ];
@@ -46,9 +196,9 @@ export const PatientData = () => {
           />
         </div>
       </div>
-      <div className=" table-responsive table-wrapper">
+      <div className=" table-responsive table-wrapper" style={{maxHeight: 'calc(100vh - 19rem)'}}>
       <table className="table table-light">
-        <thead>
+        <thead className=" sticky-top">
           <tr>
             {thead?.map((item, index) => (
               <th
