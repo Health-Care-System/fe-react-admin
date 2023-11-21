@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import searchIconGrey from '../../../assets/icon/search-grey.svg'
 import { Input } from '../../../components/ui/Form/Input';
 import '../Patient.css'
@@ -9,16 +8,19 @@ import {
   theadDoctor,
   theadPatient
 } from '../../../utils/dataObject';
+import { Select } from '../../../components/ui/Form/Select';
 
 export const PatientTransaction = () => {
   const [state, setState] = useState({
     doctorTransactions: doctorTransaction,
     drugTransactions: drugTransaction,
     searchDoctors: '',
-    searchDrugs: ''
+    searchDrugs: '',
+    statusDoctor: '',
+    statusDrugs: '',
   });
 
-  const onSearch = (e) => {
+  const hanldeInput = (e) => {
     const { name, value } = e.target;
     setState({
       ...state,
@@ -26,6 +28,11 @@ export const PatientTransaction = () => {
     });
   };
 
+  const status = [
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Sukses', value: 'Sukses' },
+    { label: 'Tolak', value: 'Tolak' }
+  ];
   const filterDoctor = state.doctorTransactions.filter((item) => item.id.includes(state.searchDoctors))
   const filterDrug = state.drugTransactions.filter((item) => item.id.includes(state.searchDrugs))
 
@@ -35,7 +42,7 @@ export const PatientTransaction = () => {
         title={'Transaksi Konsultasi Dokter'}
         thead={theadDoctor}
         name={'searchDoctors'}
-        handleChange={onSearch}
+        handleChange={hanldeInput}
         inputValue={state.searchDoctors}
       >
         {filterDoctor.map((data, index) => (
@@ -47,11 +54,16 @@ export const PatientTransaction = () => {
             <td>{`Rp ${data.total.toLocaleString('ID-id')}`}</td>
             <td>{data.date}</td>
             <td>
-              <Link style={{ color: '#104EB8' }} to={data.image}>
-                Link
-              </Link>
+              <ImageModal />
             </td>
-            <td>{data.status}</td>
+            <td>
+              <Select
+                options={status}
+                name={'statusDoctor'}
+                handleChange={(e) => hanldeInput(e)}
+                value={state.statusDoctor ?? data.status}
+              />
+            </td>
           </tr>
         ))}
       </TablePatients>
@@ -59,7 +71,7 @@ export const PatientTransaction = () => {
         title={'Transaksi Pembelian Obat'}
         thead={theadPatient}
         name={'searchDrugs'}
-        handleChange={onSearch}
+        handleChange={hanldeInput}
         inputValue={state.searchDrugs}
       >
         {filterDrug.map((data, index) => (
@@ -74,6 +86,7 @@ export const PatientTransaction = () => {
           </tr>
         ))}
       </TablePatients>
+
     </>
   )
 }
@@ -129,5 +142,46 @@ const TablePatients = ({
         </div>
       </div>
     </>
+  )
+}
+
+const ImageModal = () => {
+  return (
+    <>
+      <button
+        type="button"
+        className=" bg-transparent border-0 text-decoration-underline"
+        style={{ color: '#1766D6' }}
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Link
+      </button>
+      {/* Modal */}
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content bg-transparent border-0">
+            <div className="modal-header border-0">
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              />
+            </div>
+            <div className="modal-body">
+              <img src={'https://images.unsplash.com/photo-1700469880511-3ef0cee47985?q=80&w=1944&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} className=' img-fluid' />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+
   )
 }
