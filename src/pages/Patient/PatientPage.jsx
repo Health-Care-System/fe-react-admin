@@ -15,7 +15,7 @@ export const PatientPage = () => {
 
   return (
     <>
-      <section className="m-4 d-flex flex-column gap-4">
+      <section className="mx-4 d-flex flex-column gap-4">
         <nav className="d-inline-flex gap-5">
           {subMenu?.map((menu, index) => (
             <NavLink
