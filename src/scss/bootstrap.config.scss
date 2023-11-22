@@ -8,6 +8,7 @@ $danger: #D8243C;
 // Typography
 $font-family-base: 'Inter', sans-serif;
 
+@media (min-width: 768px) { 
 h1 {
   font-size: 6rem !important;
 }
@@ -31,8 +32,11 @@ h5 {
 h6 {
   font-size: 1rem !important;
 }
+}
 
 $font-weight-bold: 800;
+$table-striped-bg: #C5C8EE2E;
+$table-bg: #F8F8F8;
 
 $font-sizes: (
   1: 1.5rem,
