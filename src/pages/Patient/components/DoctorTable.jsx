@@ -3,9 +3,9 @@ import useForm from "../../../hooks/useForm";
 import { theadDoctor } from "../../../utils/dataObject";
 import { TableContainer } from "./TableContainer";
 import { Column } from "./Column";
-import { ImageModal } from "../Transaction/PatientTransaction";
 import { formattedDate } from "../../../utils/helpers";
 import { StatusBtn } from "./StatusBtn";
+import { ImageModal } from "./ImageModal";
 
 
 const initialState = {

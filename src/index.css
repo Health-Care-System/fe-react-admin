@@ -22,6 +22,10 @@ p {
 .w-8 {
   width: 8.5rem;
 }
+.bg-base {
+  background-color: #F8F8F8;
+
+}
 
 
 .drawer-content {

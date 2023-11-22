@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
-import { useGetAllDoctorTransaction, useGetAllDrugTransaction } from "../../../services/patient-services";
-import { theadDoctorDetails, theadDrugDetails } from "../../../utils/dataObject";
-import { formattedDate } from "../../../utils/helpers";
-import { ImageModal } from "../Transaction/PatientTransaction";
 import { Column } from "../components/Column";
 import { StatusBtn } from "../components/StatusBtn";
+import { ImageModal } from "../components/ImageModal";
+import { formattedDate } from "../../../utils/helpers";
+import { theadDoctorDetails, theadDrugDetails } from "../../../utils/dataObject";
+import {
+  useGetAllDoctorTransaction,
+  useGetAllDrugTransaction
+} from "../../../services/patient-services";
 
 export const PatientDetails = () => {
   const title = ['ID', 'Nama Lengkap', 'Email', 'Gender', 'Tanggal Lahir', 'Gol. Darah', 'Berat Badan', 'Tinggi Badan'];
@@ -42,8 +45,8 @@ export const PatientDetails = () => {
         <TableDoctorDetails />
         <TableDrugDetails />
       </section>
-      
-      <section className="d-flex justify-content-center gap-3 my-5">
+
+      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom bg-base py-5">
         <Link to={'/patients/data'} className="btn btn-primary text-white w-8 fw-semibold">
           Kembali
         </Link>
@@ -148,7 +151,7 @@ const TableDetailsContainer = ({ thead, title, children }) => {
     <>
       <div>
         <h6 className="fw-semibold fs-2 m-0 mb-2">{title}</h6>
-        <div className=" table-responsive table-wrapper" style={{ maxHeight: '12rem' }}>
+        <div className=" table-responsive table-wrapper" style={{ maxHeight: '15rem' }}>
           <table className="table table-borderless table-striped" >
             <thead className=' sticky-top z-0'>
               <tr>

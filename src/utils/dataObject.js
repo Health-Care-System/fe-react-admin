@@ -231,7 +231,7 @@ export const doctorTransaction = [
     status: 'Sukses',
   },
 ];
-
+export const thead = ["ID", "Nama Lengkap", "Email", "Gender", "Tgl Lahir", "Gol. Darah", "Berat Badan", "Tinggi Badan"];
 export const theadDoctor = ["ID", "ID Dokter", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadDoctorDetails = ["ID Transaksi", "ID Dokter", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadDrug = ["ID", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];

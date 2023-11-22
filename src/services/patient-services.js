@@ -22,3 +22,18 @@ export const useGetAllDrugTransaction = () => {
   })
   return doctorTransaction;
 }
+export const useGetAllPatients = () => {
+  const { data, isPending, isError, refetch } = useQuery({
+    queryKey: ['patients'],
+    queryFn: async () => {
+      const res = await client.get('http://localhost:3000/patients');
+      return res.data;
+    }
+  })
+  return {
+    data,
+    isError,
+    isPending,
+    refetch
+  };
+}
