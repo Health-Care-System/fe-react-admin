@@ -88,7 +88,7 @@ export const doctorTransaction = [
     total: 185000,
     date: '18 Oktober 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
   {
     id: '125',
@@ -108,7 +108,7 @@ export const doctorTransaction = [
     total: 220000,
     date: '20 Oktober 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
   {
     id: '127',
@@ -128,7 +128,7 @@ export const doctorTransaction = [
     total: 170000,
     date: '22 Oktober 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
   {
     id: '129',
@@ -148,7 +148,7 @@ export const doctorTransaction = [
     total: 205000,
     date: '24 Oktober 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
   {
     id: '131',
@@ -168,7 +168,7 @@ export const doctorTransaction = [
     total: 145000,
     date: '26 Oktober 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
   {
     id: '133',
@@ -188,7 +188,7 @@ export const doctorTransaction = [
     total: 190000,
     date: '28 Oktober 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
   {
     id: '135',
@@ -208,7 +208,7 @@ export const doctorTransaction = [
     total: 130000,
     date: '30 Oktober 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
   {
     id: '137',
@@ -228,9 +228,9 @@ export const doctorTransaction = [
     total: 175000,
     date: '1 November 2002',
     image: 'https://images.google.com/',
-    status: 'Completed',
+    status: 'Sukses',
   },
 ];
 
 export const theadDoctor = ["ID", "ID Dokter", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
-export const theadPatient = ["ID", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Lahir", "Gambar", "Status Pembayaran"];
+export const theadDrug = ["ID", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];

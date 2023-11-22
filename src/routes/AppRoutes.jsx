@@ -12,6 +12,7 @@ import { EditDoctor } from '../pages/Doctor/EditDoctor';
 import { PatientData } from '../pages/Patient/Patient/PatientData';
 import { PatientTransaction } from '../pages/Patient/Transaction/PatientTransaction';
 import { PrivateRoute } from './PrivateRoute';
+import { PatientDetails } from '../pages/Patient/Patient/PatientDetails';
 
 const AppRoutes = () => (
   <Routes>
@@ -21,7 +22,8 @@ const AppRoutes = () => (
         <Route path="/" element={<HomePage />} />
         <Route path="/drugs" element={<DrugPage />} />
         <Route path='/patients' element={<PatientPage />}>
-          <Route path="/patients/datas" element={<PatientData />} />
+          <Route path="/patients/data" element={<PatientData />} />
+          <Route path="/patients/data/:userId" element={<PatientDetails />} />
           <Route path="/patients/transactions" element={<PatientTransaction />} />
         </Route>
         <Route path="/doctors" element={<DoctorPage />} />

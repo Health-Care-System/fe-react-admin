@@ -1,0 +1,208 @@
+{
+  "consultDoctor": {
+    "meta": {
+      "success": true,
+      "message": "Berhasil Mengambil Data Advice"
+    },
+    "results": [
+      {
+        "id": "124",
+        "idDoctor": "405",
+        "idPatient": "408",
+        "payment": "Mandiri Virtual Account",
+        "total": 185000,
+        "date": "2002-10-18T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "125",
+        "idDoctor": "407",
+        "idPatient": "401",
+        "payment": "BRI Virtual Account",
+        "total": 150000,
+        "date": "2002-10-19T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Tolak"
+      },
+      {
+        "id": "126",
+        "idDoctor": "402",
+        "idPatient": "406",
+        "payment": "Virtual Account BNI",
+        "total": 220000,
+        "date": "2002-10-20T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "127",
+        "idDoctor": "404",
+        "idPatient": "409",
+        "payment": "BCA Virtual Account",
+        "total": 195000,
+        "date": "2002-10-21T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Pending"
+      },
+      {
+        "id": "128",
+        "idDoctor": "408",
+        "idPatient": "402",
+        "payment": "Mandiri Virtual Account",
+        "total": 170000,
+        "date": "2002-10-22T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "129",
+        "idDoctor": "401",
+        "idPatient": "407",
+        "payment": "BRI Virtual Account",
+        "total": 135000,
+        "date": "2002-10-23T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Pending"
+      },
+      {
+        "id": "130",
+        "idDoctor": "406",
+        "idPatient": "403",
+        "payment": "Virtual Account BNI",
+        "total": 205000,
+        "date": "2002-10-24T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "131",
+        "idDoctor": "409",
+        "idPatient": "404",
+        "payment": "BCA Virtual Account",
+        "total": 180000,
+        "date": "2002-10-25T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Pending"
+      },
+      {
+        "id": "132",
+        "idDoctor": "402",
+        "idPatient": "405",
+        "payment": "Mandiri Virtual Account",
+        "total": 145000,
+        "date": "2002-10-26T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "133",
+        "idDoctor": "407",
+        "idPatient": "410",
+        "payment": "BRI Virtual Account",
+        "total": 215000,
+        "date": "2002-10-27T00:00:00.000Z",
+        "image": "https://images.google.com/",
+        "status": "Pending"
+      }
+    ]
+  },
+  "drugTransaction": {
+    "meta": {
+      "success": true,
+      "message": "Berhasil Mengambil Data TRansaksi"
+    },
+    "results": [
+      {
+        "id": "123",
+        "idPatient": "403",
+        "payment": "BCA Virtual Account",
+        "total": 209000,
+        "date": "17 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Pending"
+      },
+      {
+        "id": "124",
+        "idPatient": "405",
+        "payment": "Mandiri Virtual Account",
+        "total": 185000,
+        "date": "18 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "125",
+        "idPatient": "407",
+        "payment": "BRI Virtual Account",
+        "total": 150000,
+        "date": "19 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "126",
+        "idPatient": "406",
+        "payment": "Virtual Account BNI",
+        "total": 220000,
+        "date": "20 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Tolak"
+      },
+      {
+        "id": "127",
+        "idPatient": "409",
+        "payment": "BCA Virtual Account",
+        "total": 195000,
+        "date": "21 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "128",
+        "idPatient": "402",
+        "payment": "Mandiri Virtual Account",
+        "total": 170000,
+        "date": "22 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "129",
+        "idPatient": "407",
+        "payment": "BRI Virtual Account",
+        "total": 135000,
+        "date": "23 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Tolak"
+      },
+      {
+        "id": "130",
+        "idPatient": "403",
+        "payment": "Virtual Account BNI",
+        "total": 205000,
+        "date": "24 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      },
+      {
+        "id": "131",
+        "idPatient": "404",
+        "payment": "BCA Virtual Account",
+        "total": 180000,
+        "date": "25 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Tolak"
+      },
+      {
+        "id": "132",
+        "idPatient": "405",
+        "payment": "Mandiri Virtual Account",
+        "total": 145000,
+        "date": "26 Oktober 2002",
+        "image": "https://images.google.com/",
+        "status": "Sukses"
+      }
+    ]
+  }
+}
