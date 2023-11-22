@@ -1,9 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import { Input } from "../../../components/ui/Form/Input";
 import searchIconGrey from '../../../assets/icon/search-grey.svg'
 import '../Patient.css'
 
 
 export const PatientData = () => {
+  const navigate = useNavigate();
+  const onNavigate = (id) => {
+    navigate(`/patients/data/${id}`)
+  }
 
   const yourDataArray = [
     {
@@ -180,7 +185,7 @@ export const PatientData = () => {
   const thead = ["ID", "Nama Lengkap", "Email", "Gender", "Tgl Lahir", "Gol. Darah", "Berat Badan", "Tinggi Badan"];
 
   return (
-    <div className="table-responsive rounded-4 border-1 border border-secondary p-4">
+    <div className="table-responsive rounded-4 border p-4">
       <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-4">
         <h6 className="fw-semibold fs-2 m-0">Daftar Pasien</h6>
         <div className="position-relative mt-3 mt-md-0">
@@ -197,7 +202,7 @@ export const PatientData = () => {
         </div>
       </div>
       <div className=" table-responsive table-wrapper" style={{maxHeight: 'calc(100vh - 19rem)'}}>
-      <table className="table table-light">
+      <table className="table border-bottom table-hover">
         <thead className=" sticky-top">
           <tr>
             {thead?.map((item, index) => (
@@ -213,7 +218,11 @@ export const PatientData = () => {
         </thead>
         <tbody>
           {yourDataArray.map((data, index) => (
-            <tr className=" text-nowrap" key={index}>
+            <tr 
+              onClick={() => onNavigate(data.id)} 
+              className="text-nowrap cursor-pointer" 
+              key={index}
+            >
               <td>{data.id}</td>
               <td>{data.name}</td>
               <td>{data.email}</td>

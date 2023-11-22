@@ -55,14 +55,15 @@ export const DoctorTable = () => {
                   <ImageModal />
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn status={data.status} />
-                </td>
+                <StatusBtn status={data.status} />
+              </td>
               </tr>
             )
           }
           }
         />
       </TableContainer>
+
     </>
   )
 }

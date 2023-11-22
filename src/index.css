@@ -18,6 +18,12 @@ p {
 	color: #fff;
 }
 
+/* Utilities */
+.w-8 {
+  width: 8.5rem;
+}
+
+
 .drawer-content {
 	display: flex;
 	flex-direction: column;
@@ -68,6 +74,9 @@ p {
   top: 8px;
   left: 1rem;
   width: 24px;
+}
+.cursor-pointer:hover {
+  cursor: pointer;
 }
 
 /* Small devices (landscape phones, 576px and up) */

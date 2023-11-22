@@ -5,8 +5,8 @@ import { DrugTable } from '../components/DrugTable';
 export const PatientTransaction = () => {
   return (
     <>
-      <DoctorTable />
-      <DrugTable />
+        <DoctorTable />
+        <DrugTable />
     </>
   )
 }
@@ -23,7 +23,7 @@ export const ImageModal = () => {
       >
         Link
       </button>
-      
+
       <div
         className="modal fade"
         id="exampleModal"

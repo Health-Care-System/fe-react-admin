@@ -23,16 +23,16 @@ const AppRoutes = () => (
         <Route path="/drugs" element={<DrugPage />} />
         <Route path='/patients' element={<PatientPage />}>
           <Route path="/patients/data" element={<PatientData />} />
-          <Route path="/patients/data/:userId" element={<PatientDetails />} />
           <Route path="/patients/transactions" element={<PatientTransaction />} />
         </Route>
+        <Route path="/patients/data/:userId" element={<PatientDetails />} />
         <Route path="/doctors" element={<DoctorPage />} />
         <Route path="/doctors/create-doctor" element={<CreateDoctor />} />
         <Route path="/doctors/detail-doctor" element={<DetailDoctor />} />
         <Route path="/doctors/edit-doctor" element={<EditDoctor />} />
         <Route path="/settings" element={<SettingPage />} />
       </Route>
-    </Route>  
+    </Route>
   </Routes>
 );
 
