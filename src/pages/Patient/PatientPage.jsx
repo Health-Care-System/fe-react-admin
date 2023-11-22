@@ -4,7 +4,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
 export const PatientPage = () => {
   const subMenu = [
     { title: 'Data Transaksi', link: '/patients/transactions' },
-    { title: 'Data Pasien', link: '/patients/datas' },
+    { title: 'Data Pasien', link: '/patients/data' },
   ]
   const location = useLocation()
   const navigate = useNavigate()
