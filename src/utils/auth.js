@@ -6,7 +6,6 @@ const client = axios.create();
 client.interceptors.request.use(function (config) {
   const token = Cookies.get('token');
   config.headers['X-API-KEY'] = `Bearer ${token}`
-
   return config;
 }, function (error) {
   return Promise.reject(error);
