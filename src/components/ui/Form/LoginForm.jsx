@@ -47,14 +47,12 @@ export const LoginForm = () => {
     if (validateFormLogin(formData, setErrors)) {
       try {
         setLoading(true);
-        const response = await client.post('/admins/login', formData);
-        if (response.status === 200) {
-          const { token } = response.data.results;
+        const res = await client.post('/admins/login', formData);
+        if (res.status === 200) {
+          const { token } = res.data.results;
           Cookies.set('token', token);
           navigate('/')
-        } else {
-          throw new Error('Data tidak sesuai!')
-        }
+        } 
       } catch (error) {
         handleLoginError(error, setErrors);
       } finally {
