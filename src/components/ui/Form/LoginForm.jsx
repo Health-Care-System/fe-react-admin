@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../Button';
-import Input from './Input'; 
 import lock from '../../../assets/icon/lock.svg';
 import visibility from '../../../assets/icon/visibility.svg';
+import Input from './Input';
 
 export const LoginForm = () => {
   const [formData, setFormData] = useState({

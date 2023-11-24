@@ -1,0 +1,11 @@
+.table thead tr td {
+  background-color: #d7d7d7;
+  font-weight: 700;
+  font-size: 0.78438rem;
+}
+
+.search {
+  width: 440px;
+  height: 55px;
+  border: 1px solid #9747ff;
+}
