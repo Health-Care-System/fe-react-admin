@@ -27,8 +27,7 @@ export const useGetAllPatients = () => {
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
-      const res = await client.put('/admins/list/users');
-      console.log(res)
+      const res = await client.get('/admins/list/users');
       return res.data;
     }
   })
