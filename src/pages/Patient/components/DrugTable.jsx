@@ -38,6 +38,7 @@ export const DrugTable = () => {
           refetch={refetch}
           data={data}
           search={form.search}
+          ifEmpty={'Tidak ada riwayat transaksi pembelian obat!'}
           renderItem={(data, index) =>
             <tr className=" text-nowrap" key={index}>
               <td>{data?.id ?? '-'}</td>

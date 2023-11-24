@@ -40,7 +40,9 @@ export const PatientData = () => {
               }
             </tr>
           </thead>
+          <tbody>
           <TableBody />
+          </tbody>
         </table>
       </div>
     </div>
@@ -61,24 +63,23 @@ const TableBody = () => {
 
   if (isError) {
     return (
-      <tbody>
-        <tr className=" table-borderless">
-          <td className="text-center" colSpan={8}>
-            <p>Gagal Memuat Data!</p>
-            <Button onClick={refetch} className={'btn-primary text-white mt-2'}>Coba lagi</Button>
-          </td>
-        </tr>
-      </tbody>
+      <tr className=" table-borderless">
+        <td className="text-center" colSpan={8}>
+          <p>Gagal Memuat Data!</p>
+          <Button onClick={refetch} className={'btn-primary text-white mt-2'}>Coba lagi</Button>
+        </td>
+      </tr>
     )
   }
 
   if (isPending) {
-    return <ColumnSkeleton totalRow={8} />
+    return (
+      <ColumnSkeleton totalRow={8} />
+    )
   }
 
   return (
     <>
-      <tbody>
         {data?.results?.map((data, index) => (
           <tr
             onClick={() => onNavigate(data.id)}
@@ -95,7 +96,6 @@ const TableBody = () => {
             <td>{data.height}</td>
           </tr>
         ))}
-      </tbody>
     </>
   )
 }

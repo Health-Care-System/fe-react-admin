@@ -12,7 +12,6 @@ const initialState = {
   search: ''
 }
 
-
 export const DoctorTable = () => {
   const {
     data,
@@ -40,6 +39,7 @@ export const DoctorTable = () => {
           refetch={refetch}
           data={data}
           search={form.search}
+          ifEmpty={'Tidak ada riwayat transaksi konsultasi dokter!'}
           renderItem={(data, index) => {
             const date = formattedDate(data.date);
             const subTotal = data.total.toLocaleString('ID-id');
