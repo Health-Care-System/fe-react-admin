@@ -1,5 +1,5 @@
-import { Input } from "../../../components/ui/Form/Input";
 import searchIconGrey from '../../../assets/icon/search-grey.svg';
+import Input from '../../../components/ui/Form/Input';
 
 export const TableContainer = ({
   handleInput,
