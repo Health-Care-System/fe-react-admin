@@ -12,7 +12,6 @@ const initialState = {
   search: ''
 }
 
-
 export const DoctorTable = () => {
   const {
     data,
