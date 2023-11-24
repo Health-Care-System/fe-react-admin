@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Form/Input";
 import { ColumnSkeleton } from "../../../components/ui/Skeleton/ColumnSkeleton";
 import { useGetAllPatients } from "../../../services/patient-services";
 import { thead } from "../../../utils/dataObject";
 import searchIconGrey from '../../../assets/icon/search-grey.svg'
 import '../Patient.css'
+import Input from "../../../components/ui/Form/Input";
 
 export const PatientData = () => {
   return (

@@ -6,7 +6,6 @@ export const LoginPage = () => {
   return (
     <div className="container" style={{ height: '100vh', width: '100vw' }}>
       <div className="row h-100 align-items-center">
-
         <div className="col-lg-7">
           <img src={Banner} alt="Banner" className="img-fluid" />
         </div>
