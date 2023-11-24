@@ -5,7 +5,7 @@ export const useGetAllDoctorTransaction = () => {
   const doctorTransaction = useQuery({
     queryKey: ['doctorTransaction'],
     queryFn: async () => {
-      const res = await client.get('http://localhost:3000/consultDoctor');
+      const res = await client.get('/consultDoctor');
       return res.data;
     }
   })
@@ -16,7 +16,7 @@ export const useGetAllDrugTransaction = () => {
   const doctorTransaction = useQuery({
     queryKey: ['drugTransaction'],
     queryFn: async () => {
-      const res = await client.get('http://localhost:3000/drugTransaction');
+      const res = await client.get('/drugTransaction');
       return res.data;
     }
   })
@@ -26,7 +26,7 @@ export const useGetAllPatients = () => {
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
-      const res = await client.get('http://localhost:3000/patients');
+      const res = await client.get('/patients');
       return res.data;
     }
   })
