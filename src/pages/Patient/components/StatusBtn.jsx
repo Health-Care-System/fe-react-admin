@@ -1,6 +1,6 @@
 import { Button } from "../../../components/ui/Button"
 
-export const StatusBtn = ({ status }) => {  
+export const StatusBtn = ({ status, handleAction, id }) => {  
   if (status === 'Sukses') {
     return <StatusInfo status={'Diterima'} color={'#d0fad0'} />
   }
@@ -14,8 +14,15 @@ export const StatusBtn = ({ status }) => {
   return (
     <>
       <div className=" d-inline-flex gap-3">
-        <Button className={'btn-outline-primary border-2 fw-semibold'}>Tolak</Button>
-        <Button className={'btn-primary text-white fw-semibold'}>Terima</Button>
+        <Button 
+          onClick={() => handleAction('Tolak', id)}
+          className={'btn-outline-primary border-2 fw-semibold'}>Tolak
+        </Button>
+        <Button 
+          onClick={() => handleAction('Sukses', id)}
+          className={'btn-primary text-white fw-semibold'}>
+          Terima
+        </Button>
       </div>
     </>
   )

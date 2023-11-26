@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
-import client from "../utils/auth"
 import axios from "axios";
 
 export const useGetAllDoctorTransaction = () => {
   const doctorTransaction = useQuery({
     queryKey: ['doctorTransaction'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/consultDoctor');
+      const res = await axios.get('http://localhost:3100/transaction/doctor');
       return res.data;
     }
   })
@@ -27,7 +26,7 @@ export const useGetAllPatients = () => {
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
-      const res = await client.get('/admins/list/users');
+      const res = await axios.get('http://localhost:3000/patients');
       return res.data;
     }
   })
