@@ -1,28 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import deleteIcon from "../../assets/icon/delete-icon.svg";
 import search from "../../assets/icon/round-search.svg";
 import plus from "../../assets/icon/count_plus.svg";
 
 import "./drug-page.css";
+import client from "../../utils/auth";
+// import axios from "axios";
 
 export const DrugPage = () => {
   const [formData, setFormData] = useState({
     image: null,
-    kode: "",
+    code: "",
     name: "",
-    merek: "",
-    kategori: "",
-    jenis: "",
-    stok: "",
-    harga: 0,
+    merk: "",
+    category: "",
+    type: "",
+    stock: "",
+    price: 0,
   });
 
   const [dataArray, setDataArray] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await client.get("/admins/medicines");
+        console.log("API Response:", response.data);
+        setDataArray(response.data.results);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
+
+  const handleInputChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   const handleImageChange = (e) => {
@@ -30,19 +50,39 @@ export const DrugPage = () => {
     setFormData({ ...formData, image: file });
   };
 
+  // const handleSave = () => {
+  //   alert("handleSave called");
+  //   setDataArray([...dataArray, { ...formData }]);
+  //   setFormData({
+  //     image: null,
+  //     code: "",
+  //     name: "",
+  //     merk: "",
+  //     category: "",
+  //     type: "",
+  //     stock: "",
+  //     price: 0,
+  //   });
+  // };
+
   const handleSave = () => {
-    alert("handleSave called");
-    setDataArray([...dataArray, { ...formData }]);
-    setFormData({
-      image: null,
-      kode: "",
-      name: "",
-      merek: "",
-      kategori: "",
-      jenis: "",
-      stok: "",
-      harga: 0,
-    });
+    client
+      .post("/admins/medicines", setFormData)
+      .then((res) => {
+        setFormData((prevData) => [...prevData, res.data]);
+        alert("Anda berhasil menambahkan produk");
+        setFormData({
+          image: null,
+          code: "",
+          name: "",
+          merk: "",
+          category: "",
+          type: "",
+          stock: "",
+          price: 0,
+        });
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleDelete = (index) => {
@@ -54,48 +94,63 @@ export const DrugPage = () => {
   const filteredData = dataArray.filter((data) => {
     const searchString = searchQuery.toLowerCase();
     return (
-      data.kode.toLowerCase().includes(searchString) ||
+      data.code.toLowerCase().includes(searchString) ||
       data.name.toLowerCase().includes(searchString) ||
-      data.merek.toLowerCase().includes(searchString) ||
-      data.kategori.toLowerCase().includes(searchString) ||
-      data.jenis.toLowerCase().includes(searchString) ||
-      data.stok.toString().includes(searchString) ||
-      data.harga.toString().includes(searchString)
+      data.merk.toLowerCase().includes(searchString) ||
+      data.category.toLowerCase().includes(searchString) ||
+      data.type.toLowerCase().includes(searchString) ||
+      data.stock.toString().includes(searchString) ||
+      data.price.toString().includes(searchString)
     );
   });
 
   return (
     <>
       <div className="pe-2">
-        <div className="d-flex justify-content-between pb-2">
+        <div className="d-flex justify-content-between pb-2 mx-3">
+          <input
+            type="text"
+            className="search rounded-5"
+            style={{
+              backgroundColor: "##F5F5F5",
+              backgroundImage: `url(${search})`,
+              backgroundSize: "24px 24px",
+              backgroundPosition: "left 10px center",
+              backgroundRepeat: "no-repeat",
+              paddingRight: "1.875rem",
+              paddingLeft: "2.62rem",
+              marginBottom: "0",
+              height: "2.5rem",
+              border: "1px solid #ced4da",
+              transition: "border-color 0.2s",
+              outline: "none",
+            }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="nama, kode, merk"
+            onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+            onBlur={(e) => (e.target.style.borderColor = "#ced4da")}
+          />
           <button
             type="button"
-            className="btn btn-dark rounded-3 btn-md"
+            className="btn btn-primary rounded-3 btn-md text-white"
+            style={{
+              height: "2.8125rem",
+              display: "flex",
+              width: "13.25rem",
+              padding: "0.25rem 0.625rem",
+              alignItems: "center",
+            }}
             data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
+            data-bs-target="#ModalTambahProduct"
           >
             <img src={plus} alt="" className="me-2" />
             Tambah Produk Baru
           </button>
-          <input
-            type="text"
-            className="search rounded"
-            style={{
-              backgroundImage: `url(${search})`,
-              backgroundSize: "36px 36px",
-              backgroundPosition: "right 10px center",
-              backgroundRepeat: "no-repeat",
-              paddingRight: "1.875rem",
-              paddingLeft: "0.62rem",
-            }}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Name, Kode, Merek"
-          />
         </div>
         <div
           className="modal fade"
-          id="exampleModal"
+          id="ModalTambahProduct"
           tabIndex={-1}
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
@@ -128,16 +183,16 @@ export const DrugPage = () => {
 
                 <form>
                   <div className="mb-3 row">
-                    <label htmlFor="Kode" className="col-sm-3 col-form-label ">
-                      Kode
+                    <label htmlFor="code" className="col-sm-3 col-form-label ">
+                      code
                     </label>
                     <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
-                        id="Kode"
-                        name="kode"
-                        value={formData.kode}
+                        id="code"
+                        name="code"
+                        value={formData.code}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -159,16 +214,16 @@ export const DrugPage = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label htmlFor="merek" className="col-sm-3 col-form-label ">
-                      Merek
+                    <label htmlFor="merk" className="col-sm-3 col-form-label ">
+                      merk
                     </label>
                     <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
-                        id="merek"
-                        name="merek"
-                        value={formData.merek}
+                        id="merk"
+                        name="merk"
+                        value={formData.merk}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -178,61 +233,61 @@ export const DrugPage = () => {
                       htmlFor="Katgori"
                       className="col-sm-3 col-form-label"
                     >
-                      Kategori
+                      category
                     </label>
                     <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
-                        id="kategori"
-                        name="kategori"
-                        value={formData.kategori}
+                        id="category"
+                        name="category"
+                        value={formData.category}
                         onChange={handleInputChange}
                       />
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label htmlFor="jenis" className="col-sm-3 col-form-label ">
-                      Jenis
+                    <label htmlFor="type" className="col-sm-3 col-form-label ">
+                      type
                     </label>
                     <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
-                        id="jenis"
-                        name="jenis"
-                        value={formData.jenis}
+                        id="type"
+                        name="type"
+                        value={formData.type}
                         onChange={handleInputChange}
                       />
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label htmlFor="stok" className="col-sm-3 col-form-label">
-                      Stok
+                    <label htmlFor="stock" className="col-sm-3 col-form-label">
+                      stock
                     </label>
                     <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control "
-                        id="stok"
-                        name="stok"
-                        value={formData.stok}
+                        id="stock"
+                        name="stock"
+                        value={formData.stock}
                         onChange={handleInputChange}
                       />
                     </div>
                   </div>
 
                   <div className="mb-3 row">
-                    <label htmlFor="harga" className="col-sm-3 col-form-label">
-                      Harga
+                    <label htmlFor="price" className="col-sm-3 col-form-label">
+                      price
                     </label>
                     <div className="col-sm-9">
                       <input
                         type="number"
                         className="form-control"
-                        id="harga"
-                        name="harga"
-                        value={formData.harga}
+                        id="price"
+                        name="price"
+                        value={formData.price}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -244,14 +299,39 @@ export const DrugPage = () => {
                 <div className="me-auto">
                   <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-primary text-white"
                     data-bs-dismiss="modal"
                     onClick={handleSave}
+                    style={{
+                      width: "7.125rem",
+                      height: "2.25rem",
+                      padding: "0.5rem 0.75rem",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      fontSize: "0.875rem",
+                      fontWeight: "600",
+                    }}
                   >
-                    Save
+                    Simpan
                   </button>
-                  <button type="button" className="btn btn-secondary ms-4">
-                    Cancel
+                  <button
+                    type="button"
+                    className="btn btn-light text-primary ms-4 border-primary border-2"
+                    style={{
+                      width: "8.125rem",
+                      height: "2.25rem",
+                      padding: "0.5rem 0.75rem",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      fontSize: "0.875rem",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Hapus Produk
                   </button>
                 </div>
               </div>
@@ -260,36 +340,31 @@ export const DrugPage = () => {
         </div>
 
         <div>
-          <table className="table table-borderless">
+          <table className="table table-borderless table-striped">
             <thead>
               <tr className="fw-bolder">
                 <td>Kode</td>
                 <td>Nama</td>
                 <td>Merek</td>
-                <td>Kategori</td>
+                <td>Kategory</td>
                 <td>Jenis</td>
                 <td>Stok</td>
                 <td>Harga</td>
-                <td></td>
+                <td>Gambar</td>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((data, index) => (
                 <tr key={index}>
-                  <td>{data.kode}</td>
+                  <td>{data.code}</td>
                   <td>{data.name}</td>
-                  <td>{data.merek}</td>
-                  <td>{data.kategori}</td>
-                  <td>{data.jenis}</td>
-                  <td>{data.stok}</td>
-                  <td>{data.harga}</td>
-                  <td>
-                    <img
-                      src={deleteIcon}
-                      alt=""
-                      onClick={() => handleDelete(index)}
-                      style={{ cursor: "pointer" }}
-                    />
+                  <td>{data.merk}</td>
+                  <td>{data.category}</td>
+                  <td>{data.type}</td>
+                  <td>{data.stock}</td>
+                  <td>{data.price}</td>
+                  <td className="text-primary">
+                    <button className="btn">Link</button>
                   </td>
                 </tr>
               ))}
