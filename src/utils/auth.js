@@ -7,7 +7,7 @@ client.interceptors.request.use(
   function (config) {
     const token = Cookies.get("token");
     config.headers["X-API-KEY"] = `Bearer ${token}`;
-    config.headers.Authorization = `Baerer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
     config.baseURL = "http://34.101.122.152";
     return config;
   },

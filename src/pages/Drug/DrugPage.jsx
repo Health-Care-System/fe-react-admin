@@ -66,10 +66,22 @@ export const DrugPage = () => {
   // };
 
   const handleSave = () => {
+    const data = new FormData();
+    data.append("image", formData.image)
+    data.append("code", formData.code)
+    data.append("name", formData.name)
+    data.append("merk", formData.merk)
+    data.append("category", formData.category)
+    data.append("type", formData.type)
+    data.append("stock", formData.stock)
+    data.append("price", formData.price)
+    data.append("details", "Obat - obatan")
+  
     client
-      .post("/admins/medicines", setFormData)
+      .post("/admins/medicines", data)
       .then((res) => {
-        setFormData((prevData) => [...prevData, res.data]);
+        console.log(res)
+        // setFormData((prevData) => [...prevData, res.data?.results]);
         alert("Anda berhasil menambahkan produk");
         setFormData({
           image: null,
