@@ -18,7 +18,17 @@ export const DoctorTable = () => {
     refetch,
     isPending,
     isError
-  } = useGetAllDoctorTransaction();
+  } = useGetAllDoctorTransaction();  
+  const handleStatusOrder = (newStatus, id) => {
+    const tempData = data.results;
+    const findIndex = tempData.findIndex((item) => item.id === id);    
+    if (findIndex !== -1) {
+      tempData[findIndex].status = newStatus;
+    } else {
+      console.log('Item tidak ditemukan')
+    }    
+    return tempData;
+  }
 
   const {
     form,
@@ -45,17 +55,21 @@ export const DoctorTable = () => {
             const subTotal = data.total.toLocaleString('ID-id');
             return (
               <tr className="text-nowrap" key={index}>
-                <td>{data.id}</td>
-                <td>{data.idDoctor}</td>
-                <td>{data.idPatient}</td>
-                <td>{data.payment}</td>
+                <td>{data.id !== '' ? data.id :  '-'}</td>
+                <td>{data.idDoctor !== '' ? data.idDoctor : '-'}</td>
+                <td>{data.idPatient !== '' ? data.idPatient : '-'}</td>
+                <td>{data.payment !== '' ? data.payment : '-'}</td>
                 <td>{`Rp ${subTotal}`}</td>
-                <td>{date}</td>
+                <td>{date !== '' ? date : '-'}</td>
                 <td>
                   <ImageModal />
                 </td>
                 <td className="d-flex justify-content-center">
-                <StatusBtn status={data.status} />
+                <StatusBtn 
+                  id={data?.id}
+                  handleAction={handleStatusOrder}
+                  status={data.status} 
+                />
               </td>
               </tr>
             )
