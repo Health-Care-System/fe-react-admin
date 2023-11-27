@@ -1,6 +1,4 @@
 // Input.js
-import React from 'react';
-
 const Input = (props) => {
   const { type, className, name, placeholder, value, onChange } = props;
 

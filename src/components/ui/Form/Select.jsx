@@ -14,13 +14,15 @@ export const Select = ({
   options,
   name,
   handleChange,
-  value
+  value,
+  defaultValue
 }) => {
   return (
     <select
       name={name}
       onChange={handleChange}
       value={value}
+      defaultValue={defaultValue}
       className="form-select"
       aria-label="Default select example"
     >
