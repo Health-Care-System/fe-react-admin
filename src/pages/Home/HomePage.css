@@ -1,0 +1,44 @@
+.view-all {
+    padding-left: 26.5rem;
+}
+
+.view-all2 {
+    padding-left: 28.5rem;
+}
+
+.view-all3 {
+    padding-right: 2.5rem;
+    margin-right: -5rem;
+}
+
+.daftar-obat {
+    font-weight: bold;
+    /* padding-left: -0.5rem; */
+    margin-right: 5.3rem;
+}
+
+.stok-obat {
+    margin-right: 2.8rem;
+}
+
+
+/* .stok-obat {
+    margin-right: 12rem!important;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 2px;
+    margin-top: 5px;
+} */
+
+.card-stok-obat {
+    margin-right: 3rem;
+    width: 320px;
+}
+
+.garis {
+    margin-left: 57.5rem;
+}
+
+.dropdown {
+    margin-right: 2rem;
+}

@@ -21,7 +21,7 @@ export const Layout = () => {
       </div>
 
       <div className="drawer-content">
-        <div className="d-flex justify-content-between m-2">
+        <div className="d-flex justify-content-between align-items-center mx-4 mx-md-0">
           <MemoizedNavbar />
           <Button
             className={'p-0 d-flex d-md-none'}
@@ -32,7 +32,7 @@ export const Layout = () => {
         </div>
 
         {menu &&
-          <div className="position-fixed d-flex d-md-none z-1 w-full h-100">
+          <div className="position-fixed d-flex d-md-none z-50 w-full h-100">
             <Transparent
               onClick={() => setMenu(false)}
             >
