@@ -33,7 +33,7 @@ export const DaftarObat = () => {
     return (
       <>
         <div className="table-obat card shadow border-0">
-            <table className="table table-borderless">
+            <table className="table table-striped">
                 <thead>
                     <tr>
                         <th className="table-nama-obat">Nama Obat</th>

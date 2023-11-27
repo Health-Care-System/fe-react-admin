@@ -29,7 +29,7 @@ export const RecentPatient = () => {
     return (
       <>
         <div className="table-responsive card shadow border-0">
-            <table className="table table-borderless">
+            <table className="table table-striped">
                 <thead>
                     <tr>
                         <th>Name</th>
