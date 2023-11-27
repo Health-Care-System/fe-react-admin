@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import back from '../../assets/icon/arrow-right.svg' 
 import Photo from '../../assets/icon/Photo.svg'
 import { Button } from '../../components/ui/Button'
-import { Input } from '../../components/ui/Form/Input'
+import Input  from '../../components/ui/Form/Input'
 import { useEffect, useState } from 'react'
 
 export const EditDoctor = () => {

@@ -1,10 +1,11 @@
 import { Button } from "../../components/ui/Button"
 import Photo from '../../assets/icon/Upload-image.svg'
-import { Input } from "../../components/ui/Form/Input"
+import  Input  from "../../components/ui/Form/Input"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import visibility from '../../assets/icon/visibility.svg'
 import axios from "axios"
+import client from "../../utils/auth"
 
 
 export const CreateDoctor = () => {
@@ -205,6 +206,10 @@ export const CreateDoctor = () => {
         e.preventDefault();
         console.log("masuk ga?");
 
+        const data = new FormData()
+
+        data.append('fullname', newform.fullname)
+
         validateForm(e);
 
         if (
@@ -222,7 +227,7 @@ export const CreateDoctor = () => {
             
         try {
             // Kirim data ke server menggunakan axios.post
-            const res = await axios.post('URL_API/doctors', newform);
+            const res = await client.post('/admins/register/doctor', data);
     
             // Tambahkan data yang berhasil disimpan ke state atau lakukan penanganan lainnya
             setForm([...form, res.data]);
