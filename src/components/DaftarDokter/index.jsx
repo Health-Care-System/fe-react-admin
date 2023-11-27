@@ -47,7 +47,7 @@ export const DaftarDokter = () => {
     return (
       <>
         <div className="table-dokter table-responsive card shadow border-0">
-            <table className="table table-borderless">
+            <table className="daftar-dokter table table-striped ">
                 <thead>
                     <tr>
                         <th className="table-name">Name</th>
