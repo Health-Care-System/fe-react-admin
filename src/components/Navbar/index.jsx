@@ -23,10 +23,10 @@ export const Navbar = () => {
           </h5>
         </div>
         <div className='d-flex gap-2 align-items-center'>
-          {
+          {/* {
             location.pathname === '/' &&
             <input type='text' className='form-control shadow border-0 py-3 px-4 rounded-4' style={{ width: '539px' }} placeholder='Search' />
-          }
+          } */}
 
           <div className='d-flex align-items-center pe-3 pe-md-0 gap-3'>
             <img src={notifIcon} className={styles.iconSize} alt='Notification' />
