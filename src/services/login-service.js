@@ -1,10 +1,11 @@
 export const handleLoginError = (error, setErrors) => {
   if (error.response) {
+    console.log(error.response)
     const field = error?.response?.data?.meta?.message;
     switch (error.response.status) {
       case 401:
         setErrors({
-          email: field.split(' ')[0] === 'Email'
+          email: field.split(' ')[0].toLowerCase() === 'email'
             ? 'Email tidak terdaftar!'
             : 'Email atau password tidak valid!',
         });
