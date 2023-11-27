@@ -4,8 +4,18 @@
   padding: 0;
   box-sizing: border-box;
 }
+body {
+	background-color: #F8F8F8;
+}
 p {
   margin: 0;
+}
+
+.btn-outline-primary {
+	--bs-btn-active-color: #fff;
+}
+.btn-outline-primary:hover {
+	color: #fff;
 }
 
 .drawer-content {
@@ -34,6 +44,32 @@ p {
   color: #000000;
 }
 
+.divider:before, 
+.divider:after {
+  background-color: #ccc;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 45%;
+}
+
+.divider:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+.divider:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+.searchIcon {
+  top: 8px;
+  left: 1rem;
+  width: 24px;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) { 
 	.bubble {
@@ -43,6 +79,6 @@ p {
  
  @media (min-width: 768px) {
   .drawer-content {
-		margin-left: 17rem;
+		margin-left: 16.3rem;
 	}
  }

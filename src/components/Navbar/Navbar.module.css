@@ -3,13 +3,12 @@
 }
 
 .iconSize {
-    width: 24px;
-    margin: 0;
+  width: 30px;
+  margin:0;
 }
 
 @media (min-width: 768px) {
-    .navbar {
-        padding: 1.5rem 2.25rem;
-        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.07);
-    }
+  .navbar{
+    padding: 1.5rem;
+  }
 }
