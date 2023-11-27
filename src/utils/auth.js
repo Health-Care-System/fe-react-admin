@@ -23,8 +23,23 @@ client.interceptors.response.use(function (response) {
       Cookies.remove('token');
     }
   }
-  
-  return Promise.reject(error);
 });
+
+client.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    if (error.response) {
+      const { status } = error.response;
+
+      if (status === 401) {
+        Cookies.remove("token");
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default client;
