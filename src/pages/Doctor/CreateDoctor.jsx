@@ -1,10 +1,9 @@
 import { Button } from "../../components/ui/Button"
-import Photo from '../../assets/icon/Upload-image.svg'
+import Photo from '../../assets/icon/Upload-Image.svg'
 import  Input  from "../../components/ui/Form/Input"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import visibility from '../../assets/icon/visibility.svg'
-import axios from "axios"
 import client from "../../utils/auth"
 
 
@@ -197,8 +196,6 @@ export const CreateDoctor = () => {
                     no_str: ''
                 })
             }
-        }else{
-
         }
     }
 
