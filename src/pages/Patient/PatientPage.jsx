@@ -4,7 +4,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
 export const PatientPage = () => {
   const subMenu = [
     { title: 'Data Transaksi', link: '/patients/transactions' },
-    { title: 'Data Pasien', link: '/patients/datas' },
+    { title: 'Data Pasien', link: '/patients/data' },
   ]
   const location = useLocation()
   const navigate = useNavigate()
@@ -15,7 +15,7 @@ export const PatientPage = () => {
 
   return (
     <>
-      <section className="m-4 d-flex flex-column gap-4">
+      <section className="mx-4 d-flex flex-column gap-4">
         <nav className="d-inline-flex gap-5">
           {subMenu?.map((menu, index) => (
             <NavLink

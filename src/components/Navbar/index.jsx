@@ -12,7 +12,7 @@ export const Navbar = () => {
 
   return (
     <header className={styles.navbar}>
-      <nav className='d-flex w-100 justify-content-between align-items-center'>
+      <nav className='d-flex w-100 justify-content-between align-items-center py-4 py-md-0'>
         <div>
           <h5 className='fw-semibold m-0'>
             {
@@ -23,14 +23,14 @@ export const Navbar = () => {
           </h5>
         </div>
         <div className='d-flex gap-2 align-items-center'>
-          {/* {
-            location.pathname === '/' &&
-            <input type='text' className='form-control shadow border-0 py-3 px-4 rounded-4' style={{ width: '539px' }} placeholder='Search' />
-          } */}
-
           <div className='d-flex align-items-center pe-3 pe-md-0 gap-3'>
             <img src={notifIcon} className={styles.iconSize} alt='Notification' />
-            <Avatar />
+            <div className=' d-none d-lg-block'>
+              <Avatar
+                name={'Bagaskara Setiawan'}
+                role={'Admin'}
+              />
+            </div>
           </div>
         </div>
 

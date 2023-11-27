@@ -1,8 +1,24 @@
 .table-wrapper {
   width: 100%;
 }
+
+.title-width {
+  width: 50%;
+}
 @media (min-width: 768px) {
   .table-wrapper {
     max-width: calc(100vw - 22.5rem);
+  }
+}
+
+@media (min-width: 992px) {
+  .title-width {
+    width: 40%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .title-width {
+    width: 35%;
   }
 }
