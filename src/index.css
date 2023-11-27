@@ -22,6 +22,9 @@ p {
 .w-8 {
   width: 8.5rem;
 }
+.z-50 {
+  z-index: 50;
+}
 .bg-base {
   background-color: #F8F8F8;
 

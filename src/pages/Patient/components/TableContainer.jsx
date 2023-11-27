@@ -1,5 +1,5 @@
-import { Input } from "../../../components/ui/Form/Input";
 import searchIconGrey from '../../../assets/icon/search-grey.svg';
+import Input from '../../../components/ui/Form/Input';
 
 export const TableContainer = ({
   handleInput,
@@ -19,7 +19,7 @@ export const TableContainer = ({
             handleChange={(e) => handleInput(e)}
             value={inputValue}
             type={'text'}
-            placeHolder={'Cari ID Tranksaksi'}
+            placeholder={'Cari ID Tranksaksi'}
             className={'rounded-5 ps-5 border-0 bg-white py-2'}
           />
           <img
