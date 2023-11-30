@@ -247,3 +247,8 @@ export const titleUserDetail = [
   'Berat Badan',
   'Tinggi Badan'
 ];
+
+export const genderFormat = {
+  male: 'Laki-Laki',
+  female: 'Perempuan',
+}

@@ -19,3 +19,9 @@ export const formattedDate = (date) => {
   const formattedDate = utc.toLocaleDateString('ID-id', options);
   return formattedDate;
 }
+
+export const formatDate = (inputDate) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = new Date(inputDate).toLocaleDateString('id-ID', options);
+  return formattedDate;
+}

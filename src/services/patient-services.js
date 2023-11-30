@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query"
 import axios from "axios";
 import client from "../utils/auth";
 import { useGetQuery } from "../hooks/useGetQuery";
-import { titleUserDetail } from "../utils/dataObject";
+import { genderFormat, titleUserDetail } from "../utils/dataObject";
+import { formatDate } from "../utils/helpers";
 
 export const useGetAllDoctorTransaction = () => {
   const doctorTransaction = useQuery({
@@ -59,7 +60,8 @@ export const useGetPatientsDetails = (userId) => {
     weight,
     height
   } = data?.results ?? {};
-  const values = [ id, fullname, email, gender, birtdate, blood_type, weight,height];
+  const date = formatDate[birtdate]
+  const values = [ id, fullname, email, genderFormat[gender], date, blood_type, weight,height];
 
   const dataUser = titleUserDetail.map((label, index) => ({
     label,

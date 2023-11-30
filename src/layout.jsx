@@ -5,6 +5,7 @@ import { Button } from "./components/ui/Button";
 import { Transparent } from "./components/ui/Container";
 import { Navbar } from "./components/Navbar";
 import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 // Sidebar di memo agar tidak melakukan rerender saat pindah route
 const MemoizedSidebar = React.memo(Sidebar);
@@ -40,6 +41,18 @@ export const Layout = () => {
             </Transparent>
           </div>
         }
+        <ToastContainer
+          position="bottom-left"
+          autoClose={2000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          rtl={false}
+          closeButton={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <Outlet />
       </div>
     </main>

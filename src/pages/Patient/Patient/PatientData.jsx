@@ -8,19 +8,21 @@ import {
   useGetAllPatients 
 } from "../../../services/patient-services";
 import useForm from "../../../hooks/useForm";
-import { thead } from "../../../utils/dataObject";
+import { genderFormat, thead } from "../../../utils/dataObject";
 import useDebounce from "../../../hooks/useDebounce";
 
 // Components
 import { RowTable } from "../../../components/Table/RowTable";
 import { TableContainer } from "../../../components/Table/TableContainer";
 import '../Patient.css'
+import { formatDate } from "../../../utils/helpers";
 
 const initialState = {
   search: '',
 }
 
-export const PatientData = () => {
+export const PatientData = () => {  
+
   
   // State untuk fungsi pencarian, state filteredData akan menampung data hasil pencarian
   // Untuk loadingSearch berfungsi memberikan efek loading saat pencarian
@@ -87,6 +89,7 @@ export const PatientData = () => {
         totalCol={10}
         totalRow={8}
         renderItem={(data, index) => {
+          const date = formatDate(data?.birthdate)
           return (
             <tr
               onClick={() => onNavigate(data.id)}
@@ -96,8 +99,8 @@ export const PatientData = () => {
               <td>{data?.id}</td>
               <td>{data?.fullname}</td>
               <td>{data?.email}</td>
-              <td>{data?.gender}</td>
-              <td>{data?.birthdate}</td>
+              <td>{genderFormat[data?.gender]}</td>
+              <td>{date}</td>
               <td>{data?.blood_type}</td>
               <td>{data?.weight}</td>
               <td>{data?.height}</td>

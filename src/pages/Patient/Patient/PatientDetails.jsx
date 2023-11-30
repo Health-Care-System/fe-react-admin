@@ -1,7 +1,9 @@
 // Packages
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Components
 import { Column } from "../components/Column";
@@ -13,16 +15,16 @@ import { Transparent } from "../../../components/ui/Container";
 import { CustomModal } from "../../../components/ui/Modal/Modal";
 
 // Utility & services
-import { 
-  theadDoctorDetails, 
-  theadDrugDetails 
+import client from "../../../utils/auth";
+import {
+  theadDoctorDetails,
+  theadDrugDetails
 } from "../../../utils/dataObject";
 import {
   useGetAllDoctorTransaction,
   useGetAllDrugTransaction,
   useGetPatientsDetails
 } from "../../../services/patient-services";
-import client from "../../../utils/auth";
 
 export const PatientDetails = () => {
   const [modalDelete, setModalDelete] = useState(false);
@@ -32,24 +34,31 @@ export const PatientDetails = () => {
     dataUser,
     isPending,
   } = useGetPatientsDetails(userId);
-  
+  const navigate = useNavigate();
+
   const handleDelete = async () => {
     try {
       setLoading(true);
-      // const res = await client.delete(`/admins/user/${userId}`);
-      // console.log(res);
+      const res = await client.delete(`/admins/user/${userId}`);
+      if (res?.status === 200) {
+        navigate('/patients/data')
+        toast.success('Anda berhasil menghapus pasien!', {
+          delay: 800
+        });
+      } else {
+        throw new Error('Gagal menghapus data pasien!');
+      }
     } catch (error) {
-      console.log(error.response);
+      toast.error(error.message, {
+        delay: 800
+      });
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-        setModalDelete(false);
-      }, 2000)
+      setLoading(false);
+      setModalDelete(false);
     }
   }
-  
-  console.log(loading);
-  
+
+
   return (
     <>
       <section className="mx-4">
@@ -60,7 +69,7 @@ export const PatientDetails = () => {
                 <td className="fw-semibold fs-2 title-width">{item.label}</td>
                 <td className="w-auto">
                   {isPending
-                    ? <Skeleton height={20} width={200} /> 
+                    ? <Skeleton height={20} width={200} />
                     : item.value
                   }
                 </td>
@@ -72,7 +81,7 @@ export const PatientDetails = () => {
               <tr key={index} className=" d-flex">
                 <td className=" fw-semibold fs-2 title-width">{item.label}</td>
                 {isPending
-                  ? <Skeleton height={20} width={200} /> 
+                  ? <Skeleton height={20} width={200} />
                   : item.value
                 }
               </tr>
@@ -90,11 +99,11 @@ export const PatientDetails = () => {
         <Link to={'/patients/data'} className="btn btn-primary text-white w-8 fw-semibold">
           Kembali
         </Link>
-        <Button 
+        <Button
           onClick={() => setModalDelete(true)}
           className={'btn-outline-primary w-8 fw-semibold border-2'}>Hapus</Button>
       </section>
-      
+
       {modalDelete &&
         <Transparent
           disabled={true}
