@@ -1,7 +1,3 @@
-import { useState } from 'react';
-import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
-
 // Components
 import Input from '../../components/ui/Form/Input';
 import { Button } from '../../components/ui/Button';
@@ -12,11 +8,8 @@ import lock from '../../assets/icon/lock.svg';
 import Logo from '../../assets/image/logo.png';
 import Banner from '../../assets/image/banner.png';
 import visibility from '../../assets/icon/visibility.svg';
-
-// Utils
-import client from '../../utils/auth';
-import { validateFormLogin } from '../../utils/validation';
-import { handleLoginError } from '../../utils/response-handler';
+import { handleLogin } from '../../services/login-service';
+import useForm from '../../hooks/useForm';
 
 export const LoginPage = () => {
   return (
@@ -40,29 +33,40 @@ export const LoginPage = () => {
   );
 };
 
+const initState = {
+  email: '',
+  password: '',
+  showPassword: false,
+}
+
+const initError = {
+  email: '',
+  password: '',
+  default: '',
+}
+
 const LoginForm = () => {
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
-    default: '',
-  });
+  const {
+    form,
+    setForm,
+    errors,
+    setErrors,
+    loading,
+    setLoading
+  } = useForm(initState, initError);
 
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
+    setForm((prev) => ({
+      ...prev,
+      showPassword: !prev.showPassword
+    }));
   };
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
     const inputValue = type === 'checkbox' ? checked : value;
 
-    setFormData((prevData) => ({
+    setForm((prevData) => ({
       ...prevData,
       [name]: inputValue,
     }));
@@ -70,26 +74,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (validateFormLogin(formData, setErrors)) {
-      try {
-        setLoading(true);
-        const res = await client.post('/admins/login', formData);
-        if (res.status === 200) {
-          const { token } = res.data.results;
-          Cookies.set('token', token);
-          navigate('/')
-        } 
-      } catch (error) {
-        handleLoginError(error, setErrors);
-      } finally {
-        setLoading(false);
-        setFormData({
-          email: '',
-          password: '',
-        })
-      }
-    }
+    handleLogin(form, setErrors, setForm, setLoading);
   }
 
   return (
@@ -104,7 +89,7 @@ const LoginForm = () => {
           type="email"
           className="form-control form-control-lg"
           name="email"
-          value={formData.email}
+          value={form.email}
           placeholder="Masukkan email"
           onChange={handleInputChange}
         />
@@ -114,15 +99,15 @@ const LoginForm = () => {
         <label className="form-label fw-medium">Password</label>
         <div className="input-group">
           <input
-            type={showPassword ? 'text' : 'password'}
+            type={form.showPassword ? 'text' : 'password'}
             className="form-control form-control-lg"
             name="password"
-            value={formData.password}
+            value={form.password}
             placeholder="Masukkan password"
             onChange={handleInputChange}
           />
           <span className="input-group-text" onClick={togglePasswordVisibility}>
-            <img src={visibility} alt={showPassword ? 'hide' : 'show'} />
+            <img src={visibility} alt={form.showPassword ? 'hide' : 'show'} />
           </span>
         </div>
         <ErrorMsg msg={errors.password} />

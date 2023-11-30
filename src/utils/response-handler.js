@@ -1,6 +1,5 @@
 export const handleLoginError = (error, setErrors) => {
   if (error.response) {
-    console.log(error.response)
     const field = error?.response?.data?.meta?.message;
     switch (error.response.status) {
       case 401:
