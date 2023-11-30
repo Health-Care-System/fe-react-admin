@@ -21,7 +21,11 @@ export const formattedDate = (date) => {
 }
 
 export const formatDate = (inputDate) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  const formattedDate = new Date(inputDate).toLocaleDateString('id-ID', options);
-  return formattedDate;
+  if (inputDate !== '') {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date(inputDate).toLocaleDateString('id-ID', options);
+    return formattedDate;
+  } else {
+    return '-'
+  }
 }

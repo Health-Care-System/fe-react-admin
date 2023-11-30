@@ -1,9 +1,19 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { menus } from '../../utils/dataObject';
 import './Sidebar.css'
 import brandLogo from '../../assets/icon/brandLogo.png';
 import logoutIcon from '../../assets/icon/logout.svg';
+import { useState } from 'react';
+import Cookies from 'js-cookie';
+import { Transparent } from '../ui/Container';
+import { CustomModal } from '../ui/Modal/Modal';
 export const Sidebar = () => {
+  const [modal, setModal] = useState(false)
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    Cookies.remove('token');
+    navigate('/login');
+  }
 
   return (
     <>
@@ -38,15 +48,24 @@ export const Sidebar = () => {
             )
           })}
         </ul>
-
-        {/* Button Logout  */}
-        <btn className='btnWrapper'>
-          <div className='logoutBtn d-flex btn'>
+          <btn onClick={() => setModal(true)} className='logoutBtn mt-3 text-primary d-flex btn'>
             <p>Logout</p>
             <img src={logoutIcon} alt='Logout' />
-          </div>
-        </btn>
-
+          </btn>
+          
+          {modal &&
+          <Transparent
+            disabled={true}
+            className='min-vw-100'
+          >
+            <CustomModal
+              title={'Ingin Keluar?'}
+              content={'Apabila anda keluar maka anda tidak dapat menerima pasien.'}
+              confirmAction={handleLogout}
+              cancelAction={() => setModal(false)}
+            />
+          </Transparent>
+        }
       </aside>
     </>
   )

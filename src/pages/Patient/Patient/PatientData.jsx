@@ -38,6 +38,7 @@ export const PatientData = () => {
     isError,
     refetch
   } = useGetAllPatients();
+  console.log(data)
   
   // useForm adalah sebuah custom hooks untuk form, yang sudah dibekali dengan handleInput untuk onChange
   const {
