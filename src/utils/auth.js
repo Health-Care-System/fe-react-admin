@@ -2,7 +2,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const client = axios.create();
-
 client.interceptors.request.use(function (config) {
   const token = Cookies.get('token');
   config.headers['X-API-KEY'] = `Bearer ${token}`;
@@ -13,18 +12,6 @@ client.interceptors.request.use(function (config) {
   return Promise.reject(error);
 })
 
-client.interceptors.response.use(function (response) {
-  return response;
-}, function (error) {
-  if (error.response) {
-    const { status } = error.response;
-
-    if (status === 401) {
-      Cookies.remove('token');
-    }
-  }
-});
-
 client.interceptors.response.use(
   function (response) {
     return response;
@@ -32,9 +19,9 @@ client.interceptors.response.use(
   function (error) {
     if (error.response) {
       const { status } = error.response;
-
       if (status === 401) {
         Cookies.remove("token");
+        window.location.href = '/login';
       }
     }
 
