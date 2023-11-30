@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "../ui/Button"
 import { ColumnSkeleton } from "../ui/Skeleton/ColumnSkeleton"
 
@@ -12,6 +13,21 @@ export const RowTable = ({
   totalCol,
   totalRow
 }) => {
+  const [showEmptyMessage, setShowEmptyMessage] = useState(false);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowEmptyMessage(true);
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+  
+  if (isPending) {
+    return (
+      <ColumnSkeleton totalRow={totalRow} totalCol={totalCol} />
+    )
+  }
+  
   if (isError) {
     return (
       <TableRow>
@@ -23,13 +39,8 @@ export const RowTable = ({
     )
   }
 
-  if (isPending) {
-    return (
-      <ColumnSkeleton totalRow={totalRow} totalCol={totalCol} />
-    )
-  }
 
-  if (data.results?.length < 1) {
+  if (showEmptyMessage && data?.length === 0) {
     return (
       <>
         <tr>
@@ -41,9 +52,10 @@ export const RowTable = ({
 
   return (
     <>
-      {data.results?.map((data, index) => (
+      {data?.map((data, index) => (
         renderItem(data, index)
-      ))}
+      ))
+      }
     </>
   )
 

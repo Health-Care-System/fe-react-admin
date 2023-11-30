@@ -1,40 +1,80 @@
-import { Link } from "react-router-dom";
-import { Button } from "../../../components/ui/Button";
+// Packages
+import { useState } from "react";
+import Skeleton from "react-loading-skeleton";
+import { Link, useParams } from "react-router-dom";
+
+// Components
 import { Column } from "../components/Column";
 import { StatusBtn } from "../components/StatusBtn";
 import { ImageModal } from "../components/ImageModal";
+import { Button } from "../../../components/ui/Button";
 import { formattedDate } from "../../../utils/helpers";
-import { theadDoctorDetails, theadDrugDetails } from "../../../utils/dataObject";
+import { Transparent } from "../../../components/ui/Container";
+import { CustomModal } from "../../../components/ui/Modal/Modal";
+
+// Utility & services
+import { 
+  theadDoctorDetails, 
+  theadDrugDetails 
+} from "../../../utils/dataObject";
 import {
   useGetAllDoctorTransaction,
-  useGetAllDrugTransaction
+  useGetAllDrugTransaction,
+  useGetPatientsDetails
 } from "../../../services/patient-services";
+import client from "../../../utils/auth";
 
 export const PatientDetails = () => {
-  const title = ['ID', 'Nama Lengkap', 'Email', 'Gender', 'Tanggal Lahir', 'Gol. Darah', 'Berat Badan', 'Tinggi Badan'];
-  const values = [123, 'Rizal Nugraha', 'rizal@example.com', 'Male', '2000-01-01', 'O', 70, 175];
-
-  const data = title.map((label, index) => ({
-    label,
-    value: values[index],
-  }));
+  const [modalDelete, setModalDelete] = useState(false);
+  const [loading, setLoading] = useState(false);
+  let { userId } = useParams();
+  const {
+    dataUser,
+    isPending,
+  } = useGetPatientsDetails(userId);
+  
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      // const res = await client.delete(`/admins/user/${userId}`);
+      // console.log(res);
+    } catch (error) {
+      console.log(error.response);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+        setModalDelete(false);
+      }, 2000)
+    }
+  }
+  
+  console.log(loading);
+  
   return (
     <>
-      <section className=" mx-4">
+      <section className="mx-4">
         <table className="row">
           <tbody className="col-12 col-lg-6">
-            {data.slice(0, 4).map((item, index) => (
+            {dataUser?.slice(0, 4)?.map((item, index) => (
               <tr key={index} className="d-flex">
                 <td className="fw-semibold fs-2 title-width">{item.label}</td>
-                <td className="w-auto">{item.value}</td>
+                <td className="w-auto">
+                  {isPending
+                    ? <Skeleton height={20} width={200} /> 
+                    : item.value
+                  }
+                </td>
               </tr>
             ))}
           </tbody>
           <tbody className="col-12 col-lg-6">
-            {data.slice(4).map((item, index) => (
+            {dataUser?.slice(4)?.map((item, index) => (
               <tr key={index} className=" d-flex">
                 <td className=" fw-semibold fs-2 title-width">{item.label}</td>
-                <td className="w-auto">{item.value}</td>
+                {isPending
+                  ? <Skeleton height={20} width={200} /> 
+                  : item.value
+                }
               </tr>
             ))}
           </tbody>
@@ -46,12 +86,29 @@ export const PatientDetails = () => {
         <TableDrugDetails />
       </section>
 
-      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom bg-base py-5">
+      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom z-0 bg-base py-5">
         <Link to={'/patients/data'} className="btn btn-primary text-white w-8 fw-semibold">
           Kembali
         </Link>
-        <Button className={'btn-outline-primary w-8 fw-semibold border-2'}>Hapus</Button>
+        <Button 
+          onClick={() => setModalDelete(true)}
+          className={'btn-outline-primary w-8 fw-semibold border-2'}>Hapus</Button>
       </section>
+      
+      {modalDelete &&
+        <Transparent
+          disabled={true}
+          className='min-vw-100 start-0 position-fixed end-0'
+        >
+          <CustomModal
+            disabled={loading}
+            title={'Hapus Pasien?'}
+            content={'Apabila anda menghapus Pasien, maka data Pasien akan hilang'}
+            confirmAction={handleDelete}
+            cancelAction={() => setModalDelete(false)}
+          />
+        </Transparent>
+      }
     </>
   )
 }
@@ -77,20 +134,20 @@ const TableDoctorDetails = () => {
           data={data}
           search={''}
           renderItem={(data, index) => {
-            const date = formattedDate(data.date);
-            const subTotal = data.total.toLocaleString('ID-id');
+            const date = formattedDate(data?.date);
+            const subTotal = data?.total?.toLocaleString('ID-id');
             return (
               <tr className="text-nowrap" key={index}>
-                <td>{data.id}</td>
-                <td>{data.idDoctor}</td>
-                <td>{data.payment}</td>
+                <td>{data?.id}</td>
+                <td>{data?.idDoctor}</td>
+                <td>{data?.payment}</td>
                 <td>{`Rp ${subTotal}`}</td>
                 <td>{date}</td>
                 <td>
                   <ImageModal />
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn status={data.status} />
+                  <StatusBtn status={data?.status} />
                 </td>
               </tr>
             )
@@ -122,19 +179,19 @@ const TableDrugDetails = () => {
           data={data}
           search={''}
           renderItem={(data, index) => {
-            const date = formattedDate(data.date);
-            const subTotal = data.total.toLocaleString('ID-id');
+            const date = formattedDate(data?.date);
+            const subTotal = data?.total?.toLocaleString('ID-id');
             return (
               <tr className="text-nowrap" key={index}>
-                <td>{data.id}</td>
-                <td>{data.payment}</td>
+                <td>{data?.id}</td>
+                <td>{data?.payment}</td>
                 <td>{`Rp ${subTotal}`}</td>
                 <td>{date}</td>
                 <td>
                   <ImageModal />
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn status={data.status} />
+                  <StatusBtn status={data?.status} />
                 </td>
               </tr>
             )

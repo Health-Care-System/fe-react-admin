@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios";
+import client from "../utils/auth";
+import { useGetQuery } from "../hooks/useGetQuery";
+import { titleUserDetail } from "../utils/dataObject";
 
 export const useGetAllDoctorTransaction = () => {
   const doctorTransaction = useQuery({
@@ -26,7 +29,7 @@ export const useGetAllPatients = () => {
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/patients');
+      const res = await client.get('/admins/users');
       return res.data;
     }
   })
@@ -37,3 +40,55 @@ export const useGetAllPatients = () => {
     refetch
   };
 }
+
+export const useGetPatientsDetails = (userId) => {
+  const {
+    data,
+    isPending,
+    isError,
+    refetch
+  } = useGetQuery('userDetails', `/admins/user/${userId}`);
+
+  const { 
+    id, 
+    fullname,
+    email,
+    gender,
+    birtdate,
+    blood_type,
+    weight,
+    height
+  } = data?.results ?? {};
+  const values = [ id, fullname, email, gender, birtdate, blood_type, weight,height];
+
+  const dataUser = titleUserDetail.map((label, index) => ({
+    label,
+    value: values[index],
+  }));
+  
+  return {
+    dataUser,
+    isError,
+    isPending,
+    refetch
+  }
+  
+}
+
+export const getUserById = async (userId) => {
+  const res = await client.get(`/admins/user/${userId}`);
+  return res?.data;
+}
+
+
+export const getDataUserById = async (setLoadingSearch, setFilterData, userId) => {
+  try {
+    setLoadingSearch(true);
+    const data = await getUserById(userId);
+    setFilterData(data && data.results ? [data.results] : []);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  } finally {
+    setLoadingSearch(false);
+  }
+};
