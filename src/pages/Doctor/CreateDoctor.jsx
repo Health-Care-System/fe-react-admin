@@ -43,7 +43,7 @@ export const CreateDoctor = () => {
     no_str: "",
   };
 
-  const { form, setForm, error, setError, handleInput, setLoading, loading } =
+  const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
     useForm(initialState, initialError);
 
   const options = [
@@ -62,8 +62,8 @@ export const CreateDoctor = () => {
     const file = e.target.files[0];
     if (file) {
       if (!validateExtImage(file)) {
-        setError({
-          ...error,
+        setErrors({
+          ...errors,
           profile_picture:
             "Hanya file dengan ekstensi .jpg, .jpeg, dan .png yang diperbolehkan.",
         });
@@ -85,8 +85,8 @@ export const CreateDoctor = () => {
         profile_picture: null,
         tempImage: null,
       });
-      setError({
-        ...error,
+      setErrors({
+        ...errors,
         profile_picture: null,
       });
     }
@@ -98,8 +98,8 @@ export const CreateDoctor = () => {
       profile_picture: null,
       tempImage: null,
     });
-    setError({
-      ...error,
+    setErrors({
+      ...errors,
       profile_picture: null,
     });
   };
@@ -121,7 +121,7 @@ export const CreateDoctor = () => {
       data.append("alumnus", form.alumnus);
       data.append("no_str", form.no_str);
 
-      if (validateAddDoctorForm(form, setError)) {
+      if (validateAddDoctorForm(form, setErrors)) {
         try {
           setLoading(true);
           const res = await client.post("/admins/register/doctor", data);
@@ -168,7 +168,7 @@ export const CreateDoctor = () => {
                 </div>
               </>
             )}
-            <ErrorMsg msg={error.profile_picture} />
+            <ErrorMsg msg={errors.profile_picture} />
             <div className="btn-group-vertical float-end">
               <label htmlFor="upload-photo" className="btn btn-light">
                 Unggah Foto
@@ -200,7 +200,7 @@ export const CreateDoctor = () => {
                 value={form.fullname}
                 onChange={(e) => handleInput(e)}
               />
-              <ErrorMsg msg={error.fullname} className={"text-end "} />
+              <ErrorMsg msg={errors.fullname} className={"text-end "} />
             </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
@@ -214,7 +214,7 @@ export const CreateDoctor = () => {
                 value={form.email}
                 onChange={(e) => handleInput(e)}
               />
-              <ErrorMsg msg={error.email} className={"text-end "} />
+              <ErrorMsg msg={errors.email} className={"text-end "} />
             </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
@@ -239,7 +239,7 @@ export const CreateDoctor = () => {
                   />
                 </span>
               </div>
-              <ErrorMsg msg={error.password} className={"text-end "} />
+              <ErrorMsg msg={errors.password} className={"text-end "} />
             </div>
 
             <div className="row align-items-md-center gap-2 ">
@@ -269,7 +269,7 @@ export const CreateDoctor = () => {
                 </div>
               </div>
 
-              <ErrorMsg msg={error.gender} className={"text-end "} />
+              <ErrorMsg msg={errors.gender} className={"text-end "} />
             </div>
 
             <div className="row align-items-md-center gap-2 ">
@@ -286,7 +286,7 @@ export const CreateDoctor = () => {
                 name="specialist"
                 value={form.specialist}
               />
-              <ErrorMsg msg={error.specialist} className={"text-end "} />
+              <ErrorMsg msg={errors.specialist} className={"text-end "} />
             </div>
 
             <div className="row align-items-md-center gap-2 ">
@@ -300,7 +300,7 @@ export const CreateDoctor = () => {
                 name="birthDate"
                 value={form.birthDate}
               />
-              <ErrorMsg msg={error.birthDate} className={"text-end "} />
+              <ErrorMsg msg={errors.birthDate} className={"text-end "} />
             </div>
 
             {/* <div className="row align-items-md-center gap-2 ">
@@ -330,7 +330,7 @@ export const CreateDoctor = () => {
                 name="experience"
                 value={form.experience}
               />
-              <ErrorMsg msg={error.experience} className={"text-end "} />
+              <ErrorMsg msg={errors.experience} className={"text-end "} />
             </div>
 
             <div className="row align-items-md-center gap-2 ">
@@ -345,7 +345,7 @@ export const CreateDoctor = () => {
                 name="alumnus"
                 value={form.alumnus}
               />
-              <ErrorMsg msg={error.alumnus} className={"text-end "} />
+              <ErrorMsg msg={errors.alumnus} className={"text-end "} />
             </div>
 
             <div className="row align-items-md-center gap-2 ">
@@ -360,7 +360,7 @@ export const CreateDoctor = () => {
                 name="no_str"
                 value={form.no_str}
               />
-              <ErrorMsg msg={error.no_str} className={"text-end "} />
+              <ErrorMsg msg={errors.no_str} className={"text-end "} />
             </div>
           </form>
         </div>
