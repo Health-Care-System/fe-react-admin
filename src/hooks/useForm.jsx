@@ -2,7 +2,11 @@ import { useState } from "react";
 
 const useForm = (initialState, initialError) => {
   const [form, setForm] = useState(initialState);
+<<<<<<< HEAD
   const [error, setError] = useState(initialError)
+=======
+  const [errors, setErrors] = useState(initialError);
+>>>>>>> 350d5f91f016ea1535df58f512eb6ec06b288b2a
   const [loading, setLoading] = useState(false);
 
   const handleInput = (e) => {
@@ -16,8 +20,13 @@ const useForm = (initialState, initialError) => {
   return {
     form,
     setForm,
+<<<<<<< HEAD
     error,
     setError,
+=======
+    errors,
+    setErrors,
+>>>>>>> 350d5f91f016ea1535df58f512eb6ec06b288b2a
     handleInput,
     setLoading,
     loading
