@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-const useForm = (initialState) => {
+const useForm = (initialState, initialError) => {
   const [form, setForm] = useState(initialState);
+  const [error, setError] = useState(initialError)
   const [loading, setLoading] = useState(false);
 
   const handleInput = (e) => {
@@ -14,8 +15,10 @@ const useForm = (initialState) => {
   
   return {
     form,
-    handleInput,
     setForm,
+    error,
+    setError,
+    handleInput,
     setLoading,
     loading
   }

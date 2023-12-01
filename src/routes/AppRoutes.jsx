@@ -11,13 +11,13 @@ import { DetailDoctor } from '../pages/Doctor/DetailDoctor';
 import { EditDoctor } from '../pages/Doctor/EditDoctor';
 import { PatientData } from '../pages/Patient/Patient/PatientData';
 import { PatientTransaction } from '../pages/Patient/Transaction/PatientTransaction';
-import { PrivateRoute } from './PrivateRoute';
+// import { PrivateRoute } from './PrivateRoute';
 import { PatientDetails } from '../pages/Patient/Patient/PatientDetails';
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/login" element={<LoginPage />} />
-    <Route element={<PrivateRoute />}>
+    {/* <Route element={<PrivateRoute />}> */}
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/drugs" element={<DrugPage />} />
@@ -32,7 +32,7 @@ const AppRoutes = () => (
         <Route path="/doctors/edit-doctor" element={<EditDoctor />} />
         <Route path="/settings" element={<SettingPage />} />
       </Route>
-    </Route>
+    {/* </Route> */}
   </Routes>
 );
 
