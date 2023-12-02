@@ -11,8 +11,46 @@ import {
 } from "../../utils/validation";
 import { ErrorMsg } from "../../components/Errors/ErrorMsg";
 import client from "../../utils/auth";
+import { CustomModal } from "../../components/ui/Modal/Modal";
+import { Transparent } from "../../components/ui/Container";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const CreateDoctor = () => {
+  const [modalDelete, setModalDelete] = useState(false);
+
+  const handleDeletePhoto = () => {
+    if (!form.tempImage) {
+      toast.error('Belum ada foto yang diinputkan', {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    setModalDelete(true);
+  };
+  
+  const handleDelete = () => {
+    setForm({
+      ...form,
+      profile_picture: null,
+      tempImage: null,
+    });
+    setErrors({
+      ...errors,
+      profile_picture: null,
+    });
+    
+    setModalDelete(false);
+  };
+  
+
   const initialState = {
     profile_picture: null,
     fullname: "",
@@ -92,19 +130,9 @@ export const CreateDoctor = () => {
     }
   };
 
-  const handleRemovePhoto = () => {
-    setForm({
-      ...form,
-      profile_picture: null,
-      tempImage: null,
-    });
-    setErrors({
-      ...errors,
-      profile_picture: null,
-    });
-  };
 
   const handlePostDoctor = async () => {
+    console.log('Hallo');
     // REQ BODY
     try {
       const data = new FormData();
@@ -129,6 +157,16 @@ export const CreateDoctor = () => {
             },
           });
           console.log(res);
+          toast.error('Data dokter berhasil diperbaharui', {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
         } catch (error) {
           console.log(error);
         } finally {
@@ -150,6 +188,7 @@ export const CreateDoctor = () => {
                 <img
                   src={form.tempImage}
                   alt="photo"
+                  className="rounded-4 "
                   style={{ maxHeight: "13.75rem", maxWidth: "16.125rem" }}
                 />
               </div>
@@ -183,7 +222,10 @@ export const CreateDoctor = () => {
                 onChange={(e) => handleFileInputChange(e)}
                 style={{ display: "none" }}
               />
-              <Button onClick={handleRemovePhoto} className="btn-light">
+              <Button
+                onClick={handleDeletePhoto}
+                className="btn-light"
+              >
                 Hapus Foto
               </Button>
             </div>
@@ -203,7 +245,9 @@ export const CreateDoctor = () => {
                 value={form.fullname}
                 onChange={(e) => handleInput(e)}
               />
-              <ErrorMsg msg={errors.fullname} className={"text-end "} />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.fullname} />
             </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
@@ -217,7 +261,9 @@ export const CreateDoctor = () => {
                 value={form.email}
                 onChange={(e) => handleInput(e)}
               />
-              <ErrorMsg msg={errors.email} className={"text-end "} />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.email} />
             </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
@@ -242,9 +288,10 @@ export const CreateDoctor = () => {
                   />
                 </span>
               </div>
-              <ErrorMsg msg={errors.password} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.password} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
                 Jenis Kelamin
@@ -271,10 +318,10 @@ export const CreateDoctor = () => {
                   <label htmlFor="female">Wanita</label>
                 </div>
               </div>
-
-              <ErrorMsg msg={errors.gender} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.gender} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
               <label
                 htmlFor="specialist"
@@ -289,9 +336,10 @@ export const CreateDoctor = () => {
                 name="specialist"
                 value={form.specialist}
               />
-              <ErrorMsg msg={errors.specialist} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.specialist} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
                 Harga Konsultasi
@@ -304,9 +352,10 @@ export const CreateDoctor = () => {
                 name="price"
                 value={form.price}
               />
-              <ErrorMsg msg={errors.price} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.price} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 text-end col-lg-3 px-0 ">
                 Pengalaman Kerja
@@ -319,9 +368,10 @@ export const CreateDoctor = () => {
                 name="experience"
                 value={form.experience}
               />
-              <ErrorMsg msg={errors.experience} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.experience} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 text-end px-0 ">
                 Alumnus
@@ -334,9 +384,10 @@ export const CreateDoctor = () => {
                 name="alumnus"
                 value={form.alumnus}
               />
-              <ErrorMsg msg={errors.alumnus} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.alumnus} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 px-0 text-end col-lg-3 ">
                 Nomor STR
@@ -349,7 +400,9 @@ export const CreateDoctor = () => {
                 name="no_str"
                 value={form.no_str}
               />
-              <ErrorMsg msg={errors.no_str} className={"text-end "} />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.no_str} />
             </div>
           </form>
         </div>
@@ -371,7 +424,7 @@ export const CreateDoctor = () => {
         <Button
           className="bg-primary border-3 text-white "
           type="submit"
-          onClick={handlePostDoctor}
+          onClick={() => handlePostDoctor()}
         >
           {loading ? (
             <span
@@ -383,6 +436,21 @@ export const CreateDoctor = () => {
           )}
         </Button>
       </div>
+      
+      {form.tempImage && modalDelete && (
+        <Transparent
+          disabled={true}
+          className="min-vw-100 position-fixed end-0"
+        >
+          <CustomModal
+            disabled={loading}
+            title={"Hapus Foto?"}
+            content={"Apabila anda menghapus Foto, maka foto akan terhapus"}
+            confirmAction={() => handleDelete()}
+            cancelAction={() => setModalDelete(false)}
+          />
+        </Transparent>
+      )}
     </section>
   );
 };

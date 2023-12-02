@@ -9,6 +9,15 @@
 	border: 1px solid #505ACB !important;
 }
 
+.input-styles::after {
+	top: 1rem !important;
+	position: absolute !important; 
+}
+
+.input-styles option {
+	padding: 5px !important;
+  }
+
 .list-input {
 	width: 100%;
 	padding: 0 1rem;
