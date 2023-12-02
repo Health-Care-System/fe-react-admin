@@ -21,8 +21,7 @@ export const CreateDoctor = () => {
     showPassword: false,
     gender: "",
     specialist: "",
-    birthDate: "",
-    phoneNumber: "",
+    price: "",
     experience: "",
     alumnus: "",
     no_str: "",
@@ -36,8 +35,7 @@ export const CreateDoctor = () => {
     showPassword: false,
     gender: "",
     specialist: "",
-    birthDate: "",
-    phoneNumber: "",
+    price: "",
     experience: "",
     alumnus: "",
     no_str: "",
@@ -47,8 +45,10 @@ export const CreateDoctor = () => {
     useForm(initialState, initialError);
 
   const options = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
+    { value: "dokterUmum", label: "Dokter Umum" },
+    { value: "spesialisAnak", label: "Spesialis Anak" },
+    { value: "dokterKulit", label: "Dokter Kulit" },
+    { value: "psikologKlinis", label: "Psikolog Klinis" },
   ];
 
   const togglePasswordVisibility = () => {
@@ -115,8 +115,7 @@ export const CreateDoctor = () => {
       data.append("password", form.password);
       data.append("gender", form.gender);
       data.append("specialist", form.specialist);
-      // data.append("birthDate", form.birthDate);
-      // data.append("phoneNumber", form.phoneNumber);
+      data.append("price", form.price);
       data.append("experience", form.experience);
       data.append("alumnus", form.alumnus);
       data.append("no_str", form.no_str);
@@ -124,9 +123,13 @@ export const CreateDoctor = () => {
       if (validateAddDoctorForm(form, setErrors)) {
         try {
           setLoading(true);
-          const res = await client.post("/admins/register/doctor", data);
+          const res = await client.post("/admins/register/doctor", data, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
           console.log(res);
-        } catch (error) { 
+        } catch (error) {
           console.log(error);
         } finally {
           setLoading(false);
@@ -251,21 +254,21 @@ export const CreateDoctor = () => {
                   <Input
                     type="radio"
                     name="gender"
-                    value="pria"
-                    checked={form.gender === "pria"}
+                    value="male"
+                    checked={form.gender === "male"}
                     onChange={(e) => handleInput(e)}
                   />
-                  <label htmlFor="pria">Pria</label>
+                  <label htmlFor="male">Pria</label>
                 </div>
                 <div className="d-flex gap-2 ">
                   <Input
                     type="radio"
                     name="gender"
-                    value="wanita"
-                    checked={form.gender === "wanita"}
+                    value="female"
+                    checked={form.gender === "female"}
                     onChange={(e) => handleInput(e)}
                   />
-                  <label htmlFor="wanita">Wanita</label>
+                  <label htmlFor="female">Wanita</label>
                 </div>
               </div>
 
@@ -291,32 +294,18 @@ export const CreateDoctor = () => {
 
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
-                Tanggal Lahir
+                Harga Konsultasi
               </label>
               <Input
-                type="date"
-                onChange={(e) => handleInput(e)}
-                className="form-control p-3 col-12 col-lg input-styles"
-                name="birthDate"
-                value={form.birthDate}
-              />
-              <ErrorMsg msg={errors.birthDate} className={"text-end "} />
-            </div>
-
-            {/* <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
-                No Telepon
-              </label>
-              <Input
-                type="text"
+                type="number"
                 className="form-control p-3 col-12 col-lg input-styles "
                 onChange={(e) => handleInput(e)}
-                placeholder="Masukkan Nomor Telepon"
-                name="phoneNumber"
-                value={form.phoneNumber}
+                placeholder="Harga Konsultasi Dokter"
+                name="price"
+                value={form.price}
               />
-              <ErrorMsg msg={error.phoneNumber} className={"text-end "} />
-            </div> */}
+              <ErrorMsg msg={errors.price} className={"text-end "} />
+            </div>
 
             <div className="row align-items-md-center gap-2 ">
               <label className="fw-bold col-12 text-end col-lg-3 px-0 ">

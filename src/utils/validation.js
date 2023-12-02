@@ -35,8 +35,8 @@ export const validateAddDoctorForm = (formData, setErrors) => {
     password: "",
     gender: "",
     specialist: "",
-    birthDate: "",
-    // phoneNumber: "",
+    birthdate: "",
+    price: "",
     experience: "",
     alumnus: "",
     no_str: "",
@@ -76,15 +76,15 @@ export const validateAddDoctorForm = (formData, setErrors) => {
     valid = false;
   }
 
-  if(!formData.birthDate) {
-    newErrors.birthDate = 'Tanggal lahir wajib diisi!';
+  if(!formData.birthdate) {
+    newErrors.birthdate = 'Tanggal lahir wajib diisi!';
     valid = false;
   }
 
-  // if(!formData.phoneNumber) {
-  //   newErrors.phoneNumber = 'Nomor telepon wajib diisi!';
-  //   valid = false;
-  // }
+  if(!formData.price) {
+    newErrors.price = 'Biaya Konsultasi wajib diisi!';
+    valid = false;
+  }
 
   if(!formData.experience) {
     newErrors.experience = 'Pengalaman wajib diisi!';
