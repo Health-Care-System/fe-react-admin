@@ -35,7 +35,6 @@ export const validateAddDoctorForm = (formData, setErrors) => {
     password: "",
     gender: "",
     specialist: "",
-    birthdate: "",
     price: "",
     experience: "",
     alumnus: "",
@@ -73,11 +72,6 @@ export const validateAddDoctorForm = (formData, setErrors) => {
 
   if(!formData.specialist) {
     newErrors.specialist = 'Spesialis wajib diisi!';
-    valid = false;
-  }
-
-  if(!formData.birthdate) {
-    newErrors.birthdate = 'Tanggal lahir wajib diisi!';
     valid = false;
   }
 

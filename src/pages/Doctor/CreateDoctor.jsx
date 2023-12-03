@@ -132,9 +132,7 @@ export const CreateDoctor = () => {
 
 
   const handlePostDoctor = async () => {
-    console.log('Hallo');
     // REQ BODY
-    try {
       const data = new FormData();
       data.append("profile_picture", form.profile_picture);
       data.append("price", 700000);
@@ -150,14 +148,11 @@ export const CreateDoctor = () => {
 
       if (validateAddDoctorForm(form, setErrors)) {
         try {
+          console.log('halo');
           setLoading(true);
-          const res = await client.post("/admins/register/doctor", data, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
+          const res = await client.post("/admins/doctors/register", data);
           console.log(res);
-          toast.error('Data dokter berhasil diperbaharui', {
+          toast.success("Data dokter berhasil diperbaharui", {
             position: "bottom-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -173,9 +168,6 @@ export const CreateDoctor = () => {
           setLoading(false);
         }
       }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -424,7 +416,7 @@ export const CreateDoctor = () => {
         <Button
           className="bg-primary border-3 text-white "
           type="submit"
-          onClick={() => handlePostDoctor()}
+          onClick={handlePostDoctor}
         >
           {loading ? (
             <span
