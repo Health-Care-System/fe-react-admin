@@ -95,7 +95,7 @@ export const PatientDetails = () => {
         <TableDrugDetails />
       </section>
 
-      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom z-0 bg-base py-5">
+      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom z-0 bg-base py-3">
         <Link to={'/patients/data'} className="btn btn-primary text-white w-8 fw-semibold">
           Kembali
         </Link>
