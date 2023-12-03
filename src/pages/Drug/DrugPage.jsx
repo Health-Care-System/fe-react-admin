@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import deleteIcon from "../../assets/icon/delete-icon.svg";
 import search from "../../assets/icon/round-search.svg";
 import plus from "../../assets/icon/count_plus.svg";
+import dangerIcon from "../../assets/icon/dangerIcon.png";
+import AddPhoto from "../../assets/icon/addPhoto.svg";
 
 import "./drug-page.css";
 import client from "../../utils/auth";
@@ -17,10 +19,33 @@ export const DrugPage = () => {
     type: "",
     stock: "",
     price: 0,
+    details: "",
   });
 
   const [dataArray, setDataArray] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const imageUploadRef = useRef(null);
+
+  const handleRowClick = (data) => {
+    setIsEditing(true);
+    setSelectedItem(data);
+    setFormData({
+      image: null,
+      code: data.code,
+      name: data.name,
+      merk: data.merk,
+      category: data.category,
+      type: data.type,
+      stock: data.stock,
+      price: data.price,
+      details: data.details,
+    });
+    setShowEditModal(true);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,20 +61,34 @@ export const DrugPage = () => {
     fetchData();
   }, []);
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData({ ...formData, [name]: value });
-  // };
-
   const handleInputChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setFormData({ ...formData, image: file });
+  // };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setFormData({ ...formData, image: file });
+
+    // Membuat preview gambar
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null); // Reset preview jika tidak ada gambar
+    }
   };
 
+  const handlePlaceholderClick = () => {
+    imageUploadRef.current.click();
+  };
   // const handleSave = () => {
   //   alert("handleSave called");
   //   setDataArray([...dataArray, { ...formData }]);
@@ -65,24 +104,65 @@ export const DrugPage = () => {
   //   });
   // };
 
+  // const handleSave = () => {
+  //   const data = new FormData();
+  //   data.append("image", formData.image)
+  //   data.append("code", formData.code)
+  //   data.append("name", formData.name)
+  //   data.append("merk", formData.merk)
+  //   data.append("category", formData.category)
+  //   data.append("type", formData.type)
+  //   data.append("stock", formData.stock)
+  //   data.append("price", formData.price)
+  //   data.append("details", "Obat - obatan")
+
+  //   client
+  //     .post("/admins/medicines", data)
+  //     .then((res) => {
+  //       console.log(res)
+  //       // setFormData((prevData) => [...prevData, res.data?.results]);
+  //       alert("Anda berhasil menambahkan produk");
+  //       setFormData({
+  //         image: null,
+  //         code: "",
+  //         name: "",
+  //         merk: "",
+  //         category: "",
+  //         type: "",
+  //         stock: "",
+  //         price: 0,
+  //       });
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
   const handleSave = () => {
     const data = new FormData();
-    data.append("image", formData.image)
-    data.append("code", formData.code)
-    data.append("name", formData.name)
-    data.append("merk", formData.merk)
-    data.append("category", formData.category)
-    data.append("type", formData.type)
-    data.append("stock", formData.stock)
-    data.append("price", formData.price)
-    data.append("details", "Obat - obatan")
-  
-    client
-      .post("/admins/medicines", data)
+    data.append("image", formData.image);
+    data.append("code", formData.code);
+    data.append("name", formData.name);
+    data.append("merk", formData.merk);
+    data.append("category", formData.category);
+    data.append("type", formData.type);
+    data.append("stock", formData.stock);
+    data.append("price", formData.price);
+    data.append("details", formData.details);
+
+    const saveEndpoint = isEditing
+      ? `/admins/medicines/${selectedItem.id}`
+      : "/admins/medicines";
+    const requestMethod = isEditing ? "put" : "post";
+
+    client[requestMethod](saveEndpoint, data)
       .then((res) => {
-        console.log(res)
-        // setFormData((prevData) => [...prevData, res.data?.results]);
-        alert("Anda berhasil menambahkan produk");
+        console.log(res);
+        alert(
+          isEditing
+            ? "Produk berhasil diperbarui"
+            : "Anda berhasil menambahkan produk"
+        );
+        setIsEditing(false);
+        setSelectedItem(null);
         setFormData({
           image: null,
           code: "",
@@ -92,15 +172,32 @@ export const DrugPage = () => {
           type: "",
           stock: "",
           price: 0,
+          details: "",
         });
       })
       .catch((err) => console.log(err));
   };
 
-  const handleDelete = (index) => {
-    const newDataArray = [...dataArray];
-    newDataArray.splice(index, 1);
-    setDataArray(newDataArray);
+  const handleDelete = () => {
+    if (selectedItem) {
+      const deleteEndpoint = `/admins/medicines/${selectedItem.id}`;
+
+      client
+        .delete(deleteEndpoint)
+        .then((res) => {
+          console.log(res);
+          alert("Produk berhasil dihapus");
+          setShowEditModal(false);
+          setIsEditing(false);
+          setSelectedItem(null);
+
+          const newDataArray = dataArray.filter(
+            (item) => item.id !== selectedItem.id
+          );
+          setDataArray(newDataArray);
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   const filteredData = dataArray.filter((data) => {
@@ -153,6 +250,7 @@ export const DrugPage = () => {
               padding: "0.25rem 0.625rem",
               alignItems: "center",
             }}
+            onClick={() => setShowEditModal(true)}
             data-bs-toggle="modal"
             data-bs-target="#ModalTambahProduct"
           >
@@ -182,14 +280,44 @@ export const DrugPage = () => {
               </div>
               <div className="modal-body px-5">
                 <div className="mb-3 row">
-                  <div className="col-sm-9">
+                  <div className="col-sm-9 text-center">
                     <input
                       type="file"
                       className="form-control"
                       id="imageUpload"
                       accept="image/*"
                       onChange={handleImageChange}
+                      ref={imageUploadRef}
+                      style={{ display: "none" }}
                     />
+                    <div
+                      className="d-flex align-items-center justify-content-center mb-5 mt-3"
+                      onClick={handlePlaceholderClick}
+                    >
+                      {imagePreview ? (
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="mt-2 img-fluid border-primary rounded p-1"
+                          style={{
+                            maxWidth: "125px",
+                            marginLeft: "6rem",
+                            border: "1px dashed",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={AddPhoto}
+                          alt="Placeholder"
+                          className="mt-2 img-fluid p-4 rounded border-primary"
+                          style={{
+                            maxWidth: "125px",
+                            marginLeft: "6rem",
+                            border: "1px dashed",
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -304,6 +432,25 @@ export const DrugPage = () => {
                       />
                     </div>
                   </div>
+
+                  <div className="mb-3 row">
+                    <label
+                      htmlFor="details"
+                      className="col-sm-3 col-form-label"
+                    >
+                      details
+                    </label>
+                    <div className="col-sm-9">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="details"
+                        name="details"
+                        value={formData.details}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
                 </form>
               </div>
 
@@ -342,6 +489,8 @@ export const DrugPage = () => {
                       fontSize: "0.875rem",
                       fontWeight: "600",
                     }}
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalHapusProduk"
                   >
                     Hapus Produk
                   </button>
@@ -350,7 +499,92 @@ export const DrugPage = () => {
             </div>
           </div>
         </div>
-
+        {/* Modal Edit Product */}
+        {showEditModal && (
+          <div
+            className="modal fade"
+            id="ModalEditProductDynamic"
+            tabIndex={-1}
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                {/* ... (existing modal structure) */}
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="exampleModalLabel">
+                    Edit Produk
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setIsEditing(false);
+                      setSelectedItem(null);
+                      setFormData({
+                        image: null,
+                        code: "",
+                        name: "",
+                        merk: "",
+                        category: "",
+                        type: "",
+                        stock: "",
+                        price: 0,
+                        details: "",
+                      });
+                    }}
+                  />
+                </div>
+                {/* ... (existing modal content) */}
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="modal" tabIndex="-1" id="modalHapusProduk">
+          <div
+            className="modal-dialog modal-dialog-centered"
+            style={{ width: "18rem" }}
+          >
+            <div className="modal-content">
+              <div className="modal-header border-0">
+                <button
+                  type="button"
+                  className="btn-tidak"
+                  data-bs-dismiss="modal"
+                  aria-label="Tidak"
+                ></button>
+              </div>
+              <div className="modal-body text-center gap">
+                <img src={dangerIcon} alt="" className="mb-4" />
+                <h5>Hapus Produk?</h5>
+                <p>
+                  Apabila anda menghapus Produk, Maka data keseluruhan Produk
+                  akan hilang
+                </p>
+              </div>
+              <div className="modal-footer justify-content-center border-0">
+                <button
+                  type="button"
+                  className="btn btn-primary px-3 text-light"
+                  data-bs-dismiss="modal"
+                >
+                  Tidak
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-light px-4 border-primary border-2 text-primary fw-bold"
+                  onClick={handleDelete}
+                  data-bs-dismiss="modal"
+                >
+                  Ya
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div>
           <table className="table table-borderless table-striped">
             <thead>
@@ -367,7 +601,11 @@ export const DrugPage = () => {
             </thead>
             <tbody>
               {filteredData.map((data, index) => (
-                <tr key={index}>
+                <tr
+                  key={index}
+                  onClick={() => handleRowClick(data)}
+                  style={{ cursor: "pointer" }}
+                >
                   <td>{data.code}</td>
                   <td>{data.name}</td>
                   <td>{data.merk}</td>
