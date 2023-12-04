@@ -1,11 +1,11 @@
 import { Button } from "../../../components/ui/Button"
 
 export const StatusBtn = ({ status, handleAction, id }) => {  
-  if (status === 'Sukses') {
+  if (status === 'success') {
     return <StatusInfo status={'Diterima'} color={'#d0fad0'} />
   }
   
-  if (status === 'Tolak') {
+  if (status === 'cancelled') {
     return <StatusInfo status={'Ditolak'} color={'#fddcd2'} />
   }
   
@@ -15,11 +15,11 @@ export const StatusBtn = ({ status, handleAction, id }) => {
     <>
       <div className=" d-inline-flex gap-3">
         <Button 
-          onClick={() => handleAction('Tolak', id)}
+          onClick={() => handleAction('cancelled', id)}
           className={'btn-outline-primary border-2 fw-semibold'}>Tolak
         </Button>
         <Button 
-          onClick={() => handleAction('Sukses', id)}
+          onClick={() => handleAction('success', id)}
           className={'btn-primary text-white fw-semibold'}>
           Terima
         </Button>
