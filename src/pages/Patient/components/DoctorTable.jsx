@@ -4,8 +4,9 @@ import { useGetAllDoctorTransaction } from "../../../services/patient-services";
 
 // Utils & Services
 import useForm from "../../../hooks/useForm";
-import { formattedDate } from "../../../utils/helpers";
+import { formatDate } from "../../../utils/helpers";
 import { theadDoctor } from "../../../utils/dataObject";
+import { updateStatusOrderDoctor } from "../../../services/transaction-services";
 
 // Components
 import { Column } from "./Column";
@@ -13,13 +14,12 @@ import { StatusBtn } from "./StatusBtn";
 import { ImageModal } from "./ImageModal";
 import { TableContainer } from "./TableContainer";
 import { Button } from "../../../components/ui/Button";
-import { updateStatusOrder } from "../../../services/transaction-services";
 
 
 const initialState = {
   search: '',
   imageSrc: null,
-  modal: false,
+  modalImg: false,
 }
 
 export const DoctorTable = () => {
@@ -37,7 +37,7 @@ export const DoctorTable = () => {
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: updateStatusOrder,
+    mutationFn: updateStatusOrderDoctor,
     onError: error => {
       console.error(error);
     },
@@ -73,7 +73,7 @@ export const DoctorTable = () => {
   const handleModalLink = (src) => {
     setForm((prev) => ({
       ...prev,
-      modal: true,
+      modalImg: true,
       imageSrc: src
     }))
   }
@@ -81,7 +81,7 @@ export const DoctorTable = () => {
   const closeModal = () => {
     setForm((prev) => ({
       ...prev,
-      modal: false
+      modalImg: false
     }))
   }
 
@@ -109,7 +109,7 @@ export const DoctorTable = () => {
           search={form.search}
           ifEmpty={'Tidak ada riwayat transaksi konsultasi dokter!'}
           renderItem={(data, index) => {
-            const date = formattedDate(data?.created_at);
+            const date = formatDate(data?.created_at);
             const subTotal = data?.price?.toLocaleString('ID-id');
             return (
               <tr className="text-nowrap" key={index}>
@@ -140,8 +140,10 @@ export const DoctorTable = () => {
           }
         />
       </TableContainer>
-      {form.modal &&
-        <ImageModal closeModal={closeModal} source={form.imageSrc} />
+      {form.modalImg &&
+        <ImageModal 
+          closeModal={closeModal} 
+          source={form.imageSrc} />
       }
 
     </>
