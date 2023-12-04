@@ -6,14 +6,21 @@ import { genderFormat, titleUserDetail } from "../utils/dataObject";
 import { formatDate } from "../utils/helpers";
 
 export const useGetAllDoctorTransaction = () => {
-  const doctorTransaction = useQuery({
+  return useQuery({
     queryKey: ['doctorTransaction'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3100/transaction/doctor');
-      return res.data;
+      try {
+        const res = await client.get('/admins/doctor-payments');
+        return res.data;
+      } catch (error) { 
+        if (error.response.status === 404) {
+          return {
+            results: []
+          }
+        }
+      }
     }
   })
-  return doctorTransaction;
 }
 
 export const useGetAllDrugTransaction = () => {
