@@ -73,7 +73,7 @@ export const DaftarObat = () => {
           <table className="tabel-daftar-obat table table-striped" style={{ marginTop: "20px" }}>
             <thead>
               <tr>
-                <th scope="col">Nama Lengkap</th>
+                <th scope="col">Nama Obat</th>
                 <th scope="col">Stok Obat</th>
               </tr>
             </thead>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import bulletIcon from '../../assets/icon/patient.svg'
 
-export const DoctorPage = () => {
+export const DokterData = () => {
   const dokterData = [
     {
       id: "017",
@@ -72,7 +72,7 @@ export const DoctorPage = () => {
 
   return (
     <div
-      className="DoctorPage border border-2 rounded"
+      className="DokterData border border-2 rounded"
       style={{ marginRight: "21px", marginTop: "40px" }}
     >
       <div className="ListDoctor">
