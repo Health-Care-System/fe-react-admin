@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useGetAllDoctorTransaction } from "../../../services/patient-services";
 
 // Utils & Services
-import client from "../../../utils/auth";
 import useForm from "../../../hooks/useForm";
 import { formattedDate } from "../../../utils/helpers";
 import { theadDoctor } from "../../../utils/dataObject";
