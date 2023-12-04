@@ -3,7 +3,7 @@ import deleteIcon from "../../assets/icon/delete-icon.svg";
 import search from "../../assets/icon/round-search.svg";
 import plus from "../../assets/icon/count_plus.svg";
 import dangerIcon from "../../assets/icon/dangerIcon.png";
-import AddPhoto from "../../assets/icon/addPhoto.svg";
+import AddPhoto from "../../assets/icon/AddPhoto.svg";
 
 import "./drug-page.css";
 import client from "../../utils/auth";
@@ -50,7 +50,7 @@ export const DrugPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await client.get("/admins/medicines");
+        const response = await client.get("/admins/medicines?offset=0&limit=20");
         console.log("API Response:", response.data);
         setDataArray(response.data.results);
       } catch (error) {
@@ -250,7 +250,20 @@ export const DrugPage = () => {
               padding: "0.25rem 0.625rem",
               alignItems: "center",
             }}
-            onClick={() => setShowEditModal(true)}
+            onClick={() => {
+              setFormData({
+                image: null,
+                code: "",
+                name: "",
+                merk: "",
+                category: "",
+                type: "",
+                stock: "",
+                price: 0,
+                details: "",
+              })
+              setShowEditModal(true)
+            }}
             data-bs-toggle="modal"
             data-bs-target="#ModalTambahProduct"
           >
@@ -605,6 +618,8 @@ export const DrugPage = () => {
                   key={index}
                   onClick={() => handleRowClick(data)}
                   style={{ cursor: "pointer" }}
+                  data-bs-toggle="modal"
+                  data-bs-target="#ModalTambahProduct"
                 >
                   <td>{data.code}</td>
                   <td>{data.name}</td>
