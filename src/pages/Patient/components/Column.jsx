@@ -41,9 +41,11 @@ export const Column = ({
       </>
     )
   }
+  
 
   // const filterData = data?.results?.filter(item => item?.transaction_id?.includes(search));
   // console.log(filterData)
+  
   return (
     <>
       {data?.results?.map((data, index) => (

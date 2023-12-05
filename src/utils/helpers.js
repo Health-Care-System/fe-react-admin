@@ -9,20 +9,9 @@ export const formatNumber = (num) => {
   return num;
 };
 
-export const formattedDate = (date) => {
-  const utc = new Date(date);
-  const options = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  };
-  const formattedDate = utc.toLocaleDateString('ID-id', options);
-  return formattedDate;
-}
-
 export const formatDate = (inputDate) => {
   if (inputDate !== '') {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const formattedDate = new Date(inputDate).toLocaleDateString('id-ID', options);
     return formattedDate;
   } else {

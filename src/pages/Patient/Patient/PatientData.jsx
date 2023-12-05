@@ -38,7 +38,6 @@ export const PatientData = () => {
     isError,
     refetch
   } = useGetAllPatients();
-  console.log(data)
   
   // useForm adalah sebuah custom hooks untuk form, yang sudah dibekali dengan handleInput untuk onChange
   const {
@@ -67,6 +66,7 @@ export const PatientData = () => {
         )
     }
   }, [debouncedValue]);
+  
   return (
     <TableContainer
       name={'search'}
@@ -93,7 +93,7 @@ export const PatientData = () => {
           const date = formatDate(data?.birthdate)
           return (
             <tr
-              onClick={() => onNavigate(data.id)}
+              onClick={() => onNavigate(data?.id)}
               className="text-nowrap cursor-pointer"
               key={index}
             >

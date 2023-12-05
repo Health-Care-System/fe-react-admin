@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios";
 import client from "../utils/auth";
 import { useGetQuery } from "../hooks/useGetQuery";
 import { genderFormat, titleUserDetail } from "../utils/dataObject";
@@ -12,7 +11,7 @@ export const useGetAllDoctorTransaction = () => {
       try {
         const res = await client.get('/admins/doctor-payments');
         return res.data;
-      } catch (error) { 
+      } catch (error) {
         if (error.response.status === 404) {
           return {
             results: []
@@ -23,15 +22,23 @@ export const useGetAllDoctorTransaction = () => {
   })
 }
 
-export const useGetAllDrugTransaction = () => {
-  const doctorTransaction = useQuery({
-    queryKey: ['drugTransaction'],
+export const useGetAllMedicineTransaction = () => {
+  return useQuery({
+    queryKey: ['medicineTransaction'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/drugTransaction');
-      return res.data;
+      try {
+        const res = await client.get('/admins/medicines-payments/checkout/?offset=0&limit=5');
+        return res.data;
+      } catch (error) {
+        if (error.response.status === 404) {
+          return {
+            results: [],
+          }
+        }
+      }
+
     }
   })
-  return doctorTransaction;
 }
 export const useGetAllPatients = () => {
   const { data, isPending, isError, refetch } = useQuery({
@@ -57,8 +64,8 @@ export const useGetPatientsDetails = (userId) => {
     refetch
   } = useGetQuery('userDetails', `/admins/user/${userId}`);
 
-  const { 
-    id, 
+  const {
+    id,
     fullname,
     email,
     gender,
@@ -68,20 +75,20 @@ export const useGetPatientsDetails = (userId) => {
     height
   } = data?.results ?? {};
   const date = formatDate[birtdate]
-  const values = [ id, fullname, email, genderFormat[gender], date, blood_type, weight,height];
+  const values = [id, fullname, email, genderFormat[gender], date, blood_type, weight, height];
 
   const dataUser = titleUserDetail.map((label, index) => ({
     label,
     value: values[index],
   }));
-  
+
   return {
     dataUser,
     isError,
     isPending,
     refetch
   }
-  
+
 }
 
 export const getUserById = async (userId) => {
