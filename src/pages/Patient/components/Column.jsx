@@ -32,7 +32,7 @@ export const Column = ({
     )
   }
 
-  if (data.results?.length < 1) {
+  if (data?.results?.length < 1) {
     return (
       <>
         <tr>
@@ -41,11 +41,14 @@ export const Column = ({
       </>
     )
   }
+  
 
-  const filterData = data?.results.filter(data => data.id.includes(search));
+  // const filterData = data?.results?.filter(item => item?.transaction_id?.includes(search));
+  // console.log(filterData)
+  
   return (
     <>
-      {filterData?.map((data, index) => (
+      {data?.results?.map((data, index) => (
         renderItem(data, index)
       ))}
     </>

@@ -10,7 +10,6 @@ import { Column } from "../components/Column";
 import { StatusBtn } from "../components/StatusBtn";
 import { ImageModal } from "../components/ImageModal";
 import { Button } from "../../../components/ui/Button";
-import { formattedDate } from "../../../utils/helpers";
 import { Transparent } from "../../../components/ui/Container";
 import { CustomModal } from "../../../components/ui/Modal/Modal";
 
@@ -22,9 +21,11 @@ import {
 } from "../../../utils/dataObject";
 import {
   useGetAllDoctorTransaction,
-  useGetAllDrugTransaction,
+  useGetAllMedicineTransaction,
   useGetPatientsDetails
 } from "../../../services/patient-services";
+import { formatDate } from "../../../utils/helpers";
+import useForm from "../../../hooks/useForm";
 
 export const PatientDetails = () => {
   const [modalDelete, setModalDelete] = useState(false);
@@ -95,7 +96,7 @@ export const PatientDetails = () => {
         <TableDrugDetails />
       </section>
 
-      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom z-0 bg-base py-5">
+      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom z-0 bg-base py-3">
         <Link to={'/patients/data'} className="btn btn-primary text-white w-8 fw-semibold">
           Kembali
         </Link>
@@ -129,6 +130,28 @@ const TableDoctorDetails = () => {
     isPending,
     isError
   } = useGetAllDoctorTransaction();
+  const initState = {
+    modalImg: false,
+    imageSrc: null
+  }
+  const {
+    form,
+    setForm,
+  } = useForm(initState);
+  const handleModalLink = (src) => {
+    setForm((prev) => ({
+      ...prev,
+      modalImg: true,
+      imageSrc: src
+    }))
+  }
+  
+  const closeModal = () => {
+    setForm((prev) => ({
+      ...prev,
+      modalImg: false
+    }))
+  }
 
   return (
     <>
@@ -143,20 +166,28 @@ const TableDoctorDetails = () => {
           data={data}
           search={''}
           renderItem={(data, index) => {
-            const date = formattedDate(data?.date);
-            const subTotal = data?.total?.toLocaleString('ID-id');
+            const date = formatDate(data?.created_at);
+            const subTotal = data?.price?.toLocaleString('ID-id');
             return (
               <tr className="text-nowrap" key={index}>
-                <td>{data?.id}</td>
-                <td>{data?.idDoctor}</td>
-                <td>{data?.payment}</td>
+                <td>{data?.transaction_id}</td>
+                <td>{data?.Doctor_id}</td>
+                <td className="text-capitalize">{data?.payment_method}</td>
                 <td>{`Rp ${subTotal}`}</td>
                 <td>{date}</td>
                 <td>
-                  <ImageModal />
+                  {!data?.payment_confirmation
+                    ? '-'
+                    : <Button
+                      className={'p-0 text-primary fw-semibold'}
+                      onClick={() => handleModalLink(data?.payment_confirmation)}>Link</Button>
+                  }
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn status={data?.status} />
+                  <StatusBtn
+                    id={data?.transaction_id}
+                    status={data?.payment_status}
+                  />
                 </td>
               </tr>
             )
@@ -164,6 +195,11 @@ const TableDoctorDetails = () => {
           }
         />
       </TableDetailsContainer>
+      {form.modalImg &&
+        <ImageModal 
+          closeModal={closeModal} 
+          source={form.imageSrc} />
+      }
     </>
   )
 }
@@ -173,7 +209,30 @@ const TableDrugDetails = () => {
     refetch,
     isPending,
     isError
-  } = useGetAllDrugTransaction();
+  } = useGetAllMedicineTransaction();
+  
+  const initState = {
+    modalImg: false,
+    imageSrc: null
+  }
+  const {
+    form,
+    setForm,
+  } = useForm(initState);
+  const handleModalLink = (src) => {
+    setForm((prev) => ({
+      ...prev,
+      modalImg: true,
+      imageSrc: src
+    }))
+  }
+  
+  const closeModal = () => {
+    setForm((prev) => ({
+      ...prev,
+      modalImg: false
+    }))
+  }
 
   return (
     <>
@@ -187,20 +246,26 @@ const TableDrugDetails = () => {
           refetch={refetch}
           data={data}
           search={''}
-          renderItem={(data, index) => {
-            const date = formattedDate(data?.date);
-            const subTotal = data?.total?.toLocaleString('ID-id');
+          renderItem={(item, index) => {
+            const date = formatDate(item?.created_at)
             return (
-              <tr className="text-nowrap" key={index}>
-                <td>{data?.id}</td>
-                <td>{data?.payment}</td>
-                <td>{`Rp ${subTotal}`}</td>
+              <tr className="text-capitalize text-nowrap" key={index}>
+                <td>{item?.id}</td>
+                <td>{item?.medicine_transaction?.payment_method}</td>
+                <td>{`Rp ${item?.medicine_transaction?.total_price.toLocaleString('ID-id')}`}</td>
                 <td>{date}</td>
                 <td>
-                  <ImageModal />
+                  {!item?.payment_confirmation
+                    ? '-'
+                    : <Button
+                      className={'p-0 text-primary fw-semibold'}
+                      onClick={() => handleModalLink(item?.payment_confirmation)}>Link</Button>
+                  }
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn status={data?.status} />
+                  <StatusBtn 
+                    id={item?.id}
+                    status={item?.payment_status} />
                 </td>
               </tr>
             )
@@ -208,6 +273,11 @@ const TableDrugDetails = () => {
           }
         />
       </TableDetailsContainer>
+      {form.modalImg &&
+        <ImageModal 
+          closeModal={closeModal} 
+          source={form.imageSrc} />
+      }
     </>
   )
 }
