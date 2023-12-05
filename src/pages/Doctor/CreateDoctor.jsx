@@ -226,7 +226,7 @@ export const CreateDoctor = () => {
         <div className="d-grid list-input pt-1">
           <form className="d-grid gap-2">
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
                 Nama
               </label>
               <Input
@@ -242,7 +242,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.fullname} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
                 Email
               </label>
               <Input
@@ -258,7 +258,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.email} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
                 Password
               </label>
               <div className="input-group col-12 col-lg p-0 ">
@@ -285,7 +285,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.password} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
                 Jenis Kelamin
               </label>
               <div className="d-flex gap-4 col-12 col-lg px-0 px-lg-3 ">
@@ -317,7 +317,7 @@ export const CreateDoctor = () => {
             <div className="row align-items-md-center gap-2 ">
               <label
                 htmlFor="specialist"
-                className="fw-bold col-12 col-lg-3 text-end px-0  "
+                className="fw-bold col-12 col-lg-3 text-md-end px-0  "
               >
                 Spesialis
               </label>
@@ -333,7 +333,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.specialist} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
                 Harga Konsultasi
               </label>
               <Input
@@ -349,7 +349,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.price} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 text-end col-lg-3 px-0 ">
+              <label className="fw-bold col-12 text-md-end col-lg-3 px-0 ">
                 Pengalaman Kerja
               </label>
               <Input
@@ -365,7 +365,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.experience} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 text-end px-0 ">
+              <label className="fw-bold col-12 col-lg-3 text-md-end px-0 ">
                 Alumnus
               </label>
               <Input
@@ -381,7 +381,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.alumnus} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 px-0 text-end col-lg-3 ">
+              <label className="fw-bold col-12 px-0 text-md-end col-lg-3 ">
                 Nomor STR
               </label>
               <Input

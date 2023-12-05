@@ -1,12 +1,16 @@
 import { Button } from "../../components/ui/Button";
 import add from "../../assets/icon/add.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { genderFormat, theadDoctorList } from "../../utils/dataObject";
 import { RowTable } from "../../components/Table/RowTable";
 import { useGetAllDoctors } from "../../services/doctor-sevices";
 
 export const DoctorPage = () => {
   const { data, isPending, isError, refetch } = useGetAllDoctors();
+  const navigate = useNavigate()
+  const onNavigate = (doctorData) => {
+    navigate(`/doctors/detail-doctor/${doctorData.id}`, { state: { data: doctorData } });
+  }
 
   return (
     <section className="container-fluid ">
@@ -41,7 +45,7 @@ export const DoctorPage = () => {
                 renderItem={(doctorData, index) => {
                   return (
                     <tr
-                      // onClick={() => onNavigate(doctorData.id)}
+                      onClick={() => onNavigate(doctorData)}
                       className="text-nowrap cursor-pointer"
                       key={index}
                     >
