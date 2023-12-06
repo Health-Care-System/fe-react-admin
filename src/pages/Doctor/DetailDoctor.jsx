@@ -8,8 +8,6 @@ export const DetailDoctor = () => {
   const location = useLocation();
   const { data } = location.state;
 
-  console.log(data);
-
   return (
     <section className="container-fluid detail-container">
       <div className="d-flex flex-column mt-3 gap-3 ">
@@ -57,10 +55,8 @@ export const DetailDoctor = () => {
         </div>
         <div className="d-flex flex-row justify-content-center align-items-center gap-3 ">
           <Link
-            to={{
-              pathname: `/doctors/edit-doctor/${data.id}`,
-              state: { data: data },
-            }}
+            to={`/doctors/edit-doctor/${data.id}`}
+            state={data}
           >
             <Button className="btn-primary border-2 border-primary text-white fw-semibold px-4 ">
               Edit

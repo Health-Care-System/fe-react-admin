@@ -15,8 +15,10 @@ import { CustomModal } from "../../components/ui/Modal/Modal";
 import { Transparent } from "../../components/ui/Container";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const CreateDoctor = () => {
+  const navigate = useNavigate()
   const [modalDelete, setModalDelete] = useState(false);
 
   const handleDeletePhoto = () => {
@@ -83,10 +85,14 @@ export const CreateDoctor = () => {
     useForm(initialState, initialError);
 
   const options = [
-    { value: "dokterUmum", label: "Dokter Umum" },
-    { value: "spesialisAnak", label: "Spesialis Anak" },
-    { value: "dokterKulit", label: "Dokter Kulit" },
-    { value: "psikologKlinis", label: "Psikolog Klinis" },
+    { value: "Umum", label: "Dokter Umum" },
+    { value: "Anak", label: "Spesialis Anak" },
+    { value: "Kulit", label: "Dokter Kulit" },
+    { value: "Psikolog", label: "Psikolog Klinis" },
+    { value: "Jantung", label: "Dokter Jantung" },
+    { value: "Gigi", label: "Dokter Gigi" },
+    { value: "Mata", label: "Dokter Mata" },
+    { value: "Bedah", label: "Spesialis Bedah" },
   ];
 
   const togglePasswordVisibility = () => {
@@ -148,11 +154,11 @@ export const CreateDoctor = () => {
 
       if (validateAddDoctorForm(form, setErrors)) {
         try {
-          console.log('halo');
           setLoading(true);
           const res = await client.post("/admins/doctors/register", data);
           console.log(res);
-          toast.success("Data dokter berhasil diperbaharui", {
+          navigate('/doctors')
+          toast.success("Data dokter berhasil ditambahkan", {
             position: "bottom-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -162,6 +168,7 @@ export const CreateDoctor = () => {
             progress: undefined,
             theme: "colored",
           });
+          
         } catch (error) {
           console.log(error);
         } finally {
@@ -226,7 +233,7 @@ export const CreateDoctor = () => {
         <div className="d-grid list-input pt-1">
           <form className="d-grid gap-2">
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Nama
               </label>
               <Input
@@ -242,7 +249,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.fullname} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Email
               </label>
               <Input
@@ -258,7 +265,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.email} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Password
               </label>
               <div className="input-group col-12 col-lg p-0 ">
@@ -285,7 +292,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.password} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Jenis Kelamin
               </label>
               <div className="d-flex gap-4 col-12 col-lg px-0 px-lg-3 ">
@@ -317,7 +324,7 @@ export const CreateDoctor = () => {
             <div className="row align-items-md-center gap-2 ">
               <label
                 htmlFor="specialist"
-                className="fw-bold col-12 col-lg-3 text-md-end px-0  "
+                className="fw-bold col-12 col-lg-3 text-lg-end px-0  "
               >
                 Spesialis
               </label>
@@ -333,7 +340,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.specialist} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Harga Konsultasi
               </label>
               <Input
@@ -349,7 +356,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.price} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 text-md-end col-lg-3 px-0 ">
+              <label className="fw-bold col-12 text-lg-end col-lg-3 px-0 ">
                 Pengalaman Kerja
               </label>
               <Input
@@ -365,7 +372,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.experience} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 text-md-end px-0 ">
+              <label className="fw-bold col-12 col-lg-3 text-lg-end px-0 ">
                 Alumnus
               </label>
               <Input
@@ -381,7 +388,7 @@ export const CreateDoctor = () => {
               <ErrorMsg msg={errors.alumnus} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 px-0 text-md-end col-lg-3 ">
+              <label className="fw-bold col-12 px-0 text-lg-end col-lg-3 ">
                 Nomor STR
               </label>
               <Input

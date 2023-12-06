@@ -4,18 +4,26 @@ import Input from "../../components/ui/Form/Input";
 import { Select } from "../../components/ui/Form/Select";
 import "./doctor.css";
 import useForm from "../../hooks/useForm";
-import {
-  validateEditDoctorForm,
-  validateExtImage,
-} from "../../utils/validation";
+import { validateExtImage } from "../../utils/validation";
 import { ErrorMsg } from "../../components/Errors/ErrorMsg";
-import client from "../../utils/auth";
 import { CustomModal } from "../../components/ui/Modal/Modal";
 import { Transparent } from "../../components/ui/Container";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { handlePutDoctor } from "../../services/doctor-sevices";
 
 export const EditDoctor = () => {
+  // Distract const dari data useLocation
+  const { state } = useLocation();
+  const idDoctor = state.id;
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  console.log(state);
+  console.log(idDoctor);
+
   const [modalDelete, setModalDelete] = useState(false);
 
   const handleDeletePhoto = () => {
@@ -50,15 +58,15 @@ export const EditDoctor = () => {
   };
 
   const initialState = {
-    profile_picture: null,
-    fullname: "",
-    email: "",
-    gender: "",
-    specialist: "",
-    price: "",
-    experience: "",
-    alumnus: "",
-    no_str: "",
+    profile_picture: state.profile_picture,
+    fullname: state.fullname,
+    email: state.email,
+    gender: state.gender,
+    specialist: state.specialist,
+    price: state.price,
+    experience: state.experience,
+    alumnus: state.alumnus,
+    no_str: state.no_str,
   };
 
   const initialError = {
@@ -76,12 +84,16 @@ export const EditDoctor = () => {
   const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
     useForm(initialState, initialError);
 
-  const options = [
-    { value: "dokterUmum", label: "Dokter Umum" },
-    { value: "spesialisAnak", label: "Spesialis Anak" },
-    { value: "dokterKulit", label: "Dokter Kulit" },
-    { value: "psikologKlinis", label: "Psikolog Klinis" },
-  ];
+    const options = [
+      { value: "Umum", label: "Dokter Umum" },
+      { value: "Anak", label: "Spesialis Anak" },
+      { value: "Kulit", label: "Dokter Kulit" },
+      { value: "Psikolog", label: "Psikolog Klinis" },
+      { value: "Jantung", label: "Dokter Jantung" },
+      { value: "Gigi", label: "Dokter Gigi" },
+      { value: "Mata", label: "Dokter Mata" },
+      { value: "Bedah", label: "Spesialis Bedah" },
+    ];
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -117,48 +129,19 @@ export const EditDoctor = () => {
     }
   };
 
-  const handlePutDoctor = async () => {
-    const data = FormData();
-    data.append("profile_picture", form.profile_picture);
-    data.append("price", form.price); 
-    data.append("fullname", form.fullname);
-    data.append("email", form.email);
-    data.append("gender", form.gender);
-    data.append("specialist", form.specialist);
-    data.append("experience", form.experience);
-    data.append("alumnus", form.alumnus);
-    data.append("no_str", form.no_str);
-
-    if (validateEditDoctorForm(form, setErrors)) {
-      try {
-        setLoading(true);
-        const res = await client.put(`/admins/doctor/${data.id}`, data); 
-        console.log(res);
-        toast.success("Data dokter berhasil diperbaharui", {
-          position: "bottom-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } catch (error) {
-        console.log(error);
-        toast.error("Gagal memperbaharui data dokter", {
-          position: "bottom-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } finally {
-        setLoading(false);
-      }
+  const handlePut = async () => {
+    const res = await handlePutDoctor(form, idDoctor, setErrors, setLoading);
+    console.log(res);
+    if (res) {
+      navigate("/doctors");
+      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+      toast.success("Dokter berhasil diedit!", {
+        delay: 800,
+      });
+    } else {
+      toast.error("Dokter gagal diedit!", {
+        delay: 800,
+      });
     }
   };
 
@@ -170,7 +153,7 @@ export const EditDoctor = () => {
             {form.photo_profile ? (
               <div className="rounded mb-3 ">
                 <img
-                  src={form.tempImage}
+                  src={form.tempImage || form.photo_profile}
                   alt="photo"
                   className="rounded-4 "
                   style={{ maxHeight: "13.75rem", maxWidth: "16.125rem" }}
@@ -216,7 +199,9 @@ export const EditDoctor = () => {
           <form className="d-grid gap-2">
             {/* Fullname */}
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">Nama</label>
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+                Nama
+              </label>
               <Input
                 className="form-control input-styles p-3 col-12 col-lg"
                 placeholder="Masukkan Nama"
@@ -242,6 +227,7 @@ export const EditDoctor = () => {
                     value="male"
                     checked={form.gender === "male"}
                     onChange={(e) => handleInput(e)}
+                    defaultChecked={form.gender === "male"}
                   />
                   <label htmlFor="male">Pria</label>
                 </div>
@@ -252,6 +238,7 @@ export const EditDoctor = () => {
                     value="female"
                     checked={form.gender === "female"}
                     onChange={(e) => handleInput(e)}
+                    defaultChecked={form.gender === "female"}
                   />
                   <label htmlFor="female">Wanita</label>
                 </div>
@@ -262,7 +249,9 @@ export const EditDoctor = () => {
             </div>
             {/* Email */}
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">Email</label>
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+                Email
+              </label>
               <Input
                 className="form-control input-styles p-3 col-12 col-lg "
                 placeholder="Masukkan Email"
@@ -330,7 +319,9 @@ export const EditDoctor = () => {
             </div>
             {/* Alumuns */}
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">Alumnus</label>
+              <label className="fw-bold col-12 col-lg-3 px-0 text-md-end ">
+                Alumnus
+              </label>
               <Input
                 type="text"
                 className="form-control p-3 col-12 col-lg input-styles "
@@ -345,7 +336,9 @@ export const EditDoctor = () => {
             </div>
             {/* STR Number */}
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 px-0 col-lg-3 text-md-end ">Nomor STR</label>
+              <label className="fw-bold col-12 px-0 col-lg-3 text-md-end ">
+                Nomor STR
+              </label>
               <Input
                 type="number"
                 className="form-control p-3 col-12 col-lg input-styles "
@@ -378,7 +371,7 @@ export const EditDoctor = () => {
         <Button
           className="bg-primary border-3 text-white "
           type="submit"
-          onClick={handlePutDoctor}
+          onClick={handlePut}
         >
           {loading ? (
             <span
