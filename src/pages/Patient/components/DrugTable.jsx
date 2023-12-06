@@ -1,3 +1,6 @@
+// Packages
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Utils / service
@@ -15,9 +18,10 @@ import { TableContainer } from "./TableContainer";
 import { Button } from "../../../components/ui/Button";
 
 const initialState = {
-  search: '',
+  searchMedicine: '',
   imageSrc: null,
   modalImg: false,
+  offset: null,
 }
 
 export const DrugTable = () => {
@@ -25,7 +29,10 @@ export const DrugTable = () => {
     data,
     refetch,
     isPending,
-    isError
+    isError,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage
   } = useGetAllMedicineTransaction();
 
   const {
@@ -34,6 +41,7 @@ export const DrugTable = () => {
     setForm,
   } = useForm(initialState);
 
+  const { ref, inView } = useInView();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: updateStatusOrderMedicine,
@@ -41,29 +49,39 @@ export const DrugTable = () => {
       console.error(error);
     },
     onSuccess: (newData) => {
-      // Mencari indeks dari item yang diperbarui di dalam array results
-      const updatedIndex = data?.results?.findIndex(item => item?.id === newData?.results?.id);
-  
+      // Mencari indeks dari pages, berdasarkan offset pagenya
+      const pageIndex = data?.pages?.findIndex(item => item?.pagination?.offset === form.offset);
+
       // Mengupdate cache dengan hasil mutasi yang baru
       queryClient.setQueryData(['medicineTransaction'], oldData => {
         if (oldData) {
           // Membuat salinan array results untuk memastikan immutability
-          const updatedResults = [...oldData.results];
+          const updatedResults = [...oldData.pages];
           // Mengganti item di updatedResults dengan data baru
-          updatedResults[updatedIndex] = newData.results;
-  
+          updatedResults[pageIndex].results.forEach((result) => {
+            if (result?.id === newData?.results?.id) {
+              // Ubah nilai payment_status
+              result.payment_status = newData?.results?.payment_status
+            }
+          });
+
           // Mengembalikan objek yang baru dengan array results yang telah diperbarui
           return {
             ...oldData,
             results: updatedResults
           };
         }
-  
+
         return oldData; // Mengembalikan null jika oldData null
       });
     }
   });
-  
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
 
   const handleModalLink = (src) => {
     setForm((prev) => ({
@@ -80,18 +98,24 @@ export const DrugTable = () => {
     }))
   }
 
-  const handleEdit = (status, id) => {
+  const handleEdit = (status, id, offset) => {
     mutation.mutate({
       newStatus: status,
-      id: id
+      id,
+      offset
     })
+    setForm(prev => ({
+      ...prev,
+      offset: offset
+    }))
   }
+
   return (
     <>
       <TableContainer
         handleInput={handleInput}
-        inputValue={form.search}
-        name={'search'}
+        inputValue={form.searchMedicine}
+        name={'searchMedicine'}
         title={'Transaksi Pembelian Obat'}
         thead={theadDrug}
       >
@@ -99,10 +123,12 @@ export const DrugTable = () => {
           isError={isError}
           isPending={isPending}
           refetch={refetch}
-          data={data}
+          reffer={ref}
+          data={data?.pages}
+          isFetch={isFetchingNextPage}
           search={form.search}
           ifEmpty={'Tidak ada riwayat transaksi pembelian obat!'}
-          renderItem={(item, index) => {
+          renderItem={(item, index, offset) => {
             const date = formatDate(item?.created_at)
             return (
               <tr className="text-capitalize text-nowrap" key={index}>
@@ -120,10 +146,12 @@ export const DrugTable = () => {
                   }
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn 
+                  <StatusBtn
                     id={item?.id}
                     handleAction={handleEdit}
-                    status={item?.payment_status} />
+                    status={item?.payment_status}
+                    offset={offset}
+                  />
                 </td>
               </tr>
             )
@@ -131,11 +159,10 @@ export const DrugTable = () => {
         />
       </TableContainer>
       {form.modalImg &&
-        <ImageModal 
-          closeModal={closeModal} 
+        <ImageModal
+          closeModal={closeModal}
           source={form.imageSrc} />
       }
-
     </>
   )
 }

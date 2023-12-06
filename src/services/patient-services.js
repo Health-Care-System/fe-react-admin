@@ -1,59 +1,71 @@
-import { useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import client from "../utils/auth";
 import { useGetQuery } from "../hooks/useGetQuery";
 import { genderFormat, titleUserDetail } from "../utils/dataObject";
 import { formatDate } from "../utils/helpers";
 
 export const useGetAllDoctorTransaction = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['doctorTransaction'],
-    queryFn: async () => {
-      try {
-        const res = await client.get('/admins/doctor-payments');
-        return res.data;
-      } catch (error) {
-        if (error.response.status === 404) {
-          return {
-            results: []
-          }
-        }
-      }
-    }
+    queryFn: getAllDoctorTransaction,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage?.results?.length ? allPages.length : undefined;
+      return nextPage;
+    },
   })
 }
+
+const getAllDoctorTransaction = async ({ pageParam = 0 }) => {
+  try {
+    const offset = pageParam * 6;
+    const res = await client.get(`/admins/doctor-payment?offset=${offset}&limit=6`);
+    return res.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return {
+        results: [],
+      };
+    }
+    throw error;
+  }
+};
+
+const getAllMedicinesTransaction = async ({ pageParam = 0 }) => {
+  try {
+    const offset = pageParam * 6;
+    const res = await client.get(`/admins/medicines-payments/checkout/?offset=${offset}&limit=6`);
+    return res.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return {
+        results: [],
+      };
+    }
+    throw error;
+  }
+};
 
 export const useGetAllMedicineTransaction = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['medicineTransaction'],
-    queryFn: async () => {
-      try {
-        const res = await client.get('/admins/medicines-payments/checkout/?offset=0&limit=5');
-        return res.data;
-      } catch (error) {
-        if (error.response.status === 404) {
-          return {
-            results: [],
-          }
-        }
-      }
+    queryFn: getAllMedicinesTransaction,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage?.results.length ? allPages.length : undefined;
+      return nextPage;
+    },
+  });
+};
 
-    }
-  })
-}
 export const useGetAllPatients = () => {
-  const { data, isPending, isError, refetch } = useQuery({
+  return useQuery({
     queryKey: ['patients'],
     queryFn: async () => {
       const res = await client.get('/admins/users');
       return res.data;
     }
   })
-  return {
-    data,
-    isError,
-    isPending,
-    refetch
-  };
 }
 
 export const useGetPatientsDetails = (userId) => {
@@ -95,7 +107,6 @@ export const getUserById = async (userId) => {
   const res = await client.get(`/admins/user/${userId}`);
   return res?.data;
 }
-
 
 export const getDataUserById = async (setLoadingSearch, setFilterData, userId) => {
   try {
