@@ -1,5 +1,5 @@
 // Packages
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useGetAllDoctorTransaction } from "../../../services/patient-services";
@@ -7,6 +7,7 @@ import { useGetAllDoctorTransaction } from "../../../services/patient-services";
 // Utils & Services
 import useForm from "../../../hooks/useForm";
 import { formatDate } from "../../../utils/helpers";
+import useDebounce from "../../../hooks/useDebounce";
 import { theadDoctor } from "../../../utils/dataObject";
 import { updateStatusOrderDoctor } from "../../../services/transaction-services";
 
@@ -108,6 +109,20 @@ export const DoctorTable = () => {
       offset
     })
   }
+  
+  // const [filterData, setFilterData] = useState([]);
+  // const [loadingSearch, setLoadingSearch] = useState(false);
+  
+  // const debouncedValue = useDebounce(form?.searchMedicine, 500);
+  // useEffect(() => {
+  //   if (debouncedValue !== '') {
+  //     getMedicineTransactionByID(
+  //       setLoadingSearch,
+  //       setFilterData,
+  //       debouncedValue
+  //       )
+  //   }
+  // }, [debouncedValue]);
     
   return (
     <>
