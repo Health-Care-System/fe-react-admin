@@ -1,3 +1,4 @@
+import { Spinner } from "../../../components/Loader/Spinner";
 import { Button } from "../../../components/ui/Button";
 
 export const Column = ({
@@ -6,8 +7,10 @@ export const Column = ({
   data,
   refetch,
   renderItem,
-  search,
-  ifEmpty
+  // search,
+  ifEmpty,
+  reffer,
+  isFetch
 }) => {
   if (isError) {
     return (
@@ -32,7 +35,7 @@ export const Column = ({
     )
   }
 
-  if (data.results?.length < 1) {
+  if (data?.results?.length < 1) {
     return (
       <>
         <tr>
@@ -41,13 +44,25 @@ export const Column = ({
       </>
     )
   }
+  
 
-  const filterData = data?.results.filter(data => data.id.includes(search));
+  // const filterData = data?.results?.filter(item => item?.transaction_id?.includes(search));
+  // console.log(filterData)
+
   return (
     <>
-      {filterData?.map((data, index) => (
-        renderItem(data, index)
-      ))}
+      {data?.map((item) => (
+        item?.results?.map((res, index) => (
+          renderItem(res, index, item?.pagination?.offset)
+        ))
+      ))
+      }
+      <tr colSpan={12} ref={reffer}>
+        {isFetch
+          ? <td colSpan={12} className="text-center text-secondary"><Spinner /></td>
+          : ''
+        }
+      </tr>
     </>
   )
 

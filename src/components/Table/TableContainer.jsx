@@ -21,7 +21,7 @@ export const TableContainer = ({
           <div className="position-relative mt-3 mt-md-0">
             <Input
               name={name}
-              handleChange={(e) => handleInput(e)}
+              onChange={(e) => handleInput(e)}
               value={inputValue}
               type={'text'}
               placeholder={placeHolder}

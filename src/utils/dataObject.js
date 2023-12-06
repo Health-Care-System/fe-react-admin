@@ -3,14 +3,12 @@ import dasboardIcon from '../assets/icon/dashboard.svg'
 import medicineIcon from '../assets/icon/medicine.svg'
 import patientIcon from '../assets/icon/patient.svg'
 import doctorIcon from '../assets/icon/doctor.svg'
-import settingIcon from '../assets/icon/settings.svg'
 
 // Icon White
 import dasboardIconWhite from '../assets/icon/dashboardWhite.svg'
 import medicineIconWhite from '../assets/icon/medicineWhite.svg'
 import patientIconWhite from '../assets/icon/patientWhite.svg'
 import doctorIconWhite from '../assets/icon/doctorWhite.svg'
-import settingIconWhite from '../assets/icon/settingsWhite.svg'
 
 export const menus = [
   {
@@ -36,12 +34,6 @@ export const menus = [
     icon2: doctorIconWhite,
     label: 'Dokter',
     link: '/doctors'
-  },
-  {
-    icon: settingIcon,
-    icon2: settingIconWhite,
-    label: 'Pengaturan',
-    link: '/settings'
   },
 ]
 
@@ -236,3 +228,19 @@ export const theadDoctor = ["ID", "ID Dokter", "ID Pasien", "Metode Pembayaran",
 export const theadDoctorDetails = ["ID Transaksi", "ID Dokter", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadDrug = ["ID", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadDrugDetails = ["ID Transaksi", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
+
+export const titleUserDetail = [
+  'ID',
+  'Nama Lengkap',
+  'Email',
+  'Gender',
+  'Tanggal Lahir',
+  'Gol. Darah',
+  'Berat Badan',
+  'Tinggi Badan'
+];
+
+export const genderFormat = {
+  male: 'Laki-Laki',
+  female: 'Perempuan',
+}
