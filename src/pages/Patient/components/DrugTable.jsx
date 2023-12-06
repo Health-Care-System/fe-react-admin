@@ -18,7 +18,7 @@ import { TableContainer } from "./TableContainer";
 import { Button } from "../../../components/ui/Button";
 
 const initialState = {
-  search: '',
+  searchMedicine: '',
   imageSrc: null,
   modalImg: false,
   offset: null,
@@ -114,8 +114,8 @@ export const DrugTable = () => {
     <>
       <TableContainer
         handleInput={handleInput}
-        inputValue={form.search}
-        name={'search'}
+        inputValue={form.searchMedicine}
+        name={'searchMedicine'}
         title={'Transaksi Pembelian Obat'}
         thead={theadDrug}
       >

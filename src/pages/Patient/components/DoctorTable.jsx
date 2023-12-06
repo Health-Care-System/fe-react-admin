@@ -19,7 +19,7 @@ import { Button } from "../../../components/ui/Button";
 
 
 const initialState = {
-  search: '',
+  searchDoctor: '',
   imageSrc: null,
   modalImg: false,
 }
@@ -107,13 +107,13 @@ export const DoctorTable = () => {
       offset
     })
   }
-  
+    
   return (
     <>
       <TableContainer
         handleInput={handleInput}
-        inputValue={form.search}
-        name={'search'}
+        inputValue={form.searchDoctor}
+        name={'searchDoctor'}
         title={'Transaksi Konsultasi Dokter'}
         thead={theadDoctor}
       >
