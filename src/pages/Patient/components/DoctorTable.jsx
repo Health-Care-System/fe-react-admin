@@ -40,7 +40,6 @@ export const DoctorTable = () => {
     handleInput,
     setForm,
   } = useForm(initialState);
-  console.log(data)
   
   const { ref, inView } = useInView();
   const queryClient = useQueryClient();
@@ -101,7 +100,8 @@ export const DoctorTable = () => {
     }))
   }
 
-  const handleEdit = (status, id, offset) => {
+  const handleEdit = (status, id, offset, e) => {
+    e.stopPropagation();
     mutation.mutate({
       newStatus: status,
       id,

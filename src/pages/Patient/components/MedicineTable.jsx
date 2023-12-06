@@ -1,30 +1,32 @@
 // Packages
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Utils / service
 import useForm from "../../../hooks/useForm";
 import { formatDate } from "../../../utils/helpers";
-import { theadDrug } from "../../../utils/dataObject";
+import useDebounce from "../../../hooks/useDebounce";
+import { theadMedicine } from "../../../utils/dataObject";
 import { useGetAllMedicineTransaction } from "../../../services/patient-services"
-import { updateStatusOrderMedicine } from "../../../services/transaction-services";
+import { getMedicineTransactionByID, updateStatusOrderMedicine } from "../../../services/transaction-services";
 
 // Components
 import { Column } from "./Column";
 import { StatusBtn } from "./StatusBtn";
-import { ImageModal } from "./ImageModal";
 import { TableContainer } from "./TableContainer";
-import { Button } from "../../../components/ui/Button";
+import { TransactionModal } from "../../../components/ui/Modal/TransactionModal";
 
 const initialState = {
   searchMedicine: '',
   imageSrc: null,
   modalImg: false,
   offset: null,
+  modalTransactions: false,
+  modalData: null,
 }
 
-export const DrugTable = () => {
+export const MedicineTable = () => {
   const {
     data,
     refetch,
@@ -83,22 +85,15 @@ export const DrugTable = () => {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const handleModalLink = (src) => {
-    setForm((prev) => ({
-      ...prev,
-      modalImg: true,
-      imageSrc: src
-    }))
-  }
-
   const closeModal = () => {
     setForm((prev) => ({
       ...prev,
-      modalImg: false
+      modalTransaction: false
     }))
   }
 
-  const handleEdit = (status, id, offset) => {
+  const handleEdit = (status, id, offset, e) => {
+    e.stopPropagation();
     mutation.mutate({
       newStatus: status,
       id,
@@ -110,6 +105,30 @@ export const DrugTable = () => {
     }))
   }
 
+  const openDetailTransactionModal = (item, e) => {
+    e.stopPropagation();
+    setForm((prev) => ({
+      ...prev,
+      modalTransaction: true,
+      modalData: item
+    })
+    )
+  }
+  
+  const [filterData, setFilterData] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  
+  const debouncedValue = useDebounce(form?.searchMedicine, 500);
+  useEffect(() => {
+    if (debouncedValue !== '') {
+      getMedicineTransactionByID(
+        setLoadingSearch,
+        setFilterData,
+        debouncedValue
+        )
+    }
+  }, [debouncedValue]);
+  
   return (
     <>
       <TableContainer
@@ -117,34 +136,30 @@ export const DrugTable = () => {
         inputValue={form.searchMedicine}
         name={'searchMedicine'}
         title={'Transaksi Pembelian Obat'}
-        thead={theadDrug}
+        thead={theadMedicine}
       >
         <Column
           isError={isError}
-          isPending={isPending}
+          isPending={isPending || loadingSearch}
           refetch={refetch}
           reffer={ref}
-          data={data?.pages}
+          isDebounce={debouncedValue !== ''}
+          data={debouncedValue !== '' ? filterData : data?.pages}
           isFetch={isFetchingNextPage}
           search={form.search}
-          ifEmpty={'Tidak ada riwayat transaksi pembelian obat!'}
+          ifEmpty={'Tidak ada riwayat transaksi!'}
           renderItem={(item, index, offset) => {
             const date = formatDate(item?.created_at)
             return (
-              <tr className="text-capitalize text-nowrap" key={index}>
+              <tr
+                onClick={(e) => openDetailTransactionModal(item, e)}
+                className="text-capitalize text-nowrap cursor-pointer"
+                key={index}>
                 <td>{item?.id}</td>
                 <td>{item?.medicine_transaction?.user_id}</td>
                 <td>{item?.medicine_transaction?.payment_method}</td>
                 <td>{`Rp ${item?.medicine_transaction?.total_price.toLocaleString('ID-id')}`}</td>
                 <td>{date}</td>
-                <td>
-                  {!item?.payment_confirmation
-                    ? '-'
-                    : <Button
-                      className={'p-0 text-primary fw-semibold'}
-                      onClick={() => handleModalLink(item?.payment_confirmation)}>Link</Button>
-                  }
-                </td>
                 <td className="d-flex justify-content-center">
                   <StatusBtn
                     id={item?.id}
@@ -156,12 +171,12 @@ export const DrugTable = () => {
               </tr>
             )
           }}
+
         />
       </TableContainer>
-      {form.modalImg &&
-        <ImageModal
-          closeModal={closeModal}
-          source={form.imageSrc} />
+
+      {form.modalTransaction &&
+        <TransactionModal data={form.modalData} close={closeModal} />
       }
     </>
   )

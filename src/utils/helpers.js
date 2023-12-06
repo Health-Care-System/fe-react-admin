@@ -18,3 +18,12 @@ export const formatDate = (inputDate) => {
     return '-'
   }
 }
+export const formatDateWithTime = (inputDate) => {
+  if (inputDate !== '') {
+    const options = { year: 'numeric', month: 'short', day: 'numeric',hour: 'numeric', minute: 'numeric', second: 'numeric'};
+    const formattedDate = new Date(inputDate).toLocaleDateString('id-ID', options).replace(/\./g, ':');
+    return formattedDate;
+  } else {
+    return '-'
+  }
+}

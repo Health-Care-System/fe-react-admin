@@ -7,9 +7,9 @@ export const Column = ({
   data,
   refetch,
   renderItem,
-  // search,
   ifEmpty,
   reffer,
+  isDebounce,
   isFetch
 }) => {
   if (isError) {
@@ -44,10 +44,23 @@ export const Column = ({
       </>
     )
   }
-  
 
-  // const filterData = data?.results?.filter(item => item?.transaction_id?.includes(search));
-  // console.log(filterData)
+  if (isDebounce) {
+    return (
+      <>
+        {data?.length > 0 ? (
+          data?.map((res, index) => renderItem(res, index, 0))
+        ) : (
+          <tr>
+            <td colSpan={12} className="text-center py-5 rounded-3 fs-2">
+              {ifEmpty}
+            </td>
+          </tr>
+        )}
+      </>
+    );
+  }
+  
 
   return (
     <>
@@ -65,7 +78,6 @@ export const Column = ({
       </tr>
     </>
   )
-
 }
 
 const TableRow = ({ children }) => {

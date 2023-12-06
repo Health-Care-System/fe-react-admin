@@ -31,3 +31,41 @@ export const updateStatusOrderMedicine = async (newData) => {
   }
 }
 
+export const getMedicineByID = async (id) => {
+  const res = await client.get(`/admins/medicines-payments/checkout/${id}`);
+  return res?.data;
+}
+
+export const getMedicineTransactionByID = async (setLoadingSearch, setFilterData, id) => {
+  try {
+    setLoadingSearch(true);
+    const data = await getMedicineByID(id);
+    setFilterData(data && data.results ? [data.results] : []);
+  } catch (error) {
+    if (error.response.status === 404) {
+      setFilterData([]);
+    }
+    console.error("Error fetching user data:", error);
+  } finally {
+    setLoadingSearch(false);
+  }
+};
+export const getDoctorByID = async (id) => {
+  const res = await client.get(`/admins/medicines-payments/checkout/${id}`);
+  return res?.data;
+}
+export const getDoctorTransactionByID = async (setLoadingSearch, setFilterData, id) => {
+  try {
+    setLoadingSearch(true);
+    const data = await getDoctorByID(id);
+    setFilterData(data && data.results ? [data.results] : []);
+  } catch (error) {
+    if (error.response.status === 404) {
+      setFilterData([]);
+    }
+    console.error("Error fetching user data:", error);
+  } finally {
+    setLoadingSearch(false);
+  }
+};
+
