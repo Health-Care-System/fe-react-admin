@@ -40,6 +40,7 @@ export const DoctorTable = () => {
     handleInput,
     setForm,
   } = useForm(initialState);
+  console.log(data)
   
   const { ref, inView } = useInView();
   const queryClient = useQueryClient();
