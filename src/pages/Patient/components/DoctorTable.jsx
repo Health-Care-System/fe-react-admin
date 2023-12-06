@@ -1,4 +1,6 @@
 // Packages
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useGetAllDoctorTransaction } from "../../../services/patient-services";
 
@@ -27,14 +29,19 @@ export const DoctorTable = () => {
     data,
     refetch,
     isPending,
-    isError
+    isError,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage
   } = useGetAllDoctorTransaction();
+  
   const {
     form,
     handleInput,
     setForm,
   } = useForm(initialState);
-
+  
+  const { ref, inView } = useInView();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: updateStatusOrderDoctor,
@@ -42,25 +49,27 @@ export const DoctorTable = () => {
       console.error(error);
     },
     onSuccess: (newData) => {
-      // Mencari indeks dari item yang diperbarui di dalam array results
-      const updatedIndex = data?.results.findIndex(item => item?.transaction_id === newData.id);
-  
+      // Mencari indeks dari pages, berdasarkan offset pagenya
+      const pageIndex = data?.pages?.findIndex(item => item?.pagination?.offset === newData.offset);
+      
       // Mengupdate cache dengan hasil mutasi yang baru
       queryClient.setQueryData(['doctorTransaction'], oldData => {
         if (oldData) {
-          // Membuat salinan array results untuk memastikan immutability
-          const updatedResults = [...oldData.results];
+          // Membuat salinan array results
+          const updatedResults = [...oldData.pages];
           
           // Mengganti item di updatedResults dengan data baru
-          updatedResults[updatedIndex] = {
-            ...updatedResults[updatedIndex],
-            payment_status: newData.newStatus
-          };
+          updatedResults[pageIndex].results.forEach((result) => {
+            if (result.transaction_id === newData.id) {
+              // Ubah nilai payment_status
+              result.payment_status = newData.newStatus;
+            }
+          });
   
-          // Mengembalikan objek yang baru dengan array results yang telah diperbarui
+          // Mengembalikan objek yang baru dengan array pages yang telah diperbarui
           return {
             ...oldData,
-            results: updatedResults
+            pages: updatedResults
           };
         }
   
@@ -68,7 +77,13 @@ export const DoctorTable = () => {
       });
     }
   });
+
   
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
 
   const handleModalLink = (src) => {
     setForm((prev) => ({
@@ -85,13 +100,14 @@ export const DoctorTable = () => {
     }))
   }
 
-  const handleEdit = (status, id) => {
+  const handleEdit = (status, id, offset) => {
     mutation.mutate({
       newStatus: status,
-      id: id
+      id,
+      offset
     })
-
   }
+  
   return (
     <>
       <TableContainer
@@ -105,10 +121,12 @@ export const DoctorTable = () => {
           isError={isError}
           isPending={isPending}
           refetch={refetch}
-          data={data}
+          data={data?.pages}
           search={form.search}
+          isFetch={isFetchingNextPage}
+          reffer={ref}
           ifEmpty={'Tidak ada riwayat transaksi konsultasi dokter!'}
-          renderItem={(data, index) => {
+          renderItem={(data, index, offset) => {
             const date = formatDate(data?.created_at);
             const subTotal = data?.price?.toLocaleString('ID-id');
             return (
@@ -132,6 +150,7 @@ export const DoctorTable = () => {
                     id={data?.transaction_id}
                     handleAction={handleEdit}
                     status={data?.payment_status}
+                    offset={offset}
                   />
                 </td>
               </tr>
