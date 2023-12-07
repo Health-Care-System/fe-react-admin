@@ -51,14 +51,14 @@ export const getMedicineTransactionByID = async (setLoadingSearch, setFilterData
   }
 };
 export const getDoctorByID = async (id) => {
-  const res = await client.get(`/admins/medicines-payments/checkout/${id}`);
+  const res = await client.get(`/admins/doctor-payment?transaction_id=${id}`);
   return res?.data;
 }
 export const getDoctorTransactionByID = async (setLoadingSearch, setFilterData, id) => {
   try {
     setLoadingSearch(true);
     const data = await getDoctorByID(id);
-    setFilterData(data && data.results ? [data.results] : []);
+    setFilterData(data && data.results ? data.results : []);
   } catch (error) {
     if (error.response.status === 404) {
       setFilterData([]);

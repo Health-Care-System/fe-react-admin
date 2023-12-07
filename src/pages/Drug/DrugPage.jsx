@@ -3,7 +3,7 @@ import deleteIcon from "../../assets/icon/delete-icon.svg";
 import search from "../../assets/icon/round-search.svg";
 import plus from "../../assets/icon/count_plus.svg";
 import dangerIcon from "../../assets/icon/dangerIcon.png";
-import AddPhoto from "../../assets/icon/addPhoto.svg";
+import AddPhoto from "../../assets/icon/AddPhoto.svg";
 
 import "./drug-page.css";
 import client from "../../utils/auth";
