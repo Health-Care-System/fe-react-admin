@@ -19,7 +19,7 @@ export const useGetAllDoctorTransaction = () => {
 const getAllDoctorTransaction = async ({ pageParam = 0 }) => {
   try {
     const offset = pageParam * 6;
-    const res = await client.get(`/admins/doctor-payment?offset=${offset}&limit=6`);
+    const res = await client.get(`/admins/doctor-payments?offset=${offset}&limit=6`);
     return res.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {

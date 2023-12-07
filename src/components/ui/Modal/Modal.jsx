@@ -16,7 +16,7 @@ export const CustomModal = ({ icon, title, content, cancelAction, confirmAction,
           />
           <div className="card-body p-0">
             <h5 className="card-title text-center fs-2 fw-semibold">{title}</h5>
-            <p className="card-text fs-4 text-center">
+            <p className="card-text fs-4 text-center text-wrap">
               {content}
             </p>
             

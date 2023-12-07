@@ -34,6 +34,9 @@ p {
 .bg-white-200 {
   background-color: #ECECEC;
 }
+.z-70 {
+  z-index: 70;
+}
 
 .drawer-content {
   position: relative;

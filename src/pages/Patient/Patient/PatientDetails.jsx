@@ -152,7 +152,7 @@ const TableDoctorDetails = () => {
       modalImg: false
     }))
   }
-
+  
   return (
     <>
       <TableDetailsContainer

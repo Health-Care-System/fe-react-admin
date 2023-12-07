@@ -7,8 +7,8 @@ import { DokterData } from "../Doctor/DokterData";
 export const HomePage = () => {
   return (
     <div className="homepage">
-    < DaftarPasien />
-    < DokterData />
+    <DaftarPasien />
+    <DokterData />
     </div>
     
   );

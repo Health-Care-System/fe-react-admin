@@ -7,14 +7,14 @@ import closeIcon from '../../../assets/icon/close-modal.svg'
 export const ImageModal = ({ source, closeModal }) => {
   return (
     <>
-      <Transparent disabled={true}>
+      <Transparent style={{ zIndex: '70'}} disabled={true}>
         <Button
           onClick={closeModal}
           type="button"
-          className="close-modal">
+          className="close-modal z-70">
           <img src={closeIcon} width={50} height={50} alt="Close Modal" />
         </Button>
-        <div className="image-modal mx-auto">
+        <div className="image-modal mx-auto" style={{ zIndex: '80'}}>
           <ImageWithFallback fallback={brokenImg} width={348} src={source} />
         </div>
       </Transparent>

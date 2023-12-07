@@ -1,5 +1,5 @@
 // Packages
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useGetAllDoctorTransaction } from "../../../services/patient-services";
@@ -7,8 +7,9 @@ import { useGetAllDoctorTransaction } from "../../../services/patient-services";
 // Utils & Services
 import useForm from "../../../hooks/useForm";
 import { formatDate } from "../../../utils/helpers";
+import useDebounce from "../../../hooks/useDebounce";
 import { theadDoctor } from "../../../utils/dataObject";
-import { updateStatusOrderDoctor } from "../../../services/transaction-services";
+import { getDoctorTransactionByID, updateStatusOrderDoctor } from "../../../services/transaction-services";
 
 // Components
 import { Column } from "./Column";
@@ -40,7 +41,6 @@ export const DoctorTable = () => {
     handleInput,
     setForm,
   } = useForm(initialState);
-  console.log(data)
   
   const { ref, inView } = useInView();
   const queryClient = useQueryClient();
@@ -101,14 +101,29 @@ export const DoctorTable = () => {
     }))
   }
 
-  const handleEdit = (status, id, offset) => {
+  const handleEdit = (status, id, offset, e) => {
+    e.stopPropagation();
     mutation.mutate({
       newStatus: status,
       id,
       offset
     })
   }
-    
+  
+  const [filterData, setFilterData] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  
+  const debouncedValue = useDebounce(form?.searchDoctor, 500);
+  useEffect(() => {
+    if (debouncedValue !== '') {
+      getDoctorTransactionByID(
+        setLoadingSearch,
+        setFilterData,
+        debouncedValue
+        )
+    }
+  }, [debouncedValue]);
+          
   return (
     <>
       <TableContainer
@@ -120,37 +135,37 @@ export const DoctorTable = () => {
       >
         <Column
           isError={isError}
-          isPending={isPending}
+          isPending={isPending || loadingSearch}
           refetch={refetch}
-          data={data?.pages}
-          search={form.search}
+          isDebounce={debouncedValue !== ''}
+          data={debouncedValue !== '' ? filterData : data?.pages}
           isFetch={isFetchingNextPage}
           reffer={ref}
           ifEmpty={'Tidak ada riwayat transaksi konsultasi dokter!'}
-          renderItem={(data, index, offset) => {
-            const date = formatDate(data?.created_at);
-            const subTotal = data?.price?.toLocaleString('ID-id');
+          renderItem={(item, index, offset) => {
+            const date = formatDate(item?.created_at);
+            const subTotal = item?.price?.toLocaleString('ID-id');
             return (
               <tr className="text-nowrap" key={index}>
-                <td>{data?.transaction_id}</td>
-                <td>{data?.Doctor_id}</td>
-                <td>{data?.user_id}</td>
-                <td className="text-capitalize">{data?.payment_method}</td>
+                <td>{item?.transaction_id}</td>
+                <td>{item?.Doctor_id}</td>
+                <td>{item?.user_id}</td>
+                <td className="text-capitalize">{item?.payment_method}</td>
                 <td>{`Rp ${subTotal}`}</td>
                 <td>{date}</td>
                 <td>
-                  {!data?.payment_confirmation
+                  {!item?.payment_confirmation
                     ? '-'
                     : <Button
                       className={'p-0 text-primary fw-semibold'}
-                      onClick={() => handleModalLink(data?.payment_confirmation)}>Link</Button>
+                      onClick={() => handleModalLink(item?.payment_confirmation)}>Link</Button>
                   }
                 </td>
                 <td className="d-flex justify-content-center">
                   <StatusBtn
-                    id={data?.transaction_id}
+                    id={item?.transaction_id}
                     handleAction={handleEdit}
-                    status={data?.payment_status}
+                    status={item?.payment_status}
                     offset={offset}
                   />
                 </td>
