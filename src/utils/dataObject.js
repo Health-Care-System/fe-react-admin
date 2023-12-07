@@ -228,6 +228,7 @@ export const theadDoctor = ["ID", "ID Dokter", "ID Pasien", "Metode Pembayaran",
 export const theadDoctorDetails = ["ID Transaksi", "ID Dokter", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadMedicine = ["ID", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Status"];
 export const theadDrugDetails = ["ID Transaksi", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
+export const theadDoctorList = ["ID", "Nama Lengkap", "Jenis Kelamin", "Email", "Spesialis", "Pengalaman", "Nomor STR"];
 
 export const titleUserDetail = [
   'ID',

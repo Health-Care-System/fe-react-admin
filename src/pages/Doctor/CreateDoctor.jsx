@@ -11,8 +11,48 @@ import {
 } from "../../utils/validation";
 import { ErrorMsg } from "../../components/Errors/ErrorMsg";
 import client from "../../utils/auth";
+import { CustomModal } from "../../components/ui/Modal/Modal";
+import { Transparent } from "../../components/ui/Container";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const CreateDoctor = () => {
+  const navigate = useNavigate()
+  const [modalDelete, setModalDelete] = useState(false);
+
+  const handleDeletePhoto = () => {
+    if (!form.tempImage) {
+      toast.error('Belum ada foto yang diinputkan', {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    setModalDelete(true);
+  };
+  
+  const handleDelete = () => {
+    setForm({
+      ...form,
+      profile_picture: null,
+      tempImage: null,
+    });
+    setErrors({
+      ...errors,
+      profile_picture: null,
+    });
+    
+    setModalDelete(false);
+  };
+  
+
   const initialState = {
     profile_picture: null,
     fullname: "",
@@ -21,8 +61,7 @@ export const CreateDoctor = () => {
     showPassword: false,
     gender: "",
     specialist: "",
-    birthDate: "",
-    phoneNumber: "",
+    price: "",
     experience: "",
     alumnus: "",
     no_str: "",
@@ -36,8 +75,7 @@ export const CreateDoctor = () => {
     showPassword: false,
     gender: "",
     specialist: "",
-    birthDate: "",
-    phoneNumber: "",
+    price: "",
     experience: "",
     alumnus: "",
     no_str: "",
@@ -47,8 +85,14 @@ export const CreateDoctor = () => {
     useForm(initialState, initialError);
 
   const options = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
+    { value: "Umum", label: "Dokter Umum" },
+    { value: "Anak", label: "Spesialis Anak" },
+    { value: "Kulit", label: "Dokter Kulit" },
+    { value: "Psikolog", label: "Psikolog Klinis" },
+    { value: "Jantung", label: "Dokter Jantung" },
+    { value: "Gigi", label: "Dokter Gigi" },
+    { value: "Mata", label: "Dokter Mata" },
+    { value: "Bedah", label: "Spesialis Bedah" },
   ];
 
   const togglePasswordVisibility = () => {
@@ -92,21 +136,9 @@ export const CreateDoctor = () => {
     }
   };
 
-  const handleRemovePhoto = () => {
-    setForm({
-      ...form,
-      profile_picture: null,
-      tempImage: null,
-    });
-    setErrors({
-      ...errors,
-      profile_picture: null,
-    });
-  };
 
   const handlePostDoctor = async () => {
     // REQ BODY
-    try {
       const data = new FormData();
       data.append("profile_picture", form.profile_picture);
       data.append("price", 700000);
@@ -115,8 +147,7 @@ export const CreateDoctor = () => {
       data.append("password", form.password);
       data.append("gender", form.gender);
       data.append("specialist", form.specialist);
-      // data.append("birthDate", form.birthDate);
-      // data.append("phoneNumber", form.phoneNumber);
+      data.append("price", form.price);
       data.append("experience", form.experience);
       data.append("alumnus", form.alumnus);
       data.append("no_str", form.no_str);
@@ -124,17 +155,26 @@ export const CreateDoctor = () => {
       if (validateAddDoctorForm(form, setErrors)) {
         try {
           setLoading(true);
-          const res = await client.post("/admins/register/doctor", data);
+          const res = await client.post("/admins/doctors/register", data);
           console.log(res);
-        } catch (error) { 
+          navigate('/doctors')
+          toast.success("Data dokter berhasil ditambahkan", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          
+        } catch (error) {
           console.log(error);
         } finally {
           setLoading(false);
         }
       }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -147,6 +187,7 @@ export const CreateDoctor = () => {
                 <img
                   src={form.tempImage}
                   alt="photo"
+                  className="rounded-4 "
                   style={{ maxHeight: "13.75rem", maxWidth: "16.125rem" }}
                 />
               </div>
@@ -180,7 +221,10 @@ export const CreateDoctor = () => {
                 onChange={(e) => handleFileInputChange(e)}
                 style={{ display: "none" }}
               />
-              <Button onClick={handleRemovePhoto} className="btn-light">
+              <Button
+                onClick={handleDeletePhoto}
+                className="btn-light"
+              >
                 Hapus Foto
               </Button>
             </div>
@@ -189,7 +233,7 @@ export const CreateDoctor = () => {
         <div className="d-grid list-input pt-1">
           <form className="d-grid gap-2">
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Nama
               </label>
               <Input
@@ -200,10 +244,12 @@ export const CreateDoctor = () => {
                 value={form.fullname}
                 onChange={(e) => handleInput(e)}
               />
-              <ErrorMsg msg={errors.fullname} className={"text-end "} />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.fullname} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Email
               </label>
               <Input
@@ -214,10 +260,12 @@ export const CreateDoctor = () => {
                 value={form.email}
                 onChange={(e) => handleInput(e)}
               />
-              <ErrorMsg msg={errors.email} className={"text-end "} />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.email} />
             </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Password
               </label>
               <div className="input-group col-12 col-lg p-0 ">
@@ -239,11 +287,12 @@ export const CreateDoctor = () => {
                   />
                 </span>
               </div>
-              <ErrorMsg msg={errors.password} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.password} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
                 Jenis Kelamin
               </label>
               <div className="d-flex gap-4 col-12 col-lg px-0 px-lg-3 ">
@@ -251,31 +300,31 @@ export const CreateDoctor = () => {
                   <Input
                     type="radio"
                     name="gender"
-                    value="pria"
-                    checked={form.gender === "pria"}
+                    value="male"
+                    checked={form.gender === "male"}
                     onChange={(e) => handleInput(e)}
                   />
-                  <label htmlFor="pria">Pria</label>
+                  <label htmlFor="male">Pria</label>
                 </div>
                 <div className="d-flex gap-2 ">
                   <Input
                     type="radio"
                     name="gender"
-                    value="wanita"
-                    checked={form.gender === "wanita"}
+                    value="female"
+                    checked={form.gender === "female"}
                     onChange={(e) => handleInput(e)}
                   />
-                  <label htmlFor="wanita">Wanita</label>
+                  <label htmlFor="female">Wanita</label>
                 </div>
               </div>
-
-              <ErrorMsg msg={errors.gender} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.gender} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
               <label
                 htmlFor="specialist"
-                className="fw-bold col-12 col-lg-3 text-end px-0  "
+                className="fw-bold col-12 col-lg-3 text-lg-end px-0  "
               >
                 Spesialis
               </label>
@@ -286,40 +335,28 @@ export const CreateDoctor = () => {
                 name="specialist"
                 value={form.specialist}
               />
-              <ErrorMsg msg={errors.specialist} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.specialist} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
-                Tanggal Lahir
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
+                Harga Konsultasi
               </label>
               <Input
-                type="date"
-                onChange={(e) => handleInput(e)}
-                className="form-control p-3 col-12 col-lg input-styles"
-                name="birthDate"
-                value={form.birthDate}
-              />
-              <ErrorMsg msg={errors.birthDate} className={"text-end "} />
-            </div>
-
-            {/* <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 px-0 text-end ">
-                No Telepon
-              </label>
-              <Input
-                type="text"
+                type="number"
                 className="form-control p-3 col-12 col-lg input-styles "
                 onChange={(e) => handleInput(e)}
-                placeholder="Masukkan Nomor Telepon"
-                name="phoneNumber"
-                value={form.phoneNumber}
+                placeholder="Harga Konsultasi Dokter"
+                name="price"
+                value={form.price}
               />
-              <ErrorMsg msg={error.phoneNumber} className={"text-end "} />
-            </div> */}
-
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.price} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 text-end col-lg-3 px-0 ">
+              <label className="fw-bold col-12 text-lg-end col-lg-3 px-0 ">
                 Pengalaman Kerja
               </label>
               <Input
@@ -330,11 +367,12 @@ export const CreateDoctor = () => {
                 name="experience"
                 value={form.experience}
               />
-              <ErrorMsg msg={errors.experience} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.experience} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 col-lg-3 text-end px-0 ">
+              <label className="fw-bold col-12 col-lg-3 text-lg-end px-0 ">
                 Alumnus
               </label>
               <Input
@@ -345,11 +383,12 @@ export const CreateDoctor = () => {
                 name="alumnus"
                 value={form.alumnus}
               />
-              <ErrorMsg msg={errors.alumnus} className={"text-end "} />
             </div>
-
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.alumnus} />
+            </div>
             <div className="row align-items-md-center gap-2 ">
-              <label className="fw-bold col-12 px-0 text-end col-lg-3 ">
+              <label className="fw-bold col-12 px-0 text-lg-end col-lg-3 ">
                 Nomor STR
               </label>
               <Input
@@ -360,7 +399,9 @@ export const CreateDoctor = () => {
                 name="no_str"
                 value={form.no_str}
               />
-              <ErrorMsg msg={errors.no_str} className={"text-end "} />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.no_str} />
             </div>
           </form>
         </div>
@@ -394,6 +435,21 @@ export const CreateDoctor = () => {
           )}
         </Button>
       </div>
+      
+      {form.tempImage && modalDelete && (
+        <Transparent
+          disabled={true}
+          className="min-vw-100 position-fixed end-0"
+        >
+          <CustomModal
+            disabled={loading}
+            title={"Hapus Foto?"}
+            content={"Apabila anda menghapus Foto, maka foto akan terhapus"}
+            confirmAction={() => handleDelete()}
+            cancelAction={() => setModalDelete(false)}
+          />
+        </Transparent>
+      )}
     </section>
   );
 };
