@@ -45,8 +45,6 @@ export const Column = ({
     )
   }
   
-  console.log(data)
-
   if (isDebounce) {
     return (
       <>
