@@ -13,7 +13,7 @@ export const handleLogin = async (formData, setErrors, setFormData, setLoading) 
       });
       if (res.status === 200) {
         const { token } = res.data.results;
-        Cookies.set('token', token);
+        Cookies.set('tokenAdmin', token);
         window.location.href = '/';
       }
     } catch (error) {
