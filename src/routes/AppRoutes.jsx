@@ -29,6 +29,7 @@ const AppRoutes = () => (
         <Route path="/doctors" element={<DoctorPage />} />
         <Route path="/doctors/create-doctor" element={<CreateDoctor />} />
         <Route path="/doctors/detail-doctor" element={<DetailDoctor />} />
+        {/* <Route path="/doctors/detail-doctor/:id" element={<DetailDoctor />} /> */}
         <Route path="/doctors/edit-doctor" element={<EditDoctor />} />
         <Route path="/settings" element={<SettingPage />} />
       </Route>

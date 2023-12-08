@@ -2,37 +2,45 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import back from '../../assets/icon/arrow-right.svg' 
 import Photo from '../../assets/icon/Photo.svg'
 import deleteIcon from '../../assets/icon/DeleteIconMerah.svg'
-import visibility from '../../assets/icon/visibility.svg'
 import { Button } from '../../components/ui/Button'
-import { useState } from 'react'
-import axios from 'axios'
+import client from '../../utils/auth'
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const DetailDoctor = () => {
     const navigate = useNavigate();
     // const data = location.state ? location.state.data : null;
-    const {state} =  useLocation();
-    console.log(state)
-    const {data} = state;
+    const { state } = useLocation();
+    const { data } = state || {};
 
-    const [showPassword, setShowPassword] = useState(false);
 
-    const togglePasswordVisibility = () => {
-        setShowPassword((prev) => !prev);
-    };
-
+    
     const handleEditClick = (e) => {
         navigate('/doctors/edit-doctor', { state: { editform: data }});
     };
 
+
     const handleDelete = async () => {
         try {
-          await axios.delete('URL_API');
-          console.log('Data berhasil dihapus:', data);
-          navigate('/doctors');
+          const res = await client.delete(`/admins/doctor/${data.id}`);
+          console.log("masuk ga?")
+          if (res?.status === 200) {
+            navigate('/doctors')
+            // toast.success('Anda berhasil menghapus pasien!', {
+            //   delay: 800
+            // });
+          } else {
+            throw new Error('Gagal menghapus data pasien!');
+          }
         } catch (error) {
-          console.error('Terjadi kesalahan saat menghapus data:', error);
+        //   toast.error(error.message, {
+        //     delay: 800
+        //   });
+        } finally {
         }
-    }
+      }
+
+    
 
     return(
         <div className='detailDoctor'>
@@ -52,9 +60,7 @@ export const DetailDoctor = () => {
             {data && (
                 <div className="row" style={{marginLeft:'20px'}}>
                     <div className="col-lg-3 col-md-12 d-flex flex-column align-items-center">
-                    <div className="photo mt-3" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Upload Photo Profile">
                         <img src={Photo} className="rounded" alt="example place" style={{ height: '270px', width: '220px' }} />
-                    </div>
                     </div>
 
                     <div className="col-lg-9 col-md-12 mt-lg-3 mt-md-0" style={{marginTop:'10px'}}>
@@ -76,32 +82,9 @@ export const DetailDoctor = () => {
                         <th className='fw-normal' scope="col">{data.email}</th>
                         </tr>
 
-                        {/* <tr>
-                        <th className='fw-semibold fs-3' >Password</th>
-                        <th className='fw-normal' scope="col">{data.password}</th>
-                        <span className="input-group-text" onClick={togglePasswordVisibility}>
-                            <img src={visibility} alt={showPassword ? 'hide' : 'show'} />
-                        </span>
-                        </tr> */}
-
                         <tr>
-                        <th className='fw-semibold fs-3' >Password</th>
-                        <td className='fw-normal'>
-                            {showPassword ? data.password : '********'}
-                            {/* <span className="input-group-text" onClick={togglePasswordVisibility}> */}
-                            <img src={visibility} alt={showPassword ? 'hide' : 'show'} onClick={togglePasswordVisibility} style={{ marginLeft: '200px' }}/>
-                            {/* </span> */}
-                        </td>
-                        </tr>
-
-                        <tr>
-                        <th className='fw-semibold' >Tanggal Lahir</th>
-                        <th className='fw-normal' scope="col">{data.tanggalLahir}</th>
-                        </tr>
-
-                        <tr>
-                        <th className='fw-semibold' >No. Telephone</th>
-                        <th className='fw-normal' scope="col">{data.noTelephone}</th>
+                        <th className='fw-semibold fs-3' >Biaya</th>
+                        <th className='fw-normal' scope="col">{data.email}</th>
                         </tr>
 
                         <tr>
@@ -111,8 +94,20 @@ export const DetailDoctor = () => {
 
                         <tr>
                         <th className='fw-semibold' >Pengalaman</th>
-                        <th className='fw-normal' scope="col">{data.pengalaman}</th>
+                        <th className='fw-normal' scope="col">{data.experience}</th>
                         </tr>
+                        
+
+                        <tr>
+                        <th className='fw-semibold' >Alumnus</th>
+                        <th className='fw-normal' scope="col">{data.alumnus}</th>
+                        </tr>
+
+                        <tr>
+                        <th className='fw-semibold' >No.STR</th>
+                        <th className='fw-normal' scope="col">{data.no_str}</th>
+                        </tr>
+
                     </thead>
                     </table>
                 </div>
@@ -123,7 +118,7 @@ export const DetailDoctor = () => {
 
             <div className=" d-flex justify-content-center mt-3" style={{marginTop: '20px'}}>
                 {/* <Link to={"/doctors/edit-doctor"} className="btn btn-dark" style={{marginRight: '10px'}}>Edit</Link> */}
-                <Button className="btn btn-primary text-white mx-2"  onClick={(e) => {handleEditClick(e) }}>Edit</Button> 
+                <Button className="btn btn-primary text-white mx-2"  onClick={() => {handleEditClick() }}>Edit</Button> 
                 {/* <button type="button" class="btn btn-secondary">Delete</button> */}
 
                 <button
@@ -165,7 +160,7 @@ export const DetailDoctor = () => {
                         Tidak
                         </button>
 
-                        <Button type="button" className="btn btn-outline-success" onClick={handleDelete}>
+                        <Button type="button" className="btn btn-outline-success" onClick={(e) => {handleDelete(e) }}>
                         Ya
                         </Button>
                     </div>

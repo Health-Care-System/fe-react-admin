@@ -2,58 +2,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import add from '../../assets/icon/add.svg'
 import { useEffect, useState } from "react";
 import axios from "axios";
+import client from "../../utils/auth";
 
 export const DoctorPage = () => {
 
   const location = useLocation();
-  const newFormData = location.state ? location.state.newFormData : null;
+  const newFormData = location.state ?.newFormData 
   const navigate = useNavigate();
-  // const [doctorList, setDoctorList] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-
+  
   const handleRowClick = (doctor) => {
     // navigate(`/doctors/detail-doctor/${fullname}`, { state: { data: yourDataArray }});
-    navigate(`/doctors/detail-doctor/${doctor.id}`, { state: { data: newFormData }});
+    navigate(`/doctors/detail-doctor/${doctor.id}`, { state: { data: doctor }});
   };
-
-  // useEffect(() => {
-  //   const fetchDoctorData = async () => {
-  //     try {
-  //       const res = await axios.get('{{local}}/admins/doctors');  // Ganti dengan URL API yang sesuai
-  //       setDoctorList(res.data);
-  //     } catch (error) {
-  //       setError(error.message || 'Terjadi kesalahan saat mengambil data.');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchDoctorData();
-  //   }, []);
-
-  //   if (loading) {
-  //     return <div>Loading...</div>;
-  //   }
-
-  //   if (error) {
-  //     return <div>Error: {error}</div>;
-  //   }
-
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://api.example.com/data');
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <div className="DoctorPage border border-2 rounded" style={{marginLeft:'30px', marginRight:'20px'}}>
@@ -116,18 +76,17 @@ export const DoctorPage = () => {
               </tbody> */}
 
               <tbody>
-              {data.map((doctor) => (
-                <tr key={doctor.id} onClick={() => handleRowClick(doctor.fullname)}>
-                  <td>{doctor.id}</td>
-                  <td>{doctor.photo_profile}</td>
-                  <td>{doctor.fullname}</td>
-                  <td>{doctor.gender}</td>
-                  <td>{doctor.email}</td>
-                  <td>{doctor.specialist}</td>
-                  <td>{doctor.experience}</td>
-                  <td>{doctor.no_str}</td>
-                </tr>
-              ))}
+                {data.map((doctor) => (
+                  <tr key={doctor.id} onClick={() => handleRowClick(doctor)}>
+                    <td>{doctor.id}</td>
+                    <td>{doctor.fullname}</td>
+                    <td>{doctor.gender}</td>
+                    <td>{doctor.email}</td>
+                    <td>{doctor.specialist}</td>
+                    <td>{doctor.experience}</td>
+                    <td>{doctor.no_str}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

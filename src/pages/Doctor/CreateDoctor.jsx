@@ -4,7 +4,6 @@ import  Input  from "../../components/ui/Form/Input"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import visibility from '../../assets/icon/visibility.svg'
-import axios from "axios"
 import client from "../../utils/auth"
 
 
@@ -209,30 +208,45 @@ export const CreateDoctor = () => {
         const data = new FormData()
 
         data.append('fullname', newform.fullname)
+        data.append('gender', newform.gender)
+        data.append('email', newform.email)
+        data.append('password', newform.password)
+        data.append('tanggalLahir', newform.tanggalLahir)
+        data.append('specialist', newform.specialist)
+        data.append('experience', newform.experience)
+        data.append('alumnus', newform.alumnus)
+        data.append('noTelephone', newform.noTelephone)
+        data.append('no_str', newform.no_str)
 
         validateForm(e);
 
-        if (
-            newform.fullname && 
-            newform.gender && 
-            newform.email && 
-            newform.password &&
-            newform.tanggalLahir && 
-            newform.specialist && 
-            newform.experience &&
-            newform.alumnus && 
-            newform.noTelephone && 
-            newform.no_str
-        ){
+        // if (
+        //     newform.fullname && 
+        //     newform.gender && 
+        //     newform.email && 
+        //     newform.password &&
+        //     newform.tanggalLahir && 
+        //     newform.specialist && 
+        //     newform.experience &&
+        //     newform.alumnus && 
+        //     newform.noTelephone && 
+        //     newform.no_str
+        // ){
             
-        try {
-            // Kirim data ke server menggunakan axios.post
-            const res = await client.post('/admins/register/doctor', data);
+        // try {
+        //     // Kirim data ke server menggunakan axios.post
+        //     const res = await client.post('/admins/register/doctor', data);
     
-            // Tambahkan data yang berhasil disimpan ke state atau lakukan penanganan lainnya
-            setForm([...form, res.data]);
+        //     // Tambahkan data yang berhasil disimpan ke state atau lakukan penanganan lainnya
+        //     setForm([res.data]);
     
             // Reset formulir setelah berhasil disimpan
+            client
+                .post('/admins/register/doctor', data)
+                .then((res) => {
+                    console.log(res)
+                    alert("Anda berhasil menambahkan doctor");
+
             setNewForm({
                 fullname: '',
                 gender: '',
@@ -244,16 +258,17 @@ export const CreateDoctor = () => {
                 alumnus: '',
                 noTelephone: '',
                 no_str: '',
-            });
+             });
     
-            // Navigasi ke halaman 'doctors' dengan membawa data baru
-            // navigate('/doctors', { state: { newFormData: response.data } });
-            navigate('/doctors');
-            } catch (error) {
-            console.error('Error posting data:', error);
-            // Handle error jika terjadi
-            }
-        }
+            // // Navigasi ke halaman 'doctors' dengan membawa data baru
+            // navigate('/doctors', { state: { newFormData: res.data } });
+            // // navigate('/doctors');
+            // } catch (error) {
+            // console.error('Error posting data:', error);
+            // // Handle error jika terjadi
+            // }
+        })
+        .catch((err) => console.log(err));
     }
 
     return(
@@ -284,7 +299,7 @@ export const CreateDoctor = () => {
                                     <Input
                                     type="text"
                                     name="fullname"
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     value={newform.fullname}
                                     placeHolder={"Masukkan nama"}
                                     className="form-control"
@@ -304,7 +319,7 @@ export const CreateDoctor = () => {
                                     className="form-control"
                                     name="email"
                                     value={newform.email}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <p className="error" style={{ color: 'red' }}>{errorMsg.email}</p>
                                 </div>
@@ -342,7 +357,7 @@ export const CreateDoctor = () => {
                                 className="form-control w-50"
                                 name="password"
                                 value={newform.password}
-                                handleChange={(e) => handleInputChange(e)}
+                                onChange={(e) => handleInputChange(e)}
                                 />
                                 <span className="input-group-text" onClick={togglePasswordVisibility}>
                                 <img src={visibility} alt={showPassword ? 'hide' : 'show'} />
@@ -363,7 +378,7 @@ export const CreateDoctor = () => {
                                     name="gender"
                                     value="Laki-Laki"
                                     checked={newform.gender === "Laki-Laki"}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <label className="form-check-label" htmlFor="inlineRadio1">
                                     Laki-Laki
@@ -376,7 +391,7 @@ export const CreateDoctor = () => {
                                     name="gender"
                                     value="Perempuan"
                                     checked={newform.gender === "Perempuan"}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <label className="form-check-label" htmlFor="inlineRadio2">
                                     Perempuan
@@ -397,7 +412,7 @@ export const CreateDoctor = () => {
                                     className="form-control"
                                     name="tanggalLahir"
                                     value={newform.tanggalLahir}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <p className="error" style={{ color: 'red' }}>{errorMsg.tanggalLahir}</p>
                                 </div>
@@ -454,7 +469,7 @@ export const CreateDoctor = () => {
                                     className="form-control"
                                     name="experience"
                                     value={newform.experience}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <p className="error" style={{ color: 'red' }}>{errorMsg.experience}</p>
                                 </div>
@@ -471,7 +486,7 @@ export const CreateDoctor = () => {
                                     className="form-control"
                                     name="alumnus"
                                     value={newform.alumnus}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <p className="error" style={{ color: 'red' }}>{errorMsg.alumnus}</p>
                                 </div>
@@ -488,7 +503,7 @@ export const CreateDoctor = () => {
                                     className="form-control"
                                     name="noTelephone"
                                     value={newform.noTelephone}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <p className="error" style={{ color: 'red' }}>{errorMsg.noTelephone}</p>
                                 </div>
@@ -505,7 +520,7 @@ export const CreateDoctor = () => {
                                     className="form-control"
                                     name="no_str"
                                     value={newform.no_str}
-                                    handleChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleInputChange(e)}
                                     />
                                     <p className="error" style={{ color: 'red' }}>{errorMsg.no_str}</p>
                                 </div>
