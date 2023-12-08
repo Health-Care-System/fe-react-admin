@@ -7,6 +7,7 @@ import "./RecentPatients.css"
 export const RecentPatient = () => {
     const patientData = [
         {
+          id: '1',
           name: 'Joshua Kristin',
           gender: 'Male',
           weight: '58 kg',
@@ -16,6 +17,7 @@ export const RecentPatient = () => {
           image: 'path/to/image2.jpg',
         },
         {
+          id: '2',
           name: 'Namira Zaitun',
           gender: 'Female',
           weight: '48 kg',
@@ -29,20 +31,22 @@ export const RecentPatient = () => {
     return (
       <>
         <div className="table-responsive card shadow border-0">
-            <table className="table table-borderless">
+            <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Jenis Kelamin</th>
+                        <th>ID</th>
+                        <th>Nama Lengkap</th>
+                        <th>Gender</th>
+                        <th>Tgl Lahir</th>
+                        <th>Gol.Darah</th>
                         <th>Berat Badan</th>
-                        <th>Discase</th>
-                        <th>Date</th>
-                        <th>Status</th>
+                        <th>Tinggi Badan</th>
                     </tr>
                 </thead>
                 <tbody>
                   {patientData.map((patient, index) => (
                     <tr key={index}>
+                      <td>{patient.id}</td>
                       <td className="d-flex flex-row align-items-center gap-2 text-nowrap">
                         <div className="rounded-circle border border-2 border-dark">
                           <img src={bulletIcon} alt={patient.name} width={34} height={34} className="rounded-circle object-fit-cover" />

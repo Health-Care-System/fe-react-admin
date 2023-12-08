@@ -9,13 +9,21 @@ export const formatNumber = (num) => {
   return num;
 };
 
-export const formattedDate = (date) => {
-  const utc = new Date(date);
-  const options = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  };
-  const formattedDate = utc.toLocaleDateString('ID-id', options);
-  return formattedDate;
+export const formatDate = (inputDate) => {
+  if (inputDate !== '') {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const formattedDate = new Date(inputDate).toLocaleDateString('id-ID', options);
+    return formattedDate;
+  } else {
+    return '-'
+  }
+}
+export const formatDateWithTime = (inputDate) => {
+  if (inputDate !== '') {
+    const options = { year: 'numeric', month: 'short', day: 'numeric',hour: 'numeric', minute: 'numeric', second: 'numeric'};
+    const formattedDate = new Date(inputDate).toLocaleDateString('id-ID', options).replace(/\./g, ':');
+    return formattedDate;
+  } else {
+    return '-'
+  }
 }

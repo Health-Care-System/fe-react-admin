@@ -13,7 +13,9 @@ import { PatientData } from '../pages/Patient/Patient/PatientData';
 import { PatientTransaction } from '../pages/Patient/Transaction/PatientTransaction';
 import { PrivateRoute } from './PrivateRoute';
 import { PatientDetails } from '../pages/Patient/Patient/PatientDetails';
+import React from 'react';
 
+const MemoizedPatientData = React.memo(PatientData)
 const AppRoutes = () => (
   <Routes>
     <Route path="/login" element={<LoginPage />} />
@@ -22,15 +24,14 @@ const AppRoutes = () => (
         <Route path="/" element={<HomePage />} />
         <Route path="/drugs" element={<DrugPage />} />
         <Route path='/patients' element={<PatientPage />}>
-          <Route path="/patients/data" element={<PatientData />} />
+          <Route path="/patients/data" element={<MemoizedPatientData />} />
           <Route path="/patients/transactions" element={<PatientTransaction />} />
         </Route>
         <Route path="/patients/data/:userId" element={<PatientDetails />} />
         <Route path="/doctors" element={<DoctorPage />} />
         <Route path="/doctors/create-doctor" element={<CreateDoctor />} />
-        <Route path="/doctors/detail-doctor" element={<DetailDoctor />} />
-        {/* <Route path="/doctors/detail-doctor/:id" element={<DetailDoctor />} /> */}
-        <Route path="/doctors/edit-doctor" element={<EditDoctor />} />
+        <Route path="/doctors/detail-doctor/:id" element={<DetailDoctor />} />
+        <Route path="/doctors/edit-doctor/:id" element={<EditDoctor />} />
         <Route path="/settings" element={<SettingPage />} />
       </Route>
     </Route>

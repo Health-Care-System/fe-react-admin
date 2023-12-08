@@ -1,547 +1,455 @@
-import { Button } from "../../components/ui/Button"
-import Photo from '../../assets/icon/Upload-image.svg'
-import  Input  from "../../components/ui/Form/Input"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import visibility from '../../assets/icon/visibility.svg'
-import client from "../../utils/auth"
-
+import Photo from "../../assets/icon/Upload-Image.svg";
+import { Button } from "../../components/ui/Button";
+import Input from "../../components/ui/Form/Input";
+import { Select } from "../../components/ui/Form/Select";
+import "./doctor.css";
+import useForm from "../../hooks/useForm";
+import visibility from "../../assets/icon/visibility.svg";
+import {
+  validateAddDoctorForm,
+  validateExtImage,
+} from "../../utils/validation";
+import { ErrorMsg } from "../../components/Errors/ErrorMsg";
+import client from "../../utils/auth";
+import { CustomModal } from "../../components/ui/Modal/Modal";
+import { Transparent } from "../../components/ui/Container";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const CreateDoctor = () => {
-    const navigate = useNavigate();
-    const [form, setForm] =  useState([]);
-    const [newform, setNewForm] = useState({
-        fullname: '',
-        gender: '',
-        email: '',
-        password: '',
-        tanggalLahir: '',
-        specialist: '',
-        experience: '',
-        alumnus: '',
-        noTelephone: '',
-        no_str: '',
+  const navigate = useNavigate()
+  const [modalDelete, setModalDelete] = useState(false);
+
+  const handleDeletePhoto = () => {
+    if (!form.tempImage) {
+      toast.error('Belum ada foto yang diinputkan', {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    setModalDelete(true);
+  };
+  
+  const handleDelete = () => {
+    setForm({
+      ...form,
+      profile_picture: null,
+      tempImage: null,
     });
+    setErrors({
+      ...errors,
+      profile_picture: null,
+    });
+    
+    setModalDelete(false);
+  };
+  
 
-    const [errorMsg, setErrorMsg] = useState({
-        fullname: '',
-        gender: '',
-        email: '',
-        password: '',
-        tanggalLahir: '',
-        specialist: '',
-        experience: '',
-        alumnus: '',
-        noTelephone: '',
-        no_str: '',
-    })
+  const initialState = {
+    profile_picture: null,
+    fullname: "",
+    email: "",
+    password: "",
+    showPassword: false,
+    gender: "",
+    specialist: "",
+    price: "",
+    experience: "",
+    alumnus: "",
+    no_str: "",
+  };
 
-    // const{
-    //     register,
-    //     // handleSubmit,
-    //     formState: {errors},
-    // } = useForm()
-    // const onSubmit = (data) => console.log(data)
+  const initialError = {
+    profile_picture: null,
+    fullname: "",
+    email: "",
+    password: "",
+    showPassword: false,
+    gender: "",
+    specialist: "",
+    price: "",
+    experience: "",
+    alumnus: "",
+    no_str: "",
+  };
 
-    const [showPassword, setShowPassword] = useState(false);
+  const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
+    useForm(initialState, initialError);
 
-    const togglePasswordVisibility = () => {
-        setShowPassword((prev) => !prev);
-    };
+  const options = [
+    { value: "Umum", label: "Dokter Umum" },
+    { value: "Anak", label: "Spesialis Anak" },
+    { value: "Kulit", label: "Dokter Kulit" },
+    { value: "Psikolog", label: "Psikolog Klinis" },
+    { value: "Jantung", label: "Dokter Jantung" },
+    { value: "Gigi", label: "Dokter Gigi" },
+    { value: "Mata", label: "Dokter Mata" },
+    { value: "Bedah", label: "Spesialis Bedah" },
+  ];
 
-    const handleInputChange = (e) => {
-        console.log("masuk ga?");
-        const { name, value } = e.target;
-        setNewForm({
-        ...newform,
-        [name]: value,
+  const togglePasswordVisibility = () => {
+    setForm((prevState) => ({
+      ...prevState,
+      showPassword: !prevState.showPassword,
+    }));
+  };
+
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!validateExtImage(file)) {
+        setErrors({
+          ...errors,
+          profile_picture:
+            "Hanya file dengan ekstensi .jpg, .jpeg, dan .png yang diperbolehkan.",
         });
-
-        validateForm(e);
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataURL = e.target.result;
+          setForm({
+            ...form,
+            profile_picture: file,
+            tempImage: dataURL,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setForm({
+        ...form,
+        profile_picture: null,
+        tempImage: null,
+      });
+      setErrors({
+        ...errors,
+        profile_picture: null,
+      });
     }
+  };
 
-    const validateForm = (e) => {
-        const { name, value } = e.target
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-        if(name === "fullname"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    fullname: "Nama Tidak Boleh Kosong"
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    fullname: ''
-                })
-            }
-        } else if(name === "gender"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    gender: 'Jenis Kelamin harus dipilih'
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    gender:''
-                })
-            }
-        } else if(name === "email"){
-            if(value === "") {
-                setErrorMsg({
-                    ...errorMsg,
-                    email: 'Email tidak boleh kosong.'
-                })
-            } else if(!emailRegex.test(value)){
-                setErrorMsg({
-                    ...errorMsg,
-                    email: 'Masukkan email yang valid.'
-                })
-            }
-            else {
-                setErrorMsg({
-                    ...errorMsg,
-                    email: ''
-                })
-            }
-        } else if(name === "password") {
-            if(value === "") {
-                setErrorMsg({
-                    ...errorMsg,
-                    password: 'Password tidak boleh kosong.'
-                })
-            } else if(!passwordRegex.test(value)){
-                setErrorMsg({
-                    ...errorMsg,
-                    password: 'Password harus memiliki setidaknya 8 character, 1 special character, angka, dan huruf.'
-                })
-            } else {
-                setErrorMsg({
-                    ...errorMsg,
-                    password: ''
-                })
-            }
-        } else if(name === "tanggalLahir"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    tanggalLahir: 'Tanggal Lahir harus diisi'
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    tanggalLahir: ''
-                })
-            }
-        } else if(name === "specialist"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    specialist: 'Specialis harus diisi'
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    specialist: ''
-                })
-            }
-        } else if(name === "experience"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    experience: 'Pengalaman harus diisi'
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    experience: ''
-                })
-            }
-        } else if(name === "alumnus"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    alumnus: 'Alumnus harus diisi'
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    alumnus: ''
-                })
-            }
-        }else if (name === "noTelephone"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    noTelephone: 'No Telephone harus diisi'
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    noTelephone: ''
-                })
-            }
-        }else if (name === "no_str"){
-            if(value === ""){
-                setErrorMsg({
-                    ...errorMsg,
-                    no_str: 'No STR harus diisi'
-                })
-            }else{
-                setErrorMsg({
-                    ...errorMsg,
-                    no_str: ''
-                })
-            }
-        }else{
+  const handlePostDoctor = async () => {
+    // REQ BODY
+      const data = new FormData();
+      data.append("profile_picture", form.profile_picture);
+      data.append("price", 700000);
+      data.append("fullname", form.fullname);
+      data.append("email", form.email);
+      data.append("password", form.password);
+      data.append("gender", form.gender);
+      data.append("specialist", form.specialist);
+      data.append("price", form.price);
+      data.append("experience", form.experience);
+      data.append("alumnus", form.alumnus);
+      data.append("no_str", form.no_str);
 
+      if (validateAddDoctorForm(form, setErrors)) {
+        try {
+          setLoading(true);
+          const res = await client.post("/admins/doctors/register", data);
+          console.log(res);
+          navigate('/doctors')
+          toast.success("Data dokter berhasil ditambahkan", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
         }
-    }
+      }
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("masuk ga?");
-
-        const data = new FormData()
-
-        data.append('fullname', newform.fullname)
-        data.append('gender', newform.gender)
-        data.append('email', newform.email)
-        data.append('password', newform.password)
-        data.append('tanggalLahir', newform.tanggalLahir)
-        data.append('specialist', newform.specialist)
-        data.append('experience', newform.experience)
-        data.append('alumnus', newform.alumnus)
-        data.append('noTelephone', newform.noTelephone)
-        data.append('no_str', newform.no_str)
-
-        validateForm(e);
-
-        // if (
-        //     newform.fullname && 
-        //     newform.gender && 
-        //     newform.email && 
-        //     newform.password &&
-        //     newform.tanggalLahir && 
-        //     newform.specialist && 
-        //     newform.experience &&
-        //     newform.alumnus && 
-        //     newform.noTelephone && 
-        //     newform.no_str
-        // ){
-            
-        // try {
-        //     // Kirim data ke server menggunakan axios.post
-        //     const res = await client.post('/admins/register/doctor', data);
-    
-        //     // Tambahkan data yang berhasil disimpan ke state atau lakukan penanganan lainnya
-        //     setForm([res.data]);
-    
-            // Reset formulir setelah berhasil disimpan
-            client
-                .post('/admins/register/doctor', data)
-                .then((res) => {
-                    console.log(res)
-                    alert("Anda berhasil menambahkan doctor");
-
-            setNewForm({
-                fullname: '',
-                gender: '',
-                email: '',
-                password: '',
-                tanggalLahir: '',
-                specialist: '',
-                experince: '',
-                alumnus: '',
-                noTelephone: '',
-                no_str: '',
-             });
-    
-            // // Navigasi ke halaman 'doctors' dengan membawa data baru
-            // navigate('/doctors', { state: { newFormData: res.data } });
-            // // navigate('/doctors');
-            // } catch (error) {
-            // console.error('Error posting data:', error);
-            // // Handle error jika terjadi
-            // }
-        })
-        .catch((err) => console.log(err));
-    }
-
-    return(
-        <div className="Create-Doctor">
-
-            <div className="container-fluid">
-                <div className="row" style={{marginLeft:'20px'}}>
-                    <div className="col-lg-3 col-md-12 d-flex flex-column align-items-center">
-                        <img src={Photo} className="rounded" alt="example place" style={{ height: '270px', width: '220px' }} />
-                    <div className="btn-group-vertical justify-content-end" role="group" aria-label="Vertical button group">
-                        <Button className="btn btn-primary text-white fs-4" type="submit">
-                            Unggah Photo
-                        </Button>
-                        <Button className="btn btn-primary text-white fs-4" type="submit">
-                            Hapus Photo
-                        </Button>
-                    </div>
-                    </div>
-
-                    <div className="col-lg-8 col-md-12 mt-lg-3 mt-md-0">
-                    <div className="formCreate mt-3">
-                        <form onSubmit={handleSubmit} >
-                        <div className="col-md-12 mb-3 row ">
-                                <label htmlFor="fullname" className="col-2 col-form-label text-end">
-                                Nama
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="text"
-                                    name="fullname"
-                                    onChange={(e) => handleInputChange(e)}
-                                    value={newform.fullname}
-                                    placeHolder={"Masukkan nama"}
-                                    className="form-control"
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.fullname}</p>
-                                </div>
-                            </div>
-
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="Email" className="col-2 col-form-label text-end">
-                                Email
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="text"
-                                    placeHolder={'Masukkan Email'}
-                                    className="form-control"
-                                    name="email"
-                                    value={newform.email}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.email}</p>
-                                </div>
-                            </div>
-                    
-                            {/* <div className="col-md-12 mb-3 row">
-                                <label htmlFor="password" className="col-2 col-form-label text-end">
-                                Password
-                                </label>
-                                <div className='col-10 input-group'>
-                                    <Input
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeHolder={'Masukkan Password'}
-                                    className="form-control"
-                                    name="password"
-                                    value={newform.password}
-                                    style={{ width: '100px' }}
-                                    handleChange={(e) => handleInputChange(e)}
-                                    />
-                                    <div className="input-group-text" onClick={togglePasswordVisibility}>
-                                        <img src={visibility} alt={showPassword ? 'hide' : 'show'} />
-                                    </div>
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.password}</p>
-                                </div>
-                            </div> */}
-
-                            <div className="col-md-12 mb-3 row">
-                            <label htmlFor="password" className="col-2 col-form-label text-end">
-                                Password
-                            </label>
-                            <div className='col-10 input-group'>
-                                <Input
-                                type={showPassword ? 'text' : 'password'}
-                                placeHolder={'Masukkan Password'}
-                                className="form-control w-50"
-                                name="password"
-                                value={newform.password}
-                                onChange={(e) => handleInputChange(e)}
-                                />
-                                <span className="input-group-text" onClick={togglePasswordVisibility}>
-                                <img src={visibility} alt={showPassword ? 'hide' : 'show'} />
-                                </span>
-                                <p className="error" style={{ color: 'red' }}>{errorMsg.password}</p>
-                            </div>
-                            </div>
-                    
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="gender" className="col-2 col-form-label text-end">
-                                Jenis Kelamin
-                                </label>
-                                <div className='col-10'>
-                                <div className="form-check form-check-inline">
-                                    <Input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="gender"
-                                    value="Laki-Laki"
-                                    checked={newform.gender === "Laki-Laki"}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <label className="form-check-label" htmlFor="inlineRadio1">
-                                    Laki-Laki
-                                    </label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <Input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="gender"
-                                    value="Perempuan"
-                                    checked={newform.gender === "Perempuan"}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <label className="form-check-label" htmlFor="inlineRadio2">
-                                    Perempuan
-                                    </label>
-                                </div>
-                                <p className="error" style={{ color: 'red' }}>{errorMsg.gender}</p>
-                                </div>
-                            </div>
-                    
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="tanggalLahir" className="col-2 col-form-label text-end">
-                                Tanggal Lahir
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="date"
-                                    placeHolder=''
-                                    className="form-control"
-                                    name="tanggalLahir"
-                                    value={newform.tanggalLahir}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.tanggalLahir}</p>
-                                </div>
-                            </div>
-                    
-                            {/* <div className="col-md-12 mb-3 row">
-                                <label htmlFor="specialis" className="col-2 col-form-label text-end">
-                                Spesialis
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="text"
-                                    placeHolder={'Spesialis'}
-                                    className="form-control"
-                                    name="specialist"
-                                    value={newform.specialist}
-                                    handleChange={(e) => handleInputChange(e)}
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.specialist}</p>
-                                </div>
-                            </div> */}
-
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="specialis" className="col-2 col-form-label text-end">
-                                Spesialis
-                                </label>
-                                <div className='col-10'>
-                                    <select
-                                    name="specialist"
-                                    onChange={(e) => handleInputChange(e)}
-                                    value={newform.specialist}
-                                    className="form-select"
-                                    aria-label="Default select example"
-                                    >
-                                        <option selected="">Choose</option>
-                                        <option value ="Dokter Umum">Dokter Umum</option>
-                                        <option value ="Anak">Spesialis Anak</option>
-                                        <option value ="Kulit">Spesialis Kulit</option>
-                                        <option value ="Gigi">Spesialis Gigi</option>
-                                        <option value ="Psikolog Klinis">Psikolog Klinis</option>
-                                    </select>
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.specialist}</p>
-                                </div>
-                            </div>
-
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="experience" className="col-2 col-form-label text-end">
-                                Pengalaman
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="text"
-                                    placeHolder={'Tahun Pengalaman Praktik'}
-                                    className="form-control"
-                                    name="experience"
-                                    value={newform.experience}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.experience}</p>
-                                </div>
-                            </div>
-
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="alumnus" className="col-2 col-form-label text-end">
-                                Alumnus
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="text"
-                                    placeHolder={'Riwayat Pendidikan'}
-                                    className="form-control"
-                                    name="alumnus"
-                                    value={newform.alumnus}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.alumnus}</p>
-                                </div>
-                            </div>
-
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="noTelephone" className="col-2 col-form-label text-end">
-                                No Telephone
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="text"
-                                    placeHolder={'No Telephone'}
-                                    className="form-control"
-                                    name="noTelephone"
-                                    value={newform.noTelephone}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.noTelephone}</p>
-                                </div>
-                            </div>
-
-                            <div className="col-md-12 mb-3 row">
-                                <label htmlFor="no_str" className="col-2 col-form-label text-end">
-                                Nomor STR
-                                </label>
-                                <div className='col-10'>
-                                    <Input
-                                    type="text"
-                                    placeHolder={'No STR'}
-                                    className="form-control"
-                                    name="no_str"
-                                    value={newform.no_str}
-                                    onChange={(e) => handleInputChange(e)}
-                                    />
-                                    <p className="error" style={{ color: 'red' }}>{errorMsg.no_str}</p>
-                                </div>
-                            </div>
-
-                        <div className="d-flex justify-content-center mt-3">
-                            <Button className="btn btn-outline-success mx-2" type="button" onClick={() => { }}>
-                            Batal
-                            </Button>
-                            <Button className="btn btn-primary text-white mx-2" type="submit">
-                            Simpan
-                            </Button>
-                        </div>
-                        </form>
-                    </div>
-                    </div>
+  return (
+    <section className="container-fluid ">
+      <div className="my-3 d-flex flex-column flex-lg-row align-items-center align-items-lg-start justify-content-lg-center gap-3  ">
+        <div className="d-flex flex-column align-items-start gap-3 mb-3 ">
+          <div>
+            {form.tempImage ? (
+              <div className="rounded mb-3 ">
+                <img
+                  src={form.tempImage}
+                  alt="photo"
+                  className="rounded-4 "
+                  style={{ maxHeight: "13.75rem", maxWidth: "16.125rem" }}
+                />
+              </div>
+            ) : (
+              <>
+                <div
+                  className="rounded bg-secondary-subtle mb-3 mx-auto "
+                  style={{
+                    padding: "3.1875rem 2rem",
+                    maxHeight: "16.125rem",
+                    maxWidth: "13.75rem",
+                  }}
+                >
+                  <img
+                    src={Photo}
+                    alt="photo"
+                    style={{ maxHeight: "9.75rem", maxWidth: "9.75rem" }}
+                  />
                 </div>
+              </>
+            )}
+            <ErrorMsg msg={errors.profile_picture} />
+            <div className="btn-group-vertical float-end">
+              <label htmlFor="upload-photo" className="btn btn-light">
+                Unggah Foto
+              </label>
+              <input
+                type="file"
+                id="upload-photo"
+                accept="image/*"
+                onChange={(e) => handleFileInputChange(e)}
+                style={{ display: "none" }}
+              />
+              <Button
+                onClick={handleDeletePhoto}
+                className="btn-light"
+              >
+                Hapus Foto
+              </Button>
             </div>
-
-            {/* <div className="row d-flex justify-content-center align-content-between flex-wrap">
-            </div> */}
+          </div>
         </div>
-    )
-}
+        <div className="d-grid list-input pt-1">
+          <form className="d-grid gap-2">
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
+                Nama
+              </label>
+              <Input
+                className="form-control input-styles p-3 col-12 col-lg"
+                placeholder="Masukkan Nama"
+                type="text"
+                name="fullname"
+                value={form.fullname}
+                onChange={(e) => handleInput(e)}
+              />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.fullname} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
+                Email
+              </label>
+              <Input
+                className="form-control input-styles p-3 col-12 col-lg "
+                placeholder="Masukkan Email"
+                type="text"
+                name="email"
+                value={form.email}
+                onChange={(e) => handleInput(e)}
+              />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.email} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
+                Password
+              </label>
+              <div className="input-group col-12 col-lg p-0 ">
+                <Input
+                  className="form-control input-styles p-3 "
+                  placeholder="Masukkan Password"
+                  onChange={(e) => handleInput(e)}
+                  type={form.showPassword ? "text" : "password"}
+                  name="password"
+                  value={form.password}
+                />
+                <span
+                  className="input-group-text cursor-pointer border-0 input-styles"
+                  onClick={togglePasswordVisibility}
+                >
+                  <img
+                    src={visibility}
+                    alt={form.showPassword ? "hide" : "show"}
+                  />
+                </span>
+              </div>
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.password} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
+                Jenis Kelamin
+              </label>
+              <div className="d-flex gap-4 col-12 col-lg px-0 px-lg-3 ">
+                <div className="d-flex gap-2 ">
+                  <Input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={form.gender === "male"}
+                    onChange={(e) => handleInput(e)}
+                  />
+                  <label htmlFor="male">Pria</label>
+                </div>
+                <div className="d-flex gap-2 ">
+                  <Input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={form.gender === "female"}
+                    onChange={(e) => handleInput(e)}
+                  />
+                  <label htmlFor="female">Wanita</label>
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.gender} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label
+                htmlFor="specialist"
+                className="fw-bold col-12 col-lg-3 text-lg-end px-0  "
+              >
+                Spesialis
+              </label>
+              <Select
+                options={options}
+                className="p-3 col-12 col-lg input-styles"
+                handleChange={(e) => handleInput(e)}
+                name="specialist"
+                value={form.specialist}
+              />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.specialist} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 col-lg-3 px-0 text-lg-end ">
+                Harga Konsultasi
+              </label>
+              <Input
+                type="number"
+                className="form-control p-3 col-12 col-lg input-styles "
+                onChange={(e) => handleInput(e)}
+                placeholder="Harga Konsultasi Dokter"
+                name="price"
+                value={form.price}
+              />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.price} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 text-lg-end col-lg-3 px-0 ">
+                Pengalaman Kerja
+              </label>
+              <Input
+                type="text"
+                onChange={(e) => handleInput(e)}
+                className="form-control p-3 col-12 col-lg input-styles "
+                placeholder="Tahun Pengalaman Praktik"
+                name="experience"
+                value={form.experience}
+              />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.experience} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 col-lg-3 text-lg-end px-0 ">
+                Alumnus
+              </label>
+              <Input
+                type="text"
+                className="form-control p-3 col-12 col-lg input-styles "
+                onChange={(e) => handleInput(e)}
+                placeholder="Riwayat Pendidikan"
+                name="alumnus"
+                value={form.alumnus}
+              />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.alumnus} />
+            </div>
+            <div className="row align-items-md-center gap-2 ">
+              <label className="fw-bold col-12 px-0 text-lg-end col-lg-3 ">
+                Nomor STR
+              </label>
+              <Input
+                type="number"
+                className="form-control p-3 col-12 col-lg input-styles "
+                onChange={(e) => handleInput(e)}
+                placeholder="Spesialis"
+                name="no_str"
+                value={form.no_str}
+              />
+            </div>
+            <div className="col-12 col-lg-8 offset-lg-3 ">
+              <ErrorMsg msg={errors.no_str} />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div className="d-flex justify-content-center align-items-center gap-5 my-3 ">
+        <Button
+          className="bg-transparent border-3 border-primary text-primary fw-semibold "
+          disabled={loading}
+        >
+          {loading ? (
+            <span
+              className="spinner-border spinner-border-sm"
+              aria-hidden="true"
+            ></span>
+          ) : (
+            "Batal"
+          )}
+        </Button>
+        <Button
+          className="bg-primary border-3 text-white "
+          type="submit"
+          onClick={handlePostDoctor}
+        >
+          {loading ? (
+            <span
+              className="spinner-border spinner-border-sm"
+              aria-hidden="true"
+            ></span>
+          ) : (
+            "Simpan"
+          )}
+        </Button>
+      </div>
+      
+      {form.tempImage && modalDelete && (
+        <Transparent
+          disabled={true}
+          className="min-vw-100 position-fixed end-0"
+        >
+          <CustomModal
+            disabled={loading}
+            title={"Hapus Foto?"}
+            content={"Apabila anda menghapus Foto, maka foto akan terhapus"}
+            confirmAction={() => handleDelete()}
+            cancelAction={() => setModalDelete(false)}
+          />
+        </Transparent>
+      )}
+    </section>
+  );
+};

@@ -1,52 +1,29 @@
-export const handleLoginError = (error, setErrors) => {
-  if (error.response) {
-    console.log(error.response)
-    const field = error?.response?.data?.meta?.message;
-    switch (error.response.status) {
-      case 401:
-        setErrors({
-          email: field.split(' ')[0].toLowerCase() === 'email'
-            ? 'Email tidak terdaftar!'
-            : 'Email atau password tidak valid!',
-        });
-        break;
-      case 400:
-        setErrors({
-          default: 'Form data tidak valid, harap masukkan data yang sesuai!',
-        });
-        break;
-      default:
-        setErrors({
-          default: 'Maaf, permintaan anda tidak dapat kami proses saat ini. Harap coba lagi',
-        });
+import axios from "axios";
+import Cookies from "js-cookie";
+import { validateFormLogin } from "../utils/validation";
+import { handleLoginError } from "../utils/response-handler";
+
+export const handleLogin = async (formData, setErrors, setFormData, setLoading) => {
+  const url = import.meta.env.VITE_BASEURL;
+  if (validateFormLogin(formData, setErrors)) {
+    try {
+      const res = await axios.post(`${url}/admins/login`, {
+        email: formData.email,
+        password: formData.password
+      });
+      if (res.status === 200) {
+        const { token } = res.data.results;
+        Cookies.set('token', token);
+        window.location.href = '/';
+      }
+    } catch (error) {
+      handleLoginError(error, setErrors);
+    } finally {
+      setLoading(false);
+      setFormData({
+        email: '',
+        password: '',
+      })
     }
   }
-};
-
-export const validateFormLogin = (formData, setErrors) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  let valid = true;
-  const newErrors = { email: '', password: '' };
-
-  if (!formData.email) {
-    newErrors.email = 'Email wajib diisi!';
-    valid = false;
-  } else if (!emailRegex.test(formData.email)) {
-    newErrors.email = 'Format email tidak valid!';
-    valid = false;
-  }
-
-  if (!formData.password) {
-    newErrors.password = 'Password wajib diisi!';
-    valid = false;
-  } else if (formData.password.length < 8) {
-    newErrors.password = 'Password harus memiliki setidaknya 8 karakter!';
-    valid = false;
-  } else if (!/(?=.*[a-z])(?=.*\d)/.test(formData.password)) {
-    newErrors.password = 'Password harus mengandung angka!';
-    valid = false;
-  }
-
-  setErrors(newErrors);
-  return valid;
-};
+}
