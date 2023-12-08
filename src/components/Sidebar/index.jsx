@@ -19,7 +19,7 @@ export const Sidebar = () => {
   const [modal, setModal] = useState(false)
   const navigate = useNavigate();
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove('tokenAdmin');
     navigate('/login');
   }
 

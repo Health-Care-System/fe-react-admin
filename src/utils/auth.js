@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const client = axios.create();
 client.interceptors.request.use(function (config) {
-  const token = Cookies.get('token');
+  const token = Cookies.get('tokenAdmin');
   config.headers['X-API-KEY'] = `Bearer ${token}`;
   config.headers.Authorization = `Bearer ${token}`;
   config.baseURL = import.meta.env.VITE_BASEURL;
@@ -20,7 +20,7 @@ client.interceptors.response.use(
     if (error.response) {
       const { status } = error.response;
       if (status === 401) {
-        Cookies.remove("token");
+        Cookies.remove("tokenAdmin");
         window.location.href = '/login';
       }
     }
