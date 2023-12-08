@@ -50,12 +50,22 @@ export const DoctorPage = () => {
                       key={index}
                     >
                       <td>{doctorData?.id}</td>
-                      <td>{doctorData?.fullname}</td>
+                      <td>
+                        <div className="d-flex gap-2 align-items-center ">
+                          <img
+                            src={doctorData?.profile_picture}
+                            alt="avatar doctor"
+                            className="object-fit-cover rounded-circle "
+                            style={{ width: "1.5rem", height: "1.5rem" }}
+                          />
+                          <p>{doctorData?.fullname}</p>
+                        </div>
+                      </td>
                       <td>{genderFormat[doctorData?.gender]}</td>
                       <td>{doctorData?.email}</td>
                       <td>{doctorData?.specialist}</td>
                       <td>{doctorData?.experience}</td>
-                      <td>{doctorData?.no_str}</td>
+                      <td className="text-secondary">{doctorData?.no_str}</td>
                     </tr>
                   );
                 }}

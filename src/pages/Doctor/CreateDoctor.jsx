@@ -51,7 +51,6 @@ export const CreateDoctor = () => {
     
     setModalDelete(false);
   };
-  
 
   const initialState = {
     profile_picture: null,
@@ -141,7 +140,6 @@ export const CreateDoctor = () => {
     // REQ BODY
       const data = new FormData();
       data.append("profile_picture", form.profile_picture);
-      data.append("price", 700000);
       data.append("fullname", form.fullname);
       data.append("email", form.email);
       data.append("password", form.password);
@@ -187,8 +185,8 @@ export const CreateDoctor = () => {
                 <img
                   src={form.tempImage}
                   alt="photo"
-                  className="rounded-4 "
-                  style={{ maxHeight: "13.75rem", maxWidth: "16.125rem" }}
+                  className="rounded-4 object-fit-cover "
+                  style={{ maxHeight: "13.75rem", maxWidth: "16.125rem", height: "13.75rem", width: "16.125rem" }}
                 />
               </div>
             ) : (

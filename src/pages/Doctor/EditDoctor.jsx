@@ -58,7 +58,7 @@ export const EditDoctor = () => {
   };
 
   const initialState = {
-    profile_picture: state.profile_picture,
+    profile_picture: state.profile_picture || null,
     fullname: state.fullname,
     email: state.email,
     gender: state.gender,
@@ -84,16 +84,18 @@ export const EditDoctor = () => {
   const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
     useForm(initialState, initialError);
 
-    const options = [
-      { value: "Umum", label: "Dokter Umum" },
-      { value: "Anak", label: "Spesialis Anak" },
-      { value: "Kulit", label: "Dokter Kulit" },
-      { value: "Psikolog", label: "Psikolog Klinis" },
-      { value: "Jantung", label: "Dokter Jantung" },
-      { value: "Gigi", label: "Dokter Gigi" },
-      { value: "Mata", label: "Dokter Mata" },
-      { value: "Bedah", label: "Spesialis Bedah" },
-    ];
+  console.log("form", form);
+
+  const options = [
+    { value: "Umum", label: "Dokter Umum" },
+    { value: "Anak", label: "Spesialis Anak" },
+    { value: "Kulit", label: "Dokter Kulit" },
+    { value: "Psikolog", label: "Psikolog Klinis" },
+    { value: "Jantung", label: "Dokter Jantung" },
+    { value: "Gigi", label: "Dokter Gigi" },
+    { value: "Mata", label: "Dokter Mata" },
+    { value: "Bedah", label: "Spesialis Bedah" },
+  ];
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -151,15 +153,6 @@ export const EditDoctor = () => {
         <div className="d-flex flex-column align-items-start gap-3 mb-3 ">
           <div>
             {form.photo_profile ? (
-              <div className="rounded mb-3 ">
-                <img
-                  src={form.tempImage || form.photo_profile}
-                  alt="photo"
-                  className="rounded-4 "
-                  style={{ maxHeight: "13.75rem", maxWidth: "16.125rem" }}
-                />
-              </div>
-            ) : (
               <>
                 <div
                   className="rounded bg-secondary-subtle mb-3 mx-auto "
@@ -172,7 +165,18 @@ export const EditDoctor = () => {
                   <img
                     src={Photo}
                     alt="photo"
-                    style={{ maxHeight: "9.75rem", maxWidth: "9.75rem" }}
+                    style={{ maxHeight: "9.75rem", maxWidth: "9.75rem", height: "9.75rem", width: "9.75rem" }}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="rounded mb-3 ">
+                  <img
+                    src={form.profile_picture}
+                    alt="photo"
+                    className="rounded-4 object-fit-cover "
+                    style={{ maxHeight: "13.75rem", maxWidth: "16.125rem", height: "16.125rem", width: "13.75rem"  }}
                   />
                 </div>
               </>

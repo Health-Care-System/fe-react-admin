@@ -138,28 +138,28 @@ export const updateDataDoctor = async (newData) => {
 //   }
 // };
 
-// export const handleDeleteArticle = async (
-//   id,
-//   setLoading,
-//   queryClient,
-//   setModalDelete
-// ) => {
-//   try {
-//     setLoading(true);
-//     const res = await client.delete(`/admins/doctor/${id}`);
-//     if (res.status === 200) {
-//       queryClient.invalidateQueries({ queryKey: ["doctors"] });
-//       toast.success("Dokter berhasil dihapus!", {
-//         delay: 800,
-//       });
-//     }
-//   } catch (error) {
-//     toast.error("Dokter gagal dihapus!", {
-//       delay: 800,
-//     });
-//     console.log(error?.response?.data?.meta?.message);
-//   } finally {
-//     setLoading(false);
-//     setModalDelete(false);
-//   }
-// };
+export const handleDeleteDoctor = async (
+  id,
+  setLoading,
+  queryClient,
+  setModalDelete
+) => {
+  try {
+    setLoading(true);
+    const res = await client.delete(`/admins/doctor/${id}`);
+    if (res.status === 200) {
+      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+      toast.success("Dokter berhasil dihapus!", {
+        delay: 800,
+      });
+    }
+  } catch (error) {
+    toast.error("Dokter gagal dihapus!", {
+      delay: 800,
+    });
+    console.log(error?.response?.data?.meta?.message);
+  } finally {
+    setLoading(false);
+    setModalDelete(false);
+  }
+};
