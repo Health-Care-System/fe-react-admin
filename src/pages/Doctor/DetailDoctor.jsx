@@ -41,21 +41,24 @@ export const DetailDoctor = () => {
         <section className="container-fluid detail-container">
         <div className="d-flex flex-column mt-3 gap-3 ">
             <div className="d-flex flex-row align-items-center gap-3 ">
-            <img src={backIcon} alt="backIcon" />
+            <Link className='nav-link active p-0 text-body-secondary'to={"/doctors"} >
+                <img src= {backIcon} alt="Bootstrap" width={30} height={30}  className="img-fluid" />
+            </Link>
             <h3 className="fw-bold fs-2 mb-0 ">Detail Dokter</h3>
             </div>
-            <div className="d-flex flex-column ">
+            <div className="d-flex flex-row flex-wrap gap-3 align-items-start custom-margin-left">
             <img
                 src={data.profile_picture || PhotoAvatar}
                 alt="photo avatar"
                 className="rounded-2 object-fit-cover "
                 style={{ maxWidth: "13.75rem", maxHeight: "16.625rem" }}
             />
-            <div className="mt-2">
+
+            <div className=" custom-margin-table" >
                 <table className="table ">
                 <tbody>
                     <tr>
-                    <th>Nama</th>
+                    <th className="header-cell">Nama</th>
                     <td>{data.fullname}</td>
                     </tr>
                     <tr>
@@ -78,6 +81,16 @@ export const DetailDoctor = () => {
                     <th>Pengalaman</th>
                     <td>{data.experience}</td>
                     </tr>
+                    <tr>
+                    <th>Alumnus</th>
+                    <td>{data.alumnus}</td>
+                    </tr>
+                    <tr>
+                    <th>No STR</th>
+                    <td>{data.no_str}</td>
+                    </tr>
+
+                    
                 </tbody>
                 </table>
             </div>
