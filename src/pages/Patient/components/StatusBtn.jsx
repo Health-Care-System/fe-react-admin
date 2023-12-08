@@ -27,7 +27,7 @@ export const StatusBtn = ({ status, handleAction, id, offset }) => {
 
   return (
     <>
-      <div className=" d-inline-flex gap-3" style={{ zIndex: 10 }}>
+      <div className=" d-inline-flex gap-3">
         <Button
           onClick={(e) => handleModalCancel(e)}
           className={'btn-outline-primary border-2 fw-semibold'}>Tolak
