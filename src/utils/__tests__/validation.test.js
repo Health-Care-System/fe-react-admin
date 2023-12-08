@@ -1,5 +1,6 @@
-import { handleLoginError, validateFormLogin } from "../login-service";
 import { describe, expect, it, vi } from 'vitest'
+import { validateFormLogin } from '../validation';
+import { handleLoginError } from '../response-handler';
 
 describe('validateFormLogin', () => {
   it('should return true for valid form data', () => {

@@ -1,0 +1,38 @@
+.input-styles {
+	background: #ECECEC !important;
+	border: 0;
+}
+
+.input-styles:focus {
+	background:transparent !important;
+	box-shadow: none !important;
+	border: 1px solid #505ACB !important;
+}
+
+.input-styles::after {
+	top: 1rem !important;
+	position: absolute !important; 
+}
+
+.input-styles option {
+	padding: 5px !important;
+  }
+
+.list-input {
+	width: 100%;
+	padding: 0 1rem;
+}
+
+@media (min-width: 1023.98px) { 
+	.list-input {
+		overflow: auto;
+		max-height: 70.6vh;
+		width: 70%;
+	}
+ }
+
+ /* Detail Doctor  */
+
+ .detail-container {
+	width: 100%;
+ }

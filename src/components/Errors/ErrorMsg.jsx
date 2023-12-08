@@ -1,6 +1,6 @@
 
-export const ErrorMsg = ({ msg }) => {
+export const ErrorMsg = ({ msg, className }) => {
   return (
-    <p className="text-danger mt-1">{msg}</p>
+    <p className={`text-danger mt-1 ${className}`}>{msg}</p>
   )
 }

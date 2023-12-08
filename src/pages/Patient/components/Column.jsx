@@ -1,3 +1,4 @@
+import { Spinner } from "../../../components/Loader/Spinner";
 import { Button } from "../../../components/ui/Button";
 
 export const Column = ({
@@ -6,8 +7,10 @@ export const Column = ({
   data,
   refetch,
   renderItem,
-  search,
-  ifEmpty
+  ifEmpty,
+  reffer,
+  isDebounce,
+  isFetch
 }) => {
   if (isError) {
     return (
@@ -32,7 +35,7 @@ export const Column = ({
     )
   }
 
-  if (data.results?.length < 1) {
+  if (data?.results?.length < 1) {
     return (
       <>
         <tr>
@@ -41,16 +44,40 @@ export const Column = ({
       </>
     )
   }
+  
+  if (isDebounce) {
+    return (
+      <>
+        {data?.length > 0 ? (
+          data?.map((res, index) => renderItem(res, index, 0))
+        ) : (
+          <tr>
+            <td colSpan={12} className="text-center py-5 rounded-3 fs-2">
+              {ifEmpty}
+            </td>
+          </tr>
+        )}
+      </>
+    );
+  }
+  
 
-  const filterData = data?.results.filter(data => data.id.includes(search));
   return (
     <>
-      {filterData?.map((data, index) => (
-        renderItem(data, index)
-      ))}
+      {data?.map((item) => (
+        item?.results?.map((res, index) => (
+          renderItem(res, index, item?.pagination?.offset)
+        ))
+      ))
+      }
+      <tr colSpan={12} ref={reffer}>
+        {isFetch
+          ? <td colSpan={12} className="text-center text-secondary"><Spinner /></td>
+          : ''
+        }
+      </tr>
     </>
   )
-
 }
 
 const TableRow = ({ children }) => {
