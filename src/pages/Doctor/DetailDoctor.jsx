@@ -17,7 +17,7 @@ export const DetailDoctor = () => {
         </div>
         <div className="d-flex flex-column ">
           <img
-            src={data.profile_picture || PhotoAvatar}
+            src={data.profile_picture ? data.profile_picture : PhotoAvatar}
             alt="photo avatar"
             className="rounded-2 object-fit-cover "
             style={{ maxWidth: "13.75rem", maxHeight: "16.625rem" }}
