@@ -2,15 +2,37 @@ import { Button } from "../../components/ui/Button";
 import add from "../../assets/icon/add.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { genderFormat, theadDoctorList } from "../../utils/dataObject";
-import { RowTable } from "../../components/Table/RowTable";
 import { useGetAllDoctors } from "../../services/doctor-sevices";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
+import { Column } from "../Patient/components/Column";
 
 export const DoctorPage = () => {
-  const { data, isPending, isError, refetch } = useGetAllDoctors();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const onNavigate = (doctorData) => {
-    navigate(`/doctors/detail-doctor/${doctorData.id}`, { state: { data: doctorData } });
-  }
+    navigate(`/doctors/detail-doctor/${doctorData.id}`, {
+      state: { data: doctorData },
+    });
+  };
+  const {
+    data,
+    refetch,
+    isPending,
+    isError,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useGetAllDoctors();
+
+  console.log(data);
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <section className="container-fluid ">
@@ -33,19 +55,18 @@ export const DoctorPage = () => {
               </Button>
             </Link>
             <TableContainerDoctor thead={theadDoctorList}>
-              <RowTable
+              <Column
                 isError={isError}
                 isPending={isPending}
-                data={data}
                 refetch={refetch}
-                ifEmpty={"Tidak ada pasien"}
-                paddingError={"py-2"}
-                totalCol={10}
-                totalRow={8}
-                renderItem={(doctorData, index) => {
+                data={data?.pages}
+                isFetch={isFetchingNextPage}
+                reffer={ref}
+                ifEmpty={"Tidak ada ada dokter!"}
+                renderItem={(doctorData, index, offset) => {
                   return (
                     <tr
-                      onClick={() => onNavigate(doctorData)}
+                      onClick={() => onNavigate(doctorData, offset)}
                       className="text-nowrap cursor-pointer"
                       key={index}
                     >
