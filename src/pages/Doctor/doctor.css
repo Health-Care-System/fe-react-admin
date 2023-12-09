@@ -23,6 +23,19 @@
 	padding: 0 1rem;
 }
 
+.custom-margin-left {
+	margin-left: 60px;
+}
+
+.custom-margin-table {
+	margin-left: 15px;
+	width: 60%;
+}
+
+.header-cell {
+	margin-right: 10px; 
+}
+
 @media (min-width: 1023.98px) { 
 	.list-input {
 		overflow: auto;
