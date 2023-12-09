@@ -157,7 +157,7 @@ const getAllDoctorData = async ({ pageParam = 0 }) => {
   try {
     const offset = pageParam * 5;
     const res = await client.get(`/admins/doctors?offset=${offset}&limit=5`);
-    return res.data
+    return res.data;
   } catch (error) {
     if (error.response?.status === 404) {
       return {
