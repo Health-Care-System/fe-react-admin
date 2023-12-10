@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import deleteIcon from "../../assets/icon/delete-icon.svg";
 import search from "../../assets/icon/round-search.svg";
 import plus from "../../assets/icon/count_plus.svg";
 import dangerIcon from "../../assets/icon/dangerIcon.png";
@@ -7,7 +6,9 @@ import AddPhoto from "../../assets/icon/AddPhoto.svg";
 
 import "./drug-page.css";
 import client from "../../utils/auth";
-// import axios from "axios";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const DrugPage = () => {
   const [formData, setFormData] = useState({
@@ -29,6 +30,8 @@ export const DrugPage = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const imageUploadRef = useRef(null);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
   const handleRowClick = (data) => {
     setIsEditing(true);
@@ -44,6 +47,12 @@ export const DrugPage = () => {
       price: data.price,
       details: data.details,
     });
+    if (data.image) {
+      setImagePreview(data.image);
+    } else {
+      setImagePreview(null);
+    }
+
     setShowEditModal(true);
   };
 
@@ -65,11 +74,6 @@ export const DrugPage = () => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   setFormData({ ...formData, image: file });
-  // };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setFormData({ ...formData, image: file });
@@ -89,52 +93,6 @@ export const DrugPage = () => {
   const handlePlaceholderClick = () => {
     imageUploadRef.current.click();
   };
-  // const handleSave = () => {
-  //   alert("handleSave called");
-  //   setDataArray([...dataArray, { ...formData }]);
-  //   setFormData({
-  //     image: null,
-  //     code: "",
-  //     name: "",
-  //     merk: "",
-  //     category: "",
-  //     type: "",
-  //     stock: "",
-  //     price: 0,
-  //   });
-  // };
-
-  // const handleSave = () => {
-  //   const data = new FormData();
-  //   data.append("image", formData.image)
-  //   data.append("code", formData.code)
-  //   data.append("name", formData.name)
-  //   data.append("merk", formData.merk)
-  //   data.append("category", formData.category)
-  //   data.append("type", formData.type)
-  //   data.append("stock", formData.stock)
-  //   data.append("price", formData.price)
-  //   data.append("details", "Obat - obatan")
-
-  //   client
-  //     .post("/admins/medicines", data)
-  //     .then((res) => {
-  //       console.log(res)
-  //       // setFormData((prevData) => [...prevData, res.data?.results]);
-  //       alert("Anda berhasil menambahkan produk");
-  //       setFormData({
-  //         image: null,
-  //         code: "",
-  //         name: "",
-  //         merk: "",
-  //         category: "",
-  //         type: "",
-  //         stock: "",
-  //         price: 0,
-  //       });
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
 
   const handleSave = () => {
     const data = new FormData();
@@ -156,7 +114,7 @@ export const DrugPage = () => {
     client[requestMethod](saveEndpoint, data)
       .then((res) => {
         console.log(res);
-        alert(
+        toast.success(
           isEditing
             ? "Produk berhasil diperbarui"
             : "Anda berhasil menambahkan produk"
@@ -499,50 +457,7 @@ export const DrugPage = () => {
             </div>
           </div>
         </div>
-        {/* Modal Edit Product */}
-        {showEditModal && (
-          <div
-            className="modal fade"
-            id="ModalEditProductDynamic"
-            tabIndex={-1}
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content">
-                {/* ... (existing modal structure) */}
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="exampleModalLabel">
-                    Edit Produk
-                  </h1>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    onClick={() => {
-                      setShowEditModal(false);
-                      setIsEditing(false);
-                      setSelectedItem(null);
-                      setFormData({
-                        image: null,
-                        code: "",
-                        name: "",
-                        merk: "",
-                        category: "",
-                        type: "",
-                        stock: "",
-                        price: 0,
-                        details: "",
-                      });
-                    }}
-                  />
-                </div>
-                {/* ... (existing modal content) */}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Modal Delete Produk */}
         <div className="modal" tabIndex="-1" id="modalHapusProduk">
           <div
             className="modal-dialog modal-dialog-centered"
@@ -585,6 +500,34 @@ export const DrugPage = () => {
             </div>
           </div>
         </div>
+        {/* Modal Preview Image */}
+        <div
+          className="modal"
+          id="imagePreviewModal"
+          tabIndex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <img
+                  src={imagePreviewUrl}
+                  alt="Preview"
+                  className="img-fluid"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div>
           <table className="table table-borderless table-striped">
             <thead>
@@ -605,6 +548,8 @@ export const DrugPage = () => {
                   key={index}
                   onClick={() => handleRowClick(data)}
                   style={{ cursor: "pointer" }}
+                  data-bs-toggle="modal"
+                  data-bs-target="#ModalTambahProduct"
                 >
                   <td>{data.code}</td>
                   <td>{data.name}</td>
@@ -613,8 +558,15 @@ export const DrugPage = () => {
                   <td>{data.type}</td>
                   <td>{data.stock}</td>
                   <td>{data.price}</td>
-                  <td className="text-primary">
-                    <button className="btn">Link</button>
+                  <td>
+                    <button
+                      className="btn text-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#imagePreviewModal"
+                      onClick={() => setImagePreviewUrl(data.image)}
+                    >
+                      Link
+                    </button>
                   </td>
                 </tr>
               ))}
