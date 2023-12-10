@@ -35,13 +35,11 @@ export const Column = ({
     )
   }
 
-  if (data?.results?.length < 1) {
+  if (data?.length < 1 || data[0] === null) {
     return (
-      <>
-        <tr>
-          <td colSpan={12} className="text-center py-5 rounded-3 fs-2">{ifEmpty}</td>
-        </tr>
-      </>
+      <tr>
+        <td colSpan={12} className="text-center rounded-3 fs-2">{ifEmpty}</td>
+      </tr>
     )
   }
   

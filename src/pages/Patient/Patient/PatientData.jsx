@@ -16,6 +16,7 @@ import { RowTable } from "../../../components/Table/RowTable";
 import { TableContainer } from "../../../components/Table/TableContainer";
 import '../Patient.css'
 import { formatDate } from "../../../utils/helpers";
+import { useInView } from "react-intersection-observer";
 
 const initialState = {
   search: '',
@@ -41,14 +42,20 @@ export const PatientData = () => {
     isFetchingNextPage,
     fetchNextPage
   } = useGetAllPatients();
-  
-  console.log(data)
-  
+    
   // useForm adalah sebuah custom hooks untuk form, yang sudah dibekali dengan handleInput untuk onChange
   const {
     form,
     handleInput
   } = useForm(initialState);
+  
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
   
   // Handle rute navigasi ke setiap halaman detail patients
   const navigate = useNavigate();
@@ -85,12 +92,20 @@ export const PatientData = () => {
       handleInput={handleInput}
     >
       <RowTable
+        // React query & infinite scroll
+        reffer={ref}
         isError={isError}
-        isPending={debouncedValue !== '' ? loadingSearch : isPending}
-        data={debouncedValue !== '' ? filterData : data?.pages}
         refetch={refetch}
+        isFetch={isFetchingNextPage}
+        isDebounce={debouncedValue !== ''}
+        data={debouncedValue !== '' ? filterData : data?.pages}
+        isPending={debouncedValue !== '' ? loadingSearch : isPending}
+        
+        // form search
         search={form?.search}
-        ifEmpty={'Tidak ada pasien'}
+        
+        // conditional render
+        ifEmpty={'Tidak ada data pasien'}
         paddingError={'py-2'}
         totalCol={10}
         totalRow={8}

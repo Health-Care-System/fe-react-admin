@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery } from "@tanstack/react-query"
 import client from "../utils/auth";
 import { useGetQuery } from "../hooks/useGetQuery";
 import { genderFormat, titleUserDetail } from "../utils/dataObject";
@@ -22,11 +22,7 @@ const getAllDoctorTransaction = async ({ pageParam = 0 }) => {
     const res = await client.get(`/admins/doctor-payments?offset=${offset}&limit=6`);
     return res.data;
   } catch (error) {
-    if (error.response && error.response.status === 404) {
-      return {
-        results: [],
-      };
-    }
+    if (error.response && error.response.status === 404) return null;
     throw error;
   }
 };
@@ -37,11 +33,7 @@ const getAllMedicinesTransaction = async ({ pageParam = 0 }) => {
     const res = await client.get(`/admins/medicines-payments/checkout/?offset=${offset}&limit=6`);
     return res.data;
   } catch (error) {
-    if (error.response && error.response.status === 404) {
-      return {
-        results: [],
-      };
-    }
+    if (error.response && error.response.status === 404) return null;
     throw error;
   }
 };
@@ -61,15 +53,11 @@ export const useGetAllMedicineTransaction = () => {
 
 const getAllPatients = async ({ pageParam = 0 }) => {
   try {
-    const offset = pageParam * 6;
-    const res = await client.get(`/admins/users?offset=${offset}&limit=6`);
+    const offset = pageParam * 10;
+    const res = await client.get(`/admins/users?offset=${offset}&limit=10`);
     return res.data;
   } catch (error) {
-    if (error.response && error.response.status === 404) {
-      return {
-        results: [],
-      };
-    }
+    if (error.response && error.response.status === 404) return null;
     throw error;
   }
 }
