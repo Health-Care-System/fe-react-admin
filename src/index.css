@@ -30,9 +30,13 @@ p {
 }
 .bg-base {
   background-color: #F8F8F8;
-
 }
-
+.bg-white-200 {
+  background-color: #ECECEC;
+}
+.z-70 {
+  z-index: 70;
+}
 
 .drawer-content {
   position: relative;

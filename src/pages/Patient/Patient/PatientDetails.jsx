@@ -1,16 +1,14 @@
 // Packages
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Components
-import { Column } from "../components/Column";
 import { StatusBtn } from "../components/StatusBtn";
 import { ImageModal } from "../components/ImageModal";
 import { Button } from "../../../components/ui/Button";
-import { formattedDate } from "../../../utils/helpers";
 import { Transparent } from "../../../components/ui/Container";
 import { CustomModal } from "../../../components/ui/Modal/Modal";
 
@@ -21,10 +19,16 @@ import {
   theadDrugDetails
 } from "../../../utils/dataObject";
 import {
-  useGetAllDoctorTransaction,
-  useGetAllDrugTransaction,
+  useGetDoctorTransactionByUserID,
+  useGetMedicineTransactionByUserID,
   useGetPatientsDetails
 } from "../../../services/patient-services";
+import { formatDate } from "../../../utils/helpers";
+import useForm from "../../../hooks/useForm";
+import { useInView } from "react-intersection-observer";
+import { TableContainer } from "../../../components/Table/TableContainer";
+import { RowTable } from "../../../components/Table/RowTable";
+
 
 export const PatientDetails = () => {
   const [modalDelete, setModalDelete] = useState(false);
@@ -95,7 +99,7 @@ export const PatientDetails = () => {
         <TableDrugDetails />
       </section>
 
-      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom z-0 bg-base py-5">
+      <section className="d-flex justify-content-center gap-3 my-5 sticky-bottom z-0 bg-base py-3">
         <Link to={'/patients/data'} className="btn btn-primary text-white w-8 fw-semibold">
           Kembali
         </Link>
@@ -123,12 +127,46 @@ export const PatientDetails = () => {
 }
 
 const TableDoctorDetails = () => {
+  let { userId } = useParams();
   const {
     data,
     refetch,
     isPending,
-    isError
-  } = useGetAllDoctorTransaction();
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useGetDoctorTransactionByUserID(userId);
+  const initState = {
+    modalImg: false,
+    imageSrc: null
+  }
+  const {
+    form,
+    setForm,
+  } = useForm(initState);
+
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  const handleModalLink = (src) => {
+    setForm((prev) => ({
+      ...prev,
+      modalImg: true,
+      imageSrc: src
+    }))
+  }
+
+  const closeModal = () => {
+    setForm((prev) => ({
+      ...prev,
+      modalImg: false
+    }))
+  }
 
   return (
     <>
@@ -136,27 +174,40 @@ const TableDoctorDetails = () => {
         thead={theadDoctorDetails}
         title={'Transaksi Konsultasi Dokter'}
       >
-        <Column
+        <RowTable
+          // React query
           isError={isError}
+          data={data?.pages}
           isPending={isPending}
+          isFetch={isFetchingNextPage}
+
+          reffer={ref}
           refetch={refetch}
-          data={data}
+          ifEmpty={'Riwayat Transaksi Konsultasi Dokter masih kosong!'}
           search={''}
           renderItem={(data, index) => {
-            const date = formattedDate(data?.date);
-            const subTotal = data?.total?.toLocaleString('ID-id');
+            const date = formatDate(data?.created_at);
+            const subTotal = data?.price?.toLocaleString('ID-id');
             return (
               <tr className="text-nowrap" key={index}>
-                <td>{data?.id}</td>
-                <td>{data?.idDoctor}</td>
-                <td>{data?.payment}</td>
+                <td>{data?.transaction_id}</td>
+                <td>{data?.Doctor_id}</td>
+                <td className="text-capitalize">{data?.payment_method}</td>
                 <td>{`Rp ${subTotal}`}</td>
                 <td>{date}</td>
                 <td>
-                  <ImageModal />
+                  {!data?.payment_confirmation
+                    ? '-'
+                    : <Button
+                      className={'p-0 text-primary fw-semibold'}
+                      onClick={() => handleModalLink(data?.payment_confirmation)}>Link</Button>
+                  }
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn status={data?.status} />
+                  <StatusBtn
+                    id={data?.transaction_id}
+                    status={data?.payment_status}
+                  />
                 </td>
               </tr>
             )
@@ -164,50 +215,90 @@ const TableDoctorDetails = () => {
           }
         />
       </TableDetailsContainer>
+      {form.modalImg &&
+        <ImageModal
+          closeModal={closeModal}
+          source={form.imageSrc} />
+      }
     </>
   )
 }
 const TableDrugDetails = () => {
+  let { userId } = useParams();
   const {
     data,
     refetch,
     isPending,
-    isError
-  } = useGetAllDrugTransaction();
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useGetMedicineTransactionByUserID(userId);
+
+  const initState = {
+    modalImg: false,
+    imageSrc: null
+  }
+  const {
+    form,
+    setForm,
+  } = useForm(initState);
+
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  const closeModal = () => {
+    setForm((prev) => ({
+      ...prev,
+      modalImg: false
+    }))
+  }
 
   return (
     <>
-      <TableDetailsContainer
-        thead={theadDrugDetails}
+      <TableContainer
+        thead={theadDrugDetails.filter(item => item !== 'Gambar')}
         title={'Transaksi Pembelian Obat'}
       >
-        <Column
+        <RowTable
+          // React query
           isError={isError}
+          data={data?.pages}
           isPending={isPending}
+          isFetch={isFetchingNextPage}
+
+          reffer={ref}
           refetch={refetch}
-          data={data}
           search={''}
-          renderItem={(data, index) => {
-            const date = formattedDate(data?.date);
-            const subTotal = data?.total?.toLocaleString('ID-id');
+          ifEmpty={'Tidak ada riwayat transaksi pembelian obat'}
+          renderItem={(item, index) => {
+            const date = formatDate(item?.created_at)
             return (
-              <tr className="text-nowrap" key={index}>
-                <td>{data?.id}</td>
-                <td>{data?.payment}</td>
-                <td>{`Rp ${subTotal}`}</td>
+              <tr className="text-capitalize text-nowrap" key={index}>
+                <td>{item?.id}</td>
+                <td>{item?.medicine_transaction?.payment_method}</td>
+                <td>{`Rp ${item?.medicine_transaction?.total_price.toLocaleString('ID-id')}`}</td>
                 <td>{date}</td>
-                <td>
-                  <ImageModal />
-                </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn status={data?.status} />
+                  <StatusBtn
+                    id={item?.id}
+                    status={item?.payment_status} />
                 </td>
               </tr>
             )
           }
           }
         />
-      </TableDetailsContainer>
+      </TableContainer>
+      {form.modalImg &&
+        <ImageModal
+          closeModal={closeModal}
+          source={form.imageSrc} />
+      }
     </>
   )
 }

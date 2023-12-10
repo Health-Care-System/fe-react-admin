@@ -1,72 +1,19 @@
-import { Link } from "react-router-dom";
-import { RecentPatient } from "../../components/RecentPatients";
-import { DaftarDokter } from "../../components/DaftarDokter";
-import "./HomePage.css";
-import { DaftarObat } from "../../components/DaftarObat";
-import { StokObat } from "../../components/StokObat";
+import { PatientData } from "../Patient/Patient/PatientData";
+import { DoctorData } from "../Doctor/DoctorPage";
+import { MedicineTable } from "./MedicineTable";
 
-// Arrow function
 export const HomePage = () => {
   return (
-    <div className="p-2" style={{ maxWidth: "auto" }}>
-      <div className="d-flex justify-content-between align-items-center p-2">
-        <h5 className="fw-bold mb-2 mt-3 me-5 mr-6">Recent Patients</h5>
-        <Link className="view-all">View All</Link>
-        <p className="stok-obat fw-600 fs-20px" style={{ fontSize: "20px", fontWeight: "600" }}>
-          Stok Obat
-        </p>
-        <div className="dropdown">
-          <button
-            className="btn dropdown-toggle"
-            style={{ backgroundColor: "#CBE4DE73" }}
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Daily
-          </button>
-          <ul className="dropdown-menu">
-            <li>
-              <button className="dropdown-item" type="button">
-                Action
-              </button>
-            </li>
-            <li>
-              <button className="dropdown-item" type="button">
-                Another action
-              </button>
-            </li>
-            <li>
-              <button className="dropdown-item" type="button">
-                Something else here
-              </button>
-            </li>
-          </ul>
+    <div className="d-flex flex-column gap-4 mx-4">
+      <div className="row">
+        <div className="col-12 col-xl-8 col-xxl-9 mb-4 mb-xl-0">
+          <PatientData forPage={'homepage'} maxHeight={'45rem'} />
+        </div>
+        <div className="col-12 col-xl-4 col-xxl-3">
+          <MedicineTable />
         </div>
       </div>
-      
-      <div className="d-flex justify-content-between ">
-        <RecentPatient />
-        <StokObat />
-      </div>
-
-      <div className="d-flex justify-content-between align-items-center p-2">
-        <h5 className="fw-bold mb-2 mt-3  me-5 mr-6">Daftar Dokter</h5>
-        <Link className="view-all2">View All</Link>
-        <div className="daftar-obat d-flex justify-content-between align-items-center">
-          <h5 className="daftar-obat">Daftar Obat</h5>
-          <Link className="view-all3">View All</Link>
-        </div>
-      </div>
-
-      {/* <DaftarDokter /> */}
-
-      <div className="d-md-flex ">
-        <DaftarDokter />
-        <div className="">
-          <DaftarObat />
-        </div>
-      </div>
+      <DoctorData maxHeight={'45rem'} forPage={'homepage'} />
     </div>
   );
 };

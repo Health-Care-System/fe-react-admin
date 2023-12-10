@@ -15,7 +15,8 @@ export const Select = ({
   name,
   handleChange,
   value,
-  defaultValue
+  defaultValue,
+  className
 }) => {
   return (
     <select
@@ -23,7 +24,7 @@ export const Select = ({
       onChange={handleChange}
       value={value}
       defaultValue={defaultValue}
-      className="form-select"
+      className={`form-select ${className}`}
       aria-label="Default select example"
     >
       <option selected="">Choose</option>
