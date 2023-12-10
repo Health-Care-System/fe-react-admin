@@ -21,7 +21,7 @@ export const menus = [
     icon: medicineIcon,
     icon2: medicineIconWhite,
     label: 'Obat - obatan',
-    link: '/drugs'
+    link: '/medicines'
   },
   {
     icon: patientIcon,
@@ -43,8 +43,8 @@ export const navbarTitle = [
     title: 'Dashboard',
   },
   {
-    route: 'drugs',
-    title: 'Manage Obat - obatan',
+    route: 'medicines',
+    title: 'Kelola Obat',
   },
   {
     route: 'patients',
@@ -227,6 +227,8 @@ export const thead = ["ID", "Nama Lengkap", "Email", "Gender", "Tgl Lahir", "Gol
 export const theadDoctor = ["ID", "ID Dokter", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadDoctorDetails = ["ID Transaksi", "ID Dokter", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadMedicine = ["ID", "ID Pasien", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Status"];
+export const theadAllMedicine = ["Kode", "Nama", "Merk", "Kategori", "Jenis", "Stok", "Harga", "Gambar"];
+export const theadMedicineHome = ["Nama Obat", "Stok Obat"];
 export const theadDrugDetails = ["ID Transaksi", "Metode Pembayaran", "Total Harga", "Tgl Transaksi", "Gambar", "Status"];
 export const theadDoctorList = ["ID", "Nama Lengkap", "Jenis Kelamin", "Email", "Spesialis", "Pengalaman", "Nomor STR"];
 
