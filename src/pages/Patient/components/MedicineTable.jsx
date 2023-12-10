@@ -12,10 +12,10 @@ import { useGetAllMedicineTransaction } from "../../../services/patient-services
 import { getMedicineTransactionByID, updateStatusOrderMedicine } from "../../../services/transaction-services";
 
 // Components
-import { Column } from "./Column";
 import { StatusBtn } from "./StatusBtn";
-import { TableContainer } from "./TableContainer";
 import { TransactionModal } from "../../../components/ui/Modal/TransactionModal";
+import { TableContainer } from "../../../components/Table/TableContainer";
+import { RowTable } from "../../../components/Table/RowTable";
 
 const initialState = {
   searchMedicine: '',
@@ -132,13 +132,17 @@ export const MedicineTable = () => {
   return (
     <>
       <TableContainer
-        handleInput={handleInput}
-        inputValue={form.searchMedicine}
         name={'searchMedicine'}
         title={'Transaksi Pembelian Obat'}
+        placeHolder={'Cari ID Transaksi'}
+        handleInput={handleInput}
+        className={'border'}
+        bgThead={'bg-light'}
         thead={theadMedicine}
+        inputValue={form.searchMedicine}
+        maxHeight={'45rem'}
       >
-        <Column
+        <RowTable
           isError={isError}
           isPending={isPending || loadingSearch}
           refetch={refetch}

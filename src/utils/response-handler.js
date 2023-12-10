@@ -22,3 +22,34 @@ export const handleLoginError = (error, setErrors) => {
   }
 };
 
+export const handleRegisterDoctorError = (error, setErrors) => {
+  if (error?.response) {
+    switch (error?.response?.data?.meta?.message) {
+      case 'invalid input register data':
+        setErrors({
+          default: 'Form data tidak valid, harap masukan data yang benar!',
+        });
+        break;
+      case 'image file is required':
+        setErrors({
+          profile_picture: 'Harap pilih profile picture!',
+        });
+        break;
+      case 'error upload image to cloud storage':
+        setErrors({
+          profile_picture: 'Gagal menyimpan gambar di Database, maksimal ukuran gambar adalah 10MB!',
+        });
+        break;
+      case 'email already exist':
+        setErrors({
+          email: 'Email sudah terdaftar, harap gunakan email yang lain!',
+        });
+        break;
+      default:
+        setErrors({
+          default: 'Registrasi gagal, harap coba lagi',
+        });
+    }
+  }
+};
+

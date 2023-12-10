@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { HomePage } from '../pages/Home/HomePage';
 import { Layout } from '../layout';
-import { DrugPage } from '../pages/Drug/DrugPage';
 import { PatientPage } from '../pages/Patient/PatientPage';
 import { DoctorPage } from '../pages/Doctor/DoctorPage';
 import { SettingPage } from '../pages/Setting/SettingPage';
@@ -14,6 +13,7 @@ import { PatientTransaction } from '../pages/Patient/Transaction/PatientTransact
 import { PrivateRoute } from './PrivateRoute';
 import { PatientDetails } from '../pages/Patient/Patient/PatientDetails';
 import React from 'react';
+import { MedicinePage } from '../pages/Medicine/MedicinePage';
 
 const MemoizedPatientData = React.memo(PatientData)
 const AppRoutes = () => (
@@ -22,7 +22,7 @@ const AppRoutes = () => (
     <Route element={<PrivateRoute />}>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/drugs" element={<DrugPage />} />
+        <Route path="/medicines" element={<MedicinePage />} />
         <Route path='/patients' element={<PatientPage />}>
           <Route path="/patients/data" element={<MemoizedPatientData />} />
           <Route path="/patients/transactions" element={<PatientTransaction />} />
