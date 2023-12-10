@@ -2,15 +2,37 @@ import { Button } from "../../components/ui/Button";
 import add from "../../assets/icon/add.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { genderFormat, theadDoctorList } from "../../utils/dataObject";
-import { RowTable } from "../../components/Table/RowTable";
-import { useGetAllDoctors } from "../../services/doctor-sevices";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
+import { useGetAllDoctorData } from "../../services/doctor-sevices";
+import { Column } from "../Patient/components/Column";
 
 export const DoctorPage = () => {
-  const { data, isPending, isError, refetch } = useGetAllDoctors();
-  const navigate = useNavigate()
-  const onNavigate = (doctorData) => {
-    navigate(`/doctors/detail-doctor/${doctorData.id}`, { state: { data: doctorData } });
-  }
+  const navigate = useNavigate();
+  const { ref, inView } = useInView();
+
+  const onNavigate = (doctorData, offset) => {
+    navigate(`/doctors/detail-doctor/${doctorData.id}`, {
+      state: { data: doctorData, offset: offset },
+    });
+  };
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isError,
+    isPending,
+    refetch,
+    isFetchingNextPage,
+  } = useGetAllDoctorData();
+
+  console.log("data", data);
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
 
   return (
     <section className="container-fluid ">
@@ -33,29 +55,38 @@ export const DoctorPage = () => {
               </Button>
             </Link>
             <TableContainerDoctor thead={theadDoctorList}>
-              <RowTable
+              <Column
+                ifEmpty={"Tidak ada data dokter!"}
                 isError={isError}
-                isPending={isPending}
-                data={data}
+                isFetch={isFetchingNextPage}
+                reffer={ref}
                 refetch={refetch}
-                ifEmpty={"Tidak ada pasien"}
-                paddingError={"py-2"}
-                totalCol={10}
-                totalRow={8}
-                renderItem={(doctorData, index) => {
+                isPending={isPending}
+                data={data?.pages}
+                renderItem={(data, index) => {
                   return (
                     <tr
-                      onClick={() => onNavigate(doctorData)}
+                      onClick={() => onNavigate(data)}
                       className="text-nowrap cursor-pointer"
                       key={index}
                     >
-                      <td>{doctorData?.id}</td>
-                      <td>{doctorData?.fullname}</td>
-                      <td>{genderFormat[doctorData?.gender]}</td>
-                      <td>{doctorData?.email}</td>
-                      <td>{doctorData?.specialist}</td>
-                      <td>{doctorData?.experience}</td>
-                      <td>{doctorData?.no_str}</td>
+                      <td>{data?.id}</td>
+                      <td>
+                        <div className="d-flex gap-2 align-items-center ">
+                          <img
+                            src={data?.profile_picture}
+                            alt="avatar doctor"
+                            className="object-fit-cover rounded-circle "
+                            style={{ width: "1.5rem", height: "1.5rem" }}
+                          />
+                          <p>{data?.fullname}</p>
+                        </div>
+                      </td>
+                      <td>{genderFormat[data?.gender]}</td>
+                      <td>{data?.email}</td>
+                      <td>{data?.specialist}</td>
+                      <td>{data?.experience}</td>
+                      <td className="text-secondary">{data?.no_str}</td>
                     </tr>
                   );
                 }}
