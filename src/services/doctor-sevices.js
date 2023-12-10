@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import client from "../utils/auth";
 import { validateAddDoctorForm, validateEditDoctorForm } from "../utils/validation";
 import { toast } from "react-toastify";
@@ -115,51 +115,55 @@ export const updateDataDoctor = async (newData) => {
   }
 }
 
-// export const handleEditDoctor = async (
-//   form,
-//   idDoctor,
-//   setError,
-//   setLoading
-// ) => {
-//   const data = prepareDoctorData(form);
-//   if (validateAddDoctorForm(form, setError)) {
-//     try {
-//       setLoading(true);
-//       const res = await client.put(`/doctors/doctor/${idDoctor}`, data);
-//       if (res.status === 201 || res.status === 200) {
-//         return true;
-//       }
-//     } catch (error) {
-//       console.log(error?.response?.data?.meta?.message);
-//       return false;
-//     } finally {
-//       setLoading(false);
-//     }
-//   }
-// };
+export const handleDeleteDoctor = async (
+  id,
+  setLoading,
+  queryClient,
+  setModalDelete
+) => {
+  try {
+    setLoading(true);
+    const res = await client.delete(`/admins/doctor/${id}`);
+    if (res.status === 200) {
+      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+      toast.success("Dokter berhasil dihapus!", {
+        delay: 800,
+      });
+    }
+  } catch (error) {
+    toast.error("Dokter gagal dihapus!", {
+      delay: 800,
+    });
+    console.log(error?.response?.data?.meta?.message);
+  } finally {
+    setLoading(false);
+    setModalDelete(false);
+  }
+};
 
-// export const handleDeleteArticle = async (
-//   id,
-//   setLoading,
-//   queryClient,
-//   setModalDelete
-// ) => {
-//   try {
-//     setLoading(true);
-//     const res = await client.delete(`/admins/doctor/${id}`);
-//     if (res.status === 200) {
-//       queryClient.invalidateQueries({ queryKey: ["doctors"] });
-//       toast.success("Dokter berhasil dihapus!", {
-//         delay: 800,
-//       });
-//     }
-//   } catch (error) {
-//     toast.error("Dokter gagal dihapus!", {
-//       delay: 800,
-//     });
-//     console.log(error?.response?.data?.meta?.message);
-//   } finally {
-//     setLoading(false);
-//     setModalDelete(false);
-//   }
-// };
+export const useGetAllDoctorData = () => {
+  return useInfiniteQuery({
+    queryKey: ['doctors'],
+    queryFn: getAllDoctorData,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage?.results?.length ? allPages.length : undefined;
+      return nextPage;
+    },
+  });
+};
+
+const getAllDoctorData = async ({ pageParam = 0 }) => {
+  try {
+    const offset = pageParam * 5;
+    const res = await client.get(`/admins/doctors?offset=${offset}&limit=5`);
+    return res.data;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return {
+        results: [],
+      };
+    }
+    throw error;
+  }
+};
