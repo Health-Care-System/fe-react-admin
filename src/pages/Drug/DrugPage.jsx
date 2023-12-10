@@ -59,9 +59,7 @@ export const DrugPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await client.get(
-          "/admins/medicines?offset=0&limit=20"
-        );
+        const response = await client.get("/admins/medicines");
         console.log("API Response:", response.data);
         setDataArray(response.data.results);
       } catch (error) {
@@ -210,20 +208,7 @@ export const DrugPage = () => {
               padding: "0.25rem 0.625rem",
               alignItems: "center",
             }}
-            onClick={() => {
-              setFormData({
-                image: null,
-                code: "",
-                name: "",
-                merk: "",
-                category: "",
-                type: "",
-                stock: "",
-                price: 0,
-                details: "",
-              });
-              setShowEditModal(true);
-            }}
+            onClick={() => setShowEditModal(true)}
             data-bs-toggle="modal"
             data-bs-target="#ModalTambahProduct"
           >
