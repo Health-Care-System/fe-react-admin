@@ -185,6 +185,8 @@ const TableDoctorDetails = () => {
           refetch={refetch}
           ifEmpty={'Riwayat Transaksi Konsultasi Dokter masih kosong!'}
           search={''}
+          totalRow={7}
+          totalCol={5}
           renderItem={(data, index) => {
             const date = formatDate(data?.created_at);
             const subTotal = data?.price?.toLocaleString('ID-id');
@@ -263,6 +265,7 @@ const TableDrugDetails = () => {
       <TableContainer
         thead={theadDrugDetails.filter(item => item !== 'Gambar')}
         title={'Transaksi Pembelian Obat'}
+        name={null}
       >
         <RowTable
           // React query
@@ -274,7 +277,9 @@ const TableDrugDetails = () => {
           reffer={ref}
           refetch={refetch}
           search={''}
-          ifEmpty={'Tidak ada riwayat transaksi pembelian obat'}
+          ifEmpty={'Riwayat transaksi pembelian obat masih kosong!'}
+          totalRow={5}
+          totalCol={5}
           renderItem={(item, index) => {
             const date = formatDate(item?.created_at)
             return (
