@@ -1,15 +1,11 @@
-import { Link } from "react-router-dom";
-import "./HomePage.css";
-import { DaftarPasien } from "../../components/DaftarPasien/DaftarPasien";
-import { DokterData } from "../Doctor/DokterData";
+import { PatientData } from "../Patient/Patient/PatientData";
+import { DoctorData } from "../Doctor/DoctorPage";
 
-// Arrow function
 export const HomePage = () => {
   return (
-    <div className="homepage">
-    <DaftarPasien />
-    <DokterData />
+    <div className="d-flex flex-column gap-4 mx-4">
+    <PatientData forPage={'homepage'} maxHeight={'45rem'} />
+    <DoctorData maxHeight={'45rem'} forPage={'homepage'} />
     </div>
-    
   );
 };

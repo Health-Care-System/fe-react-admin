@@ -61,7 +61,13 @@ export const validateAddDoctorForm = (formData, setErrors) => {
     newErrors.password = 'Password harus memiliki setidaknya 8 karakter!';
     valid = false;
   } else if (!/(?=.*[a-z])(?=.*\d)/.test(formData.password)) {
-    newErrors.password = 'Password harus mengandung angka!';
+    if (/^[a-zA-Z]+$/.test(formData.password)) {
+      newErrors.password = 'Password harus mengandung setidaknya satu angka!';
+    } else if (/^\d+$/.test(formData.password)) {
+      newErrors.password = 'Password harus mengandung setidaknya satu huruf!';
+    } else {
+      newErrors.password = 'Password harus mengandung setidaknya satu huruf dan satu angka!';
+    }
     valid = false;
   }
 

@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Components
-import { Column } from "../components/Column";
 import { StatusBtn } from "../components/StatusBtn";
 import { ImageModal } from "../components/ImageModal";
 import { Button } from "../../../components/ui/Button";
@@ -28,6 +27,7 @@ import { formatDate } from "../../../utils/helpers";
 import useForm from "../../../hooks/useForm";
 import { useInView } from "react-intersection-observer";
 import { TableContainer } from "../../../components/Table/TableContainer";
+import { RowTable } from "../../../components/Table/RowTable";
 
 
 export const PatientDetails = () => {
@@ -174,7 +174,7 @@ const TableDoctorDetails = () => {
         thead={theadDoctorDetails}
         title={'Transaksi Konsultasi Dokter'}
       >
-        <Column
+        <RowTable
           // React query
           isError={isError}
           data={data?.pages}
@@ -264,7 +264,7 @@ const TableDrugDetails = () => {
         thead={theadDrugDetails.filter(item => item !== 'Gambar')}
         title={'Transaksi Pembelian Obat'}
       >
-        <Column
+        <RowTable
           // React query
           isError={isError}
           data={data?.pages}

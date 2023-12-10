@@ -245,3 +245,14 @@ export const genderFormat = {
   male: 'Laki-Laki',
   female: 'Perempuan',
 }
+
+export const optionsDoctorSpesialist = [
+  { value: "Umum", label: "Dokter Umum" },
+  { value: "Anak", label: "Spesialis Anak" },
+  { value: "Kulit", label: "Dokter Kulit" },
+  { value: "Psikolog", label: "Psikolog Klinis" },
+  { value: "Jantung", label: "Dokter Jantung" },
+  { value: "Gigi", label: "Dokter Gigi" },
+  { value: "Mata", label: "Dokter Mata" },
+  { value: "Bedah", label: "Spesialis Bedah" },
+];

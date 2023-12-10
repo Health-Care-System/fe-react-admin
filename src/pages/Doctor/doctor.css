@@ -32,6 +32,9 @@
 	width: 60%;
 }
 
+th {
+	font-weight: 600;
+}
 .header-cell {
 	margin-right: 10px; 
 }

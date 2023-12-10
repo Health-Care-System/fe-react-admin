@@ -1,10 +1,10 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import client from "../utils/auth";
-import { validateAddDoctorForm, validateEditDoctorForm } from "../utils/validation";
+import { validateEditDoctorForm } from "../utils/validation";
 import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
-const prepareDoctorData = (form) => {
+export const prepareDoctorData = (form) => {
   const data = new FormData();
   data.append("profile_picture", form.profile_picture);
   data.append("fullname", form.fullname);
@@ -31,21 +31,6 @@ const prepareEditDoctorData = (form) => {
   data.append("alumnus", form.alumnus);
   data.append("no_str", form.no_str);
   return data;
-};
-
-export const handlePostDoctor = async (form, setError) => {
-  const data = prepareDoctorData(form);
-  if (validateAddDoctorForm(form, setError)) {
-    try {
-      const res = await client.post(`/admins/doctors/register`, data);
-      if (res.status === 201 || res.status === 200) {
-        return true;
-      }
-    } catch (error) {
-      console.log(error?.response?.data?.meta?.message);
-      return false;
-    }
-  }
 };
 
 export const useGetAllDoctors = () => {
@@ -155,8 +140,8 @@ export const useGetAllDoctorData = () => {
 
 const getAllDoctorData = async ({ pageParam = 0 }) => {
   try {
-    const offset = pageParam * 5;
-    const res = await client.get(`/admins/doctors?offset=${offset}&limit=5`);
+    const offset = pageParam * 10;
+    const res = await client.get(`/admins/doctors?offset=${offset}&limit=10`);
     return res.data;
   } catch (error) {
     if (error.response?.status === 404) {

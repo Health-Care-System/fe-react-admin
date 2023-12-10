@@ -1,56 +1,35 @@
-import Photo from "../../assets/icon/Upload-Image.svg";
-import { Button } from "../../components/ui/Button";
-import Input from "../../components/ui/Form/Input";
-import { Select } from "../../components/ui/Form/Select";
-import "./doctor.css";
+// Packages
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
+
+// Utils & services
+import client from "../../utils/auth";
 import useForm from "../../hooks/useForm";
-import visibility from "../../assets/icon/visibility.svg";
+import { optionsDoctorSpesialist } from "../../utils/dataObject";
+import { handleRegisterDoctorError } from "../../utils/response-handler";
 import {
   validateAddDoctorForm,
   validateExtImage,
 } from "../../utils/validation";
-import { ErrorMsg } from "../../components/Errors/ErrorMsg";
-import client from "../../utils/auth";
-import { CustomModal } from "../../components/ui/Modal/Modal";
+
+// Components
+import Input from "../../components/ui/Form/Input";
+import { Button } from "../../components/ui/Button";
+import { Select } from "../../components/ui/Form/Select";
 import { Transparent } from "../../components/ui/Container";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { ErrorMsg } from "../../components/Errors/ErrorMsg";
+import { CustomModal } from "../../components/ui/Modal/Modal";
+
+// Assets
+import Photo from "../../assets/icon/Upload-Image.svg";
+import visibility from "../../assets/icon/visibility.svg";
+import "./doctor.css";
+import { prepareDoctorData } from "../../services/doctor-sevices";
 
 export const CreateDoctor = () => {
   const navigate = useNavigate()
   const [modalDelete, setModalDelete] = useState(false);
-
-  const handleDeletePhoto = () => {
-    if (!form.tempImage) {
-      toast.error('Belum ada foto yang diinputkan', {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return;
-    }
-    setModalDelete(true);
-  };
-  
-  const handleDelete = () => {
-    setForm({
-      ...form,
-      profile_picture: null,
-      tempImage: null,
-    });
-    setErrors({
-      ...errors,
-      profile_picture: null,
-    });
-    
-    setModalDelete(false);
-  };
 
   const initialState = {
     profile_picture: null,
@@ -78,21 +57,19 @@ export const CreateDoctor = () => {
     experience: "",
     alumnus: "",
     no_str: "",
+    default: ""
   };
 
-  const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
-    useForm(initialState, initialError);
+  const {
+    form,
+    setForm,
+    errors,
+    setErrors,
+    handleInput,
+    setLoading,
+    loading } = useForm(initialState, initialError);
 
-  const options = [
-    { value: "Umum", label: "Dokter Umum" },
-    { value: "Anak", label: "Spesialis Anak" },
-    { value: "Kulit", label: "Dokter Kulit" },
-    { value: "Psikolog", label: "Psikolog Klinis" },
-    { value: "Jantung", label: "Dokter Jantung" },
-    { value: "Gigi", label: "Dokter Gigi" },
-    { value: "Mata", label: "Dokter Mata" },
-    { value: "Bedah", label: "Spesialis Bedah" },
-  ];
+
 
   const togglePasswordVisibility = () => {
     setForm((prevState) => ({
@@ -137,42 +114,51 @@ export const CreateDoctor = () => {
 
 
   const handlePostDoctor = async () => {
-    // REQ BODY
-      const data = new FormData();
-      data.append("profile_picture", form.profile_picture);
-      data.append("fullname", form.fullname);
-      data.append("email", form.email);
-      data.append("password", form.password);
-      data.append("gender", form.gender);
-      data.append("specialist", form.specialist);
-      data.append("price", form.price);
-      data.append("experience", form.experience);
-      data.append("alumnus", form.alumnus);
-      data.append("no_str", form.no_str);
-
-      if (validateAddDoctorForm(form, setErrors)) {
-        try {
-          setLoading(true);
-          const res = await client.post("/admins/doctors/register", data);
-          console.log(res);
+    const data = prepareDoctorData(form);
+    if (validateAddDoctorForm(form, setErrors)) {
+      try {
+        setLoading(true);
+        const res = await client.post("/admins/doctors/register", data);
+        if (res?.status === 201 || res?.status === 200) {
           navigate('/doctors')
           toast.success("Data dokter berhasil ditambahkan", {
-            position: "bottom-left",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
+            delay: 800,
           });
-          
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
         }
+
+      } catch (error) {
+        handleRegisterDoctorError(error, setErrors)
+        toast.error("Data dokter gagal ditambahkan", {
+          delay: 800,
+        });
+      } finally {
+        setLoading(false);
       }
+    }
+  };
+
+  const handleDeletePhoto = () => {
+    if (!form.tempImage) {
+      toast.error('Belum ada foto yang diinputkan', {
+        delay: 800,
+      });
+      return;
+    }
+    setModalDelete(true);
+  };
+
+  const handleDelete = () => {
+    setForm({
+      ...form,
+      profile_picture: null,
+      tempImage: null,
+    });
+    setErrors({
+      ...errors,
+      profile_picture: null,
+    });
+
+    setModalDelete(false);
   };
 
   return (
@@ -327,7 +313,7 @@ export const CreateDoctor = () => {
                 Spesialis
               </label>
               <Select
-                options={options}
+                options={optionsDoctorSpesialist}
                 className="p-3 col-12 col-lg input-styles"
                 handleChange={(e) => handleInput(e)}
                 name="specialist"
@@ -404,23 +390,20 @@ export const CreateDoctor = () => {
           </form>
         </div>
       </div>
-      <div className="d-flex justify-content-center align-items-center gap-5 my-3 ">
-        <Button
-          className="bg-transparent border-3 border-primary text-primary fw-semibold "
+      <ErrorMsg msg={errors.default} />
+      <div className="d-flex justify-content-center align-items-center gap-3 my-3 ">
+        <Link
+          to={'/doctors'}
+          className="btn btn-outline-primary border-2 fw-semibold "
           disabled={loading}
+          style={{ minWidth: '5.375rem'}}
         >
-          {loading ? (
-            <span
-              className="spinner-border spinner-border-sm"
-              aria-hidden="true"
-            ></span>
-          ) : (
-            "Batal"
-          )}
-        </Button>
+          Batal
+        </Link>
         <Button
-          className="bg-primary border-3 text-white "
+          className="bg-primary text-white fw-semibold"
           type="submit"
+          style={{ minWidth: '5.375rem'}}
           onClick={handlePostDoctor}
         >
           {loading ? (
@@ -433,7 +416,7 @@ export const CreateDoctor = () => {
           )}
         </Button>
       </div>
-      
+
       {form.tempImage && modalDelete && (
         <Transparent
           disabled={true}

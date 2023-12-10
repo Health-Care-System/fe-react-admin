@@ -22,9 +22,7 @@ const initialState = {
   search: '',
 }
 
-export const PatientData = () => {  
-
-  
+export const PatientData = ({ maxHeight, forPage }) => {  
   // State untuk fungsi pencarian, state filteredData akan menampung data hasil pencarian
   // Untuk loadingSearch berfungsi memberikan efek loading saat pencarian
   const [filterData, setFilterData] = useState([]);
@@ -86,7 +84,8 @@ export const PatientData = () => {
       placeHolder={'Cari ID Pasien'}
       className={'border'}
       bgThead={'bg-light'}
-      maxHeight={'22rem'}
+      forPage={forPage ?? 'patient'}
+      maxHeight={ maxHeight ?? '22rem'}
       thead={thead}
       inputValue={form?.search}
       handleInput={handleInput}
