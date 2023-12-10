@@ -9,9 +9,31 @@
 	border: 1px solid #505ACB !important;
 }
 
+.input-styles::after {
+	top: 1rem !important;
+	position: absolute !important; 
+}
+
+.input-styles option {
+	padding: 5px !important;
+  }
+
 .list-input {
 	width: 100%;
 	padding: 0 1rem;
+}
+
+.custom-margin-left {
+	margin-left: 60px;
+}
+
+.custom-margin-table {
+	margin-left: 15px;
+	width: 60%;
+}
+
+.header-cell {
+	margin-right: 10px; 
 }
 
 @media (min-width: 1023.98px) { 
@@ -20,4 +42,10 @@
 		max-height: 70.6vh;
 		width: 70%;
 	}
+ }
+
+ /* Detail Doctor  */
+
+ .detail-container {
+	width: 100%;
  }

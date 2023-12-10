@@ -16,7 +16,7 @@ export const TableContainer = ({
         <div className="position-relative mt-3 mt-md-0">
           <Input
             name={name}
-            handleChange={(e) => handleInput(e)}
+            onChange={(e) => handleInput(e)}
             value={inputValue}
             type={'text'}
             placeholder={'Cari ID Tranksaksi'}
@@ -29,7 +29,7 @@ export const TableContainer = ({
           />
         </div>
       </div>
-      <div className=" table-responsive table-wrapper" style={{ maxHeight: '22.625rem' }}>
+      <div className=" table-responsive table-wrapper" style={{ maxHeight: 'calc(100vh - 44rem)' }}>
         <table className="table table-borderless table-striped" >
           <thead className=' sticky-top z-0'>
             <tr>

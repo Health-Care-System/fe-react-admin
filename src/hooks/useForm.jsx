@@ -12,7 +12,7 @@ const useForm = (initialState, initialError) => {
           [name]: value
       })
   }
-  
+
   return {
     form,
     setForm,
