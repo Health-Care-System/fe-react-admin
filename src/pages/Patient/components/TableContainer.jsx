@@ -29,7 +29,7 @@ export const TableContainer = ({
           />
         </div>
       </div>
-      <div className=" table-responsive table-wrapper" style={{ maxHeight: 'calc(100vh - 44rem)' }}>
+      <div className=" table-responsive table-wrapper" style={{ minHeight: '13rem', maxHeight: 'calc(100vh - 44rem)' }}>
         <table className="table table-borderless table-striped" >
           <thead className=' sticky-top z-0'>
             <tr>

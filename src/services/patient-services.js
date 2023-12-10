@@ -58,13 +58,30 @@ export const useGetAllMedicineTransaction = () => {
   });
 };
 
-export const useGetAllPatients = () => {
-  return useQuery({
-    queryKey: ['patients'],
-    queryFn: async () => {
-      const res = await client.get('/admins/users');
-      return res.data;
+
+const getAllPatients = async ({ pageParam = 0 }) => {
+  try {
+    const offset = pageParam * 6;
+    const res = await client.get(`/admins/users?offset=${offset}&limit=6`);
+    return res.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return {
+        results: [],
+      };
     }
+    throw error;
+  }
+}
+export const useGetAllPatients = () => {
+  return useInfiniteQuery({
+    queryKey: ['AllPatients'],
+    queryFn: getAllPatients,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage?.results.length ? allPages.length : undefined;
+      return nextPage;
+    },
   })
 }
 

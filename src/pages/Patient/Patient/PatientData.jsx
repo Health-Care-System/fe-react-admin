@@ -36,8 +36,13 @@ export const PatientData = () => {
     data,
     isPending,
     isError,
-    refetch
+    refetch,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage
   } = useGetAllPatients();
+  
+  console.log(data)
   
   // useForm adalah sebuah custom hooks untuk form, yang sudah dibekali dengan handleInput untuk onChange
   const {
@@ -82,7 +87,7 @@ export const PatientData = () => {
       <RowTable
         isError={isError}
         isPending={debouncedValue !== '' ? loadingSearch : isPending}
-        data={debouncedValue !== '' ? filterData : data?.results}
+        data={debouncedValue !== '' ? filterData : data?.pages}
         refetch={refetch}
         search={form?.search}
         ifEmpty={'Tidak ada pasien'}
