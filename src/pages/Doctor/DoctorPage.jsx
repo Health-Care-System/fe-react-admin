@@ -26,8 +26,6 @@ export const DoctorPage = () => {
     isFetchingNextPage,
   } = useGetAllDoctorData();
 
-  console.log("data", data);
-
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -37,8 +35,8 @@ export const DoctorPage = () => {
   return (
     <section className="container-fluid ">
       <div className="m-3">
-        <div className="card ">
-          <div className="card-body ">
+        <div className="card rounded-4">
+          <div className="card-body bg-light rounded-4">
             <h3 className="card-title fs-2 fw-semibold mb-2">Daftar Dokter</h3>
             <Link
               to="/doctors/create-doctor"

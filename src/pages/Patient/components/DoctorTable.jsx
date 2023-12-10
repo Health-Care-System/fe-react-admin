@@ -12,11 +12,11 @@ import { theadDoctor } from "../../../utils/dataObject";
 import { getDoctorTransactionByID, updateStatusOrderDoctor } from "../../../services/transaction-services";
 
 // Components
-import { Column } from "./Column";
 import { StatusBtn } from "./StatusBtn";
 import { ImageModal } from "./ImageModal";
-import { TableContainer } from "./TableContainer";
 import { Button } from "../../../components/ui/Button";
+import { TableContainer } from "../../../components/Table/TableContainer";
+import { RowTable } from "../../../components/Table/RowTable";
 
 
 const initialState = {
@@ -132,8 +132,12 @@ export const DoctorTable = () => {
         name={'searchDoctor'}
         title={'Transaksi Konsultasi Dokter'}
         thead={theadDoctor}
+        maxHeight={'45rem'}
+        className={'border'}
+        bgThead={'bg-light'}
+        placeHolder={'Cari ID Transaksi'}
       >
-        <Column
+        <RowTable
           isError={isError}
           isPending={isPending || loadingSearch}
           refetch={refetch}

@@ -27,6 +27,8 @@ import {
 import { formatDate } from "../../../utils/helpers";
 import useForm from "../../../hooks/useForm";
 import { useInView } from "react-intersection-observer";
+import { TableContainer } from "../../../components/Table/TableContainer";
+
 
 export const PatientDetails = () => {
   const [modalDelete, setModalDelete] = useState(false);
@@ -258,7 +260,7 @@ const TableDrugDetails = () => {
 
   return (
     <>
-      <TableDetailsContainer
+      <TableContainer
         thead={theadDrugDetails.filter(item => item !== 'Gambar')}
         title={'Transaksi Pembelian Obat'}
       >
@@ -291,7 +293,7 @@ const TableDrugDetails = () => {
           }
           }
         />
-      </TableDetailsContainer>
+      </TableContainer>
       {form.modalImg &&
         <ImageModal
           closeModal={closeModal}
