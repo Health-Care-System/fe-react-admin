@@ -13,6 +13,7 @@ import { CustomModal } from '../ui/Modal/Modal';
 // Assets
 import brandLogo from '../../assets/icon/brandLogo.png';
 import logoutIcon from '../../assets/icon/logout.svg';
+import logout from '../../assets/icon/logout-large.svg'
 import './Sidebar.css';
 
 export const Sidebar = () => {
@@ -68,8 +69,9 @@ export const Sidebar = () => {
             className='min-vw-100'
           >
             <CustomModal
-              title={'Ingin Keluar?'}
-              content={'Apabila anda keluar maka anda tidak dapat menerima informasi terbaru.'}
+              icon={logout}
+              title={'Keluar?'}
+              content={'Ingin beristirahat sejenak? keluar dan nikmati waktu Anda.'}
               confirmAction={handleLogout}
               cancelAction={() => setModal(false)}
             />

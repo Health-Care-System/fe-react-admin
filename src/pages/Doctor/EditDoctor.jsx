@@ -10,7 +10,7 @@ import { CustomModal } from "../../components/ui/Modal/Modal";
 import { Transparent } from "../../components/ui/Container";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { handlePutDoctor } from "../../services/doctor-sevices";
 
@@ -20,9 +20,6 @@ export const EditDoctor = () => {
   const idDoctor = state.id;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  console.log(state);
-  console.log(idDoctor);
 
   const [modalDelete, setModalDelete] = useState(false);
 
@@ -83,8 +80,6 @@ export const EditDoctor = () => {
 
   const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
     useForm(initialState, initialError);
-
-  console.log("form", form);
 
   const options = [
     { value: "Umum", label: "Dokter Umum" },
@@ -358,20 +353,14 @@ export const EditDoctor = () => {
           </form>
         </div>
       </div>
-      <div className="d-flex justify-content-center align-items-center gap-5 my-3 ">
-        <Button
-          className="bg-transparent border-3 border-primary text-primary fw-semibold "
+      <div className="d-flex justify-content-center align-items-center gap-3 my-3 ">
+        <Link to={'/doctors'}
+          style={{ width: '5.375rem'}}
+          className="btn btn-outline-primary border-2 fw-semibold "
           disabled={loading}
         >
-          {loading ? (
-            <span
-              className="spinner-border spinner-border-sm"
-              aria-hidden="true"
-            ></span>
-          ) : (
-            "Batal"
-          )}
-        </Button>
+          Batal
+        </Link>
         <Button
           className="bg-primary border-3 text-white "
           type="submit"

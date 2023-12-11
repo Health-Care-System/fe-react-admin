@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Spinner } from "../Loader/Spinner"
 import { Button } from "../ui/Button"
 import { ColumnSkeleton } from "../ui/Skeleton/ColumnSkeleton"
 
@@ -11,16 +11,11 @@ export const RowTable = ({
   ifEmpty,
   paddingError,
   totalCol,
-  totalRow
+  totalRow,
+  isDebounce,
+  reffer,
+  isFetch
 }) => {
-  const [showEmptyMessage, setShowEmptyMessage] = useState(false);
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setShowEmptyMessage(true);
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
   
   if (isPending) {
     return (
@@ -38,24 +33,45 @@ export const RowTable = ({
       </TableRow>
     )
   }
+  
+  if (data?.length < 1 || data[0] === null) {
+    return (
+      <tr>
+        <td colSpan={totalRow} className="text-center rounded-3 fs-2">{ifEmpty}</td>
+      </tr>
+    )
+  }
 
-
-  if (showEmptyMessage && data?.length === 0) {
+  if (isDebounce) {
     return (
       <>
-        <tr>
-          <td colSpan={12} className="text-center py-5 rounded-3 fs-2">{ifEmpty}</td>
-        </tr>
+        {data?.length > 0 ? (
+          data?.map((res, index) => renderItem(res, index, 0))
+        ) : (
+          <tr>
+            <td colSpan={12} className="text-center py-5 rounded-3 fs-2">
+              {ifEmpty}
+            </td>
+          </tr>
+        )}
       </>
-    )
+    );
   }
 
   return (
     <>
-      {data?.map((data, index) => (
-        renderItem(data, index)
+      {data?.map((item) => (
+        item?.results?.map((res, index) => (
+          renderItem(res, index, item?.pagination?.offset)
+        ))
       ))
       }
+      <tr colSpan={12} ref={reffer}>
+        {isFetch
+          ? <td colSpan={12} className="text-center text-secondary"><Spinner /></td>
+          : ''
+        }
+      </tr>
     </>
   )
 
