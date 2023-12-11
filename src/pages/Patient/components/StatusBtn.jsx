@@ -70,7 +70,7 @@ export const StatusBtn = ({ status, handleAction, id, offset }) => {
   )
 }
 
-const StatusInfo = ({ status, color }) => {
+export const StatusInfo = ({ status, color }) => {
   return (
     <div className="px-4 rounded-5" style={{ backgroundColor: color, width: 'fit-content' }}>
       <p className={`fw-semibold ${status === 'Diterima' ? 'text-primary' : 'text-danger'}`}>{status}</p>
