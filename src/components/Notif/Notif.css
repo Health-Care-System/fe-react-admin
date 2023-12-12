@@ -1,0 +1,26 @@
+.notif-modal {
+  position: absolute;
+  top: 130%;
+  right: -10%;
+  min-width: 24rem;
+  max-width: 39.275rem;
+  z-index: 55;
+  box-shadow: 1px -2px 7px 0px rgba(0, 0, 0, 0.25); 
+}
+
+.text-notif {
+  color: #000;
+}
+.text-notif:visited {
+  color: #ccc;
+}
+.visited {
+  color: #ccc;
+}
+
+@media (min-width: 768px) {
+  .notif-modal {
+    right: 16%;
+    min-width: 39.275rem;
+  }
+}
