@@ -18,8 +18,9 @@ import { RowTable } from "../../components/Table/RowTable";
 import { ImageModal } from "../Patient/components/ImageModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { validateExtImage, validateMedicineForm } from "../../utils/validation";
+import { validateExtImage, validateFormIsChanges, validateMedicineForm } from "../../utils/validation";
 import { ErrorMsg } from "../../components/Errors/ErrorMsg";
+import useDebounce from "../../hooks/useDebounce";
 
 const initState = {
   modalImg: null,
@@ -228,6 +229,7 @@ const MedicineModal = ({
     setErrors
   } = useForm(initState, errorState);
   const imageUploadRef = useRef(null);
+  const [isFormChanged, setIsFormChanged] = useState(false);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -266,7 +268,28 @@ const MedicineModal = ({
       handleAction(form)
     }
   }
+  
+  useEffect(() => {
+    const isChanged = validateFormIsChanges(form, data);
+    setIsFormChanged(isChanged);
+  }, [form, data]);
+  
+  
+  // // Search feature
+  // const [filterData, setFilterData] = useState([]);
+  // const [loadingSearch, setLoadingSearch] = useState(false);
 
+  // const debouncedValue = useDebounce(form?.searchMedicine, 500);
+  // useEffect(() => {
+  //   if (debouncedValue !== '') {
+  //     getMedicineTransactionByID(
+  //       setLoadingSearch,
+  //       setFilterData,
+  //       debouncedValue
+  //     )
+  //   }
+  // }, [debouncedValue]);
+  
   return (
     <>
       <div
@@ -500,6 +523,7 @@ const MedicineModal = ({
             <div className="modal-footer">
               <div className="d-flex flex-row gap-3 justify-content-start w-100 align-items-center">
                 <Button
+                  disabled={!isFormChanged}
                   onClick={handleSubmit}
                   style={{ width: '7.125rem' }}
                   className={'btn-primary text-white fw-semibold'}
@@ -582,7 +606,7 @@ export const MedicineTableContainer = ({
         style={{
           height: 'fit-content',
           minHeight: '13rem',
-          maxHeight: `calc(100vh - 45rem)`
+          maxHeight: `calc(100vh - 14rem)`
         }}>
         <table className="table table-borderless table-striped align-middle" >
           <thead className='sticky-top z-0 '>
