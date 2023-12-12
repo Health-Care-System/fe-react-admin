@@ -112,6 +112,12 @@ export const CreateDoctor = () => {
     }
   };
 
+  const handleSelecteChange = (e) => {
+    const selectedValue = e.target.value;
+    if (selectedValue !== 'Choose') {
+      handleInput(e);
+    }
+  }
 
   const handlePostDoctor = async () => {
     const data = prepareDoctorData(form);
@@ -315,7 +321,7 @@ export const CreateDoctor = () => {
               <Select
                 options={optionsDoctorSpesialist}
                 className="p-3 col-12 col-lg input-styles"
-                handleChange={(e) => handleInput(e)}
+                handleChange={(e) => handleSelecteChange(e)}
                 name="specialist"
                 value={form.specialist}
               />
