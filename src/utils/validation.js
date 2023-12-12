@@ -181,3 +181,84 @@ export const validateEditDoctorForm = (formData, setErrors) => {
   setErrors(newErrors);
   return valid;
 }
+
+export const validateMedicineForm = (form, setErrors) => {
+  let valid = true;
+  const isNumber = (value) => /^\d+$/.test(value);
+  const newErrors = { 
+    code: "",
+    name: "",
+    merk: "",
+    category: "",
+    type: "",
+    stock: "",
+    price: "",
+    details: "",
+    image: null,
+   };
+
+   if(!form.code) {
+    newErrors.code = 'Kode Obat wajib diisi!'
+    valid = false;
+   }
+
+   if (!form.name) {
+    newErrors.name = 'Nama obat wajib diisi!';
+    valid = false;
+  } else if (isNumber(form.name)) {
+    newErrors.name = 'Nama obat harus mengandung huruf!';
+    valid = false;
+  }
+
+  if(!form.merk) {
+    newErrors.merk = 'Merk obat wajib diisi!';
+    valid = false;
+  } else if (isNumber(form.name)) {
+    newErrors.merk = 'Merk obat harus mengandung huruf!';
+    valid = false;
+  }
+
+  if(!form.category) {
+    newErrors.category = 'Kategori obat wajib diisi!';
+    valid = false;
+  } else if (isNumber(form.name)) {
+    newErrors.category = 'Kategori obat harus mengandung huruf!';
+    valid = false;
+  }
+
+  if(!form.type) {
+    newErrors.type = 'Jenis obat wajib diisi!';
+    valid = false;
+  } else if (isNumber(form.name)) {
+    newErrors.type = 'Jenis obat harus mengandung huruf!';
+    valid = false;
+  }
+
+  if (!form.stock) {
+    newErrors.stock = 'Stock obat wajib diisi!';
+    valid = false;
+  } else if (!isNumber(form.stock)) {
+    newErrors.stock = 'Stock obat harus berupa angka!';
+    valid = false;
+  }
+  
+  if (!form.price) {
+    newErrors.price = 'Harga obat wajib diisi!';
+    valid = false;
+  } else if (!isNumber(form.price)) {
+    newErrors.price = 'Harga obat harus berupa angka!';
+    valid = false;
+  }
+
+  if(!form.details) {
+    newErrors.details = 'Details obat wajib diisi!';
+    valid = false;
+  }
+  if(!form.image) {
+    newErrors.image = 'Gambar obat wajib diisi!';
+    valid = false;
+  }
+
+  setErrors(newErrors);
+  return valid;
+}

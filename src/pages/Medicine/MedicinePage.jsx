@@ -18,6 +18,8 @@ import { RowTable } from "../../components/Table/RowTable";
 import { ImageModal } from "../Patient/components/ImageModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { validateExtImage, validateMedicineForm } from "../../utils/validation";
+import { ErrorMsg } from "../../components/Errors/ErrorMsg";
 
 const initState = {
   modalImg: null,
@@ -182,7 +184,15 @@ export const MedicinePage = () => {
   );
 };
 
-const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, handleDelete }) => {
+const MedicineModal = ({
+  title,
+  data,
+  setEditModal,
+  forModal,
+  handleAction,
+  handleDelete
+}) => {
+  const [clickImg, setClickImg] = useState(false);
   const [imagePreview, setImagePreview] = useState(data?.image);
   let initState = {
     id: data?.id ?? '',
@@ -191,39 +201,71 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
     merk: data?.merk ?? '',
     category: data?.category ?? '',
     type: data?.type ?? '',
-    stock: data?.stock ?? 0,
-    price: data?.price ?? 0,
+    stock: data?.stock ?? '',
+    price: data?.price ?? '',
     details: data?.details ?? '',
     image: data?.image ?? null,
+  }
+
+
+  let errorState = {
+    code: '',
+    name: '',
+    merk: '',
+    category: '',
+    type: '',
+    stock: '',
+    price: '',
+    details: '',
+    image: null,
   }
 
   const {
     form,
     setForm,
-    handleInput
-  } = useForm(initState);
+    handleInput,
+    errors,
+    setErrors
+  } = useForm(initState, errorState);
   const imageUploadRef = useRef(null);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setForm({
-      ...form,
-      image: file
-    });
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
     if (file) {
-      reader.readAsDataURL(file);
+      if (!validateExtImage(file)) {
+        setErrors({
+          ...errors,
+          image: 'Hanya file dengan ekstensi .jpg, .jpeg, dan .png yang diperbolehkan.'
+        });
+      } else {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          setForm((prevForm) => ({
+            ...prevForm,
+            image: file
+          }));
+          setImagePreview(reader.result);
+        };
+
+        reader.readAsDataURL(file);
+      }
     } else {
       setImagePreview(null);
     }
   };
 
+
   const handlePlaceholderClick = () => {
     imageUploadRef.current.click();
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateMedicineForm(form, setErrors)) {
+      handleAction(form)
+    }
+  }
 
   return (
     <>
@@ -254,47 +296,64 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
               />
             </div>
             <div className="modal-body px-5">
-              <div className="mb-3 row">
-                <div className="col-sm-9 text-center">
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="imageUpload"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    ref={imageUploadRef}
-                    style={{ display: "none" }}
-                  />
-                  <div
-                    className="d-flex align-items-center justify-content-center mb-5 mt-3"
-                    onClick={handlePlaceholderClick}
-                  >
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="mt-2 img-fluid border-primary rounded p-1"
-                        style={{
-                          maxWidth: "125px",
-                          marginLeft: "6rem",
-                          border: "1px dashed",
-                        }}
-                      />
-                    ) : (
-                      <img
-                        src={AddPhoto}
-                        alt="Placeholder"
-                        className="mt-2 img-fluid p-4 rounded border-primary"
-                        style={{
-                          maxWidth: "125px",
-                          marginLeft: "6rem",
-                          border: "1px dashed",
-                        }}
-                      />
-                    )}
+              {forModal === 'post'
+                ? <div className="mb-3 row">
+                  <div className="col-sm-12 text-center">
+                    <input
+                      type="file"
+                      className="form-control"
+                      id="imageUpload"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      ref={imageUploadRef}
+                      style={{ display: "none" }}
+                    />
+                    <div
+                      className="d-flex align-items-center justify-content-center w-100"
+                      onClick={handlePlaceholderClick}
+                    >
+                      {imagePreview ? (
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="mt-2 mx-auto img-fluid border-primary rounded p-1"
+                          style={{
+                            maxWidth: "125px",
+                            border: "1px dashed",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src={AddPhoto}
+                          alt="Placeholder"
+                          className="mt-2 img-fluid p-4 rounded border-primary"
+                          style={{
+                            maxWidth: "125px",
+                            border: "1px dashed",
+                          }}
+                        />
+                      )}
+                    </div>
+                    <ErrorMsg msg={errors.image} />
                   </div>
                 </div>
-              </div>
+                :
+                <Button onClick={() => setClickImg(!clickImg)} className="d-flex mx-auto p-0 mb-3 position-relative">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className={`mt-2 mx-auto img-fluid rounded`}
+                    style={{
+                      maxWidth: "125px",
+                      border: "1px solid black",
+                    }}
+                  />
+                  {clickImg &&
+                    <EditButtonImage />
+                  }
+                  </Button>
+              }
+
 
               <form>
                 <div className="mb-3 row">
@@ -310,8 +369,10 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.code}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.code} />
                   </div>
                 </div>
+
 
                 <div className="mb-3 row">
                   <label htmlFor="name" className="col-sm-3 col-form-label">
@@ -326,6 +387,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.name}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.name} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -341,6 +403,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.merk}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.merk} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -359,6 +422,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.category}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.category} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -374,6 +438,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.type}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.type} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -389,6 +454,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.stock}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.stock} />
                   </div>
                 </div>
 
@@ -398,13 +464,14 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                   </label>
                   <div className="col-sm-9">
                     <input
-                      type="number"
+                      type="text"
                       className="form-control"
                       id="price"
                       name="price"
                       value={form.price}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.price} />
                   </div>
                 </div>
 
@@ -424,6 +491,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.details}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.details} />
                   </div>
                 </div>
               </form>
@@ -432,7 +500,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
             <div className="modal-footer">
               <div className="d-flex flex-row gap-3 justify-content-start w-100 align-items-center">
                 <Button
-                  onClick={() => handleAction(form)}
+                  onClick={handleSubmit}
                   style={{ width: '7.125rem' }}
                   className={'btn-primary text-white fw-semibold'}
                 >
@@ -460,6 +528,7 @@ export const MedicineTableContainer = ({
   handleInput,
   inputValue,
   setAddModal,
+  name,
   thead,
   pageFor,
   className
@@ -534,5 +603,44 @@ export const MedicineTableContainer = ({
         </table>
       </div>
     </div>
+  )
+}
+
+export const EditButtonImage = ({ setForm, handleFileInputChange, tempImage }) => {
+  const deleteImage = () => {
+    setForm((prev) => ({
+      ...prev,
+      tempImage: null,
+      image: null,
+      clickImg: false,
+    }))
+  }
+
+  return (
+    <>
+      <div className="d-flex flex-column shadow rounded-2 p-2 edit-btn-wrapper" style={{ width: 'fit-content' }}>
+        <Link
+          target="_blank"
+          to={`${tempImage}`}
+          className={'btn fw-semibold'}>
+          {'Lihat Foto'}
+        </Link>
+        <div className="text-center">
+          <input
+            onChange={(e) => handleFileInputChange(e)}
+            type="file"
+            id="fileWhite"
+            className={`inputFileWhite form-control`}
+            name="fileWhite"
+          />
+          <label htmlFor="fileWhite" className="text-black bg-light text-nowrap">Unggah Foto</label>
+        </div>
+        <Button
+          onClick={deleteImage}
+          className={'fw-semibold text-nowrap'}>
+          {'Hapus Foto'}
+        </Button>
+      </div>
+    </>
   )
 }

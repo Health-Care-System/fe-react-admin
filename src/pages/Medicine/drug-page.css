@@ -3,3 +3,54 @@
   font-weight: 700;
   font-size: 0.78438rem;
 }
+
+.edit-btn-wrapper {
+  position: absolute;
+  top: 40%; 
+  right: -60%;
+  z-index: 2;
+  background-color: #fbfbfb;
+}
+
+.inputfile, 
+.inputFileWhite {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label, 
+.inputFileWhite + label {
+  padding: 0.75rem 1rem; 
+  border-radius: 0.5rem; 
+  width: fit-content;
+  font-size: 1rem;
+  font-weight: 600;
+  display: inline-block;
+}
+.inputfile + label {
+  background-color: #008772;
+  color: white;
+
+}
+.inputFileWhite + label {
+  background-color: #fff;
+}
+
+.article-edit-icon {
+  position: absolute;
+  width: 2.5rem;
+  left: 40%;
+  top: 40%;
+}
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: #008772;
+}
+.inputfile + label, 
+.inputFileWhite + label {
+	cursor: pointer; /* "hand" cursor */
+}
