@@ -33,59 +33,70 @@ export const validateFormLogin = (formData, setErrors) => {
 };
 
 export const validateAddDoctorForm = (formData, setErrors) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  let valid = true;
-  const newErrors = { 
-    fullname: "",
-    email: "",
-    password: "",
-    gender: "",
-    specialist: "",
-    price: "",
-    experience: "",
-    alumnus: "",
-    no_str: "",
-   };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const numberRegex = /^-?\d+\.?\d*$/;
+    let valid = true;
+    const newErrors = {
+      fullname: "",
+      email: "",
+      password: "",
+      gender: "",
+      specialist: "",
+      price: "",
+      experience: "",
+      alumnus: "",
+      no_str: "",
+    };
 
-   if(!formData.fullname) {
-    newErrors.fullname = 'Nama Dokter wajib diisi!'
-    valid = false;
-   }
-
-   if (!formData.email) {
-    newErrors.email = 'Email wajib diisi!';
-    valid = false;
-  } else if (!emailRegex.test(formData.email)) {
-    newErrors.email = 'Format email tidak valid!';
-    valid = false;
-  }
-
-  if (!formData.password) {
-    newErrors.password = 'Password wajib diisi!';
-    valid = false;
-  } else if (formData.password.length < 8) {
-    newErrors.password = 'Password harus memiliki setidaknya 8 karakter!';
-    valid = false;
-  } else if (!/(?=.*[a-z])(?=.*\d)/.test(formData.password)) {
-    if (/^[a-zA-Z]+$/.test(formData.password)) {
-      newErrors.password = 'Password harus mengandung setidaknya satu angka!';
-    } else if (/^\d+$/.test(formData.password)) {
-      newErrors.password = 'Password harus mengandung setidaknya satu huruf!';
-    } else {
-      newErrors.password = 'Password harus mengandung setidaknya satu huruf dan satu angka!';
+    if (!formData.fullname) {
+      newErrors.fullname = "Nama Dokter wajib diisi!";
+      valid = false;
+    } else if (numberRegex.test(formData.fullname)) {
+      newErrors.fullname = "Nama Dokter tidak boleh terdiri dari angka!";
+      valid = false;
     }
-    valid = false;
-  }
 
-  if(!formData.gender) {
-    newErrors.gender = 'Gender wajib diisi!';
-    valid = false;
-  }
+    if (!formData.email) {
+      newErrors.email = "Email wajib diisi!";
+      valid = false;
+    } else if (
+      !emailRegex.test(formData.email) ||
+      numberRegex.test(formData.email)
+    ) {
+      newErrors.email = "Format email tidak valid!";
+      valid = false;
+    }
 
-  if(!formData.specialist) {
-    newErrors.specialist = 'Spesialis wajib diisi!';
-    valid = false;
-  }
+    if (!formData.password) {
+      newErrors.password = "Password wajib diisi!";
+      valid = false;
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password harus memiliki setidaknya 8 karakter!";
+      valid = false;
+    } else if (!/(?=.*[a-z])(?=.*\d)/.test(formData.password)) {
+      if (/^[a-zA-Z]+$/.test(formData.password)) {
+        newErrors.password = "Password harus mengandung setidaknya satu angka!";
+      } else if (/^\d+$/.test(formData.password)) {
+        newErrors.password = "Password harus mengandung setidaknya satu huruf!";
+      } else {
+        newErrors.password =
+          "Password harus mengandung setidaknya satu huruf dan satu angka!";
+      }
+      valid = false;
+    }
+
+    if (!formData.gender) {
+      newErrors.gender = "Gender wajib diisi!";
+      valid = false;
+    }
+
+    if (!formData.specialist) {
+      newErrors.specialist = "Spesialis wajib diisi!";
+      valid = false;
+    } else if (numberRegex.test(formData.specialist)) {
+      newErrors.specialist = "Spesialis tidak boleh terdiri dari angka!";
+      valid = false;
+    }
 
   if(!formData.price) {
     newErrors.price = 'Biaya Konsultasi wajib diisi!';

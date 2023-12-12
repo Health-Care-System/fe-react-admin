@@ -27,7 +27,7 @@ export const Select = ({
       className={`form-select ${className}`}
       aria-label="Default select example"
     >
-      <option selected="">Choose</option>
+      <option value="">Choose</option>
       {options?.map((item, index) => (
         <option
           key={index}
