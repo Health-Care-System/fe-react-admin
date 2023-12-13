@@ -7,7 +7,7 @@
 .edit-btn-wrapper {
   position: absolute;
   top: 40%; 
-  right: -60%;
+  right: 15%;
   z-index: 2;
   background-color: #fbfbfb;
 }
