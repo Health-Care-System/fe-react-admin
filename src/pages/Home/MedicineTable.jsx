@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { RowTable } from "../../components/Table/RowTable";
 import { useGetAllMedicine } from "../../services/medicine-service";
 import { useInView } from "react-intersection-observer";
-import { MedicineTableContainer } from "../Medicine/MedicinePage";
 import { theadMedicineHome } from "../../utils/dataObject";
+import { MedicineTableContainer } from "../Medicine/components/MedicineTableContainer";
 
 export const MedicineTable = () => {
   const { ref, inView } = useInView();
@@ -28,6 +28,7 @@ export const MedicineTable = () => {
       thead={theadMedicineHome}
       pageFor={'homepage'}
       className={'border'}
+      maxHeight={'45rem'}
       >
     <RowTable
       ifEmpty={"Tidak ada data Obat!"}
