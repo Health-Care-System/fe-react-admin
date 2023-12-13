@@ -224,7 +224,7 @@ export const validateMedicineForm = (form, setErrors) => {
   if(!form.merk) {
     newErrors.merk = 'Merk obat wajib diisi!';
     valid = false;
-  } else if (isNumber(form.name)) {
+  } else if (isNumber(form.merk)) {
     newErrors.merk = 'Merk obat harus mengandung huruf!';
     valid = false;
   }
@@ -232,7 +232,7 @@ export const validateMedicineForm = (form, setErrors) => {
   if(!form.category) {
     newErrors.category = 'Kategori obat wajib diisi!';
     valid = false;
-  } else if (isNumber(form.name)) {
+  } else if (isNumber(form.category)) {
     newErrors.category = 'Kategori obat harus mengandung huruf!';
     valid = false;
   }
@@ -240,7 +240,7 @@ export const validateMedicineForm = (form, setErrors) => {
   if(!form.type) {
     newErrors.type = 'Jenis obat wajib diisi!';
     valid = false;
-  } else if (isNumber(form.name)) {
+  } else if (isNumber(form.type)) {
     newErrors.type = 'Jenis obat harus mengandung huruf!';
     valid = false;
   }

@@ -34,6 +34,7 @@ import { CustomModal } from "../../components/ui/Modal/Modal";
 import "./drug-page.css";
 import { PostImage } from "./components/PostImage";
 import { MedicineTableContainer } from "./components/MedicineTableContainer";
+import { Spinner, SpinnerSM } from "../../components/Loader/Spinner";
 
 const initState = {
   modalImg: null,
@@ -46,7 +47,9 @@ export const MedicinePage = () => {
   const {
     form,
     setForm,
-    handleInput
+    handleInput,
+    loading,
+    setLoading
   } = useForm(initState)
   const [editedData, setEditedData] = useState(null);
   const [editModal, setEditModal] = useState(false);
@@ -95,6 +98,7 @@ export const MedicinePage = () => {
 
   const queryClient = useQueryClient();
   const handlePostMedicine = async (data) => {
+    setLoading(true);
     const formData = convertMedicineFormData(data);
     try {
       const res = await client.post('/admins/medicines', formData);
@@ -107,6 +111,7 @@ export const MedicinePage = () => {
       console.error(error)
     } finally {
       setAddModal(false)
+      setLoading(false);
     }
   }
 
@@ -137,7 +142,6 @@ export const MedicinePage = () => {
       setEditModal(false);
     }
   });
-
 
   const handleDelete = async (med_id, offset) => {
     mutateDelete.mutate({
@@ -217,6 +221,7 @@ export const MedicinePage = () => {
           title={'Informasi Produk'}
           data={editedData}
           offset={form.offset}
+          loading={loading || mutateDelete.isPending}
           handleDelete={handleDelete}
           handleAction={handleEditMedicine}
           setEditModal={setEditModal} />
@@ -225,6 +230,7 @@ export const MedicinePage = () => {
         <MedicineModal
           offset={form.offset}
           title={'Tambah Produk'}
+          loading={loading || mutateDelete.isPending}
           data={form}
           forModal={'post'}
           handleAction={handlePostMedicine}
@@ -245,6 +251,7 @@ const MedicineModal = ({
   data,
   setEditModal,
   forModal,
+  loading,
   handleAction,
   handleDelete,
   offset
@@ -559,15 +566,18 @@ const MedicineModal = ({
             <div className="modal-footer">
               <div className="d-flex flex-row gap-3 justify-content-start w-100 align-items-center">
                 <Button
-                  disabled={!isFormChanged}
+                  disabled={!isFormChanged || loading}
                   onClick={handleSubmit}
                   style={{ width: '7.125rem' }}
                   className={'btn-primary text-white fw-semibold'}
                 >
-                  Simpan
+                {loading
+                  ? <SpinnerSM />
+                  : 'Simpan'
+                }
                 </Button>
                 <Button
-                  disabled={forModal === 'post'}
+                  disabled={forModal === 'post' || loading}
                   type="button"
                   onClick={() => setDeleteConfirm(true)}
                   className="btn-outline-primary fw-semibold border-2 text-nowrap"
