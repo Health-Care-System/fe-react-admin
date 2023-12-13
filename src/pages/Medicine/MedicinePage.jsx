@@ -1,37 +1,57 @@
-import { useRef, useState, useEffect } from "react";
-import search from "../../assets/icon/search-grey.svg";
-import plus from "../../assets/icon/count_plus.svg";
-import AddPhoto from "../../assets/icon/AddPhoto.svg";
-
-import "./drug-page.css";
-import client from "../../utils/auth";
-
+// Packages
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { theadAllMedicine } from "../../utils/dataObject";
-import Input from "../../components/ui/Form/Input";
-import { Button } from "../../components/ui/Button";
-import useForm from "../../hooks/useForm";
-import { convertMedicineFormData, useGetAllMedicine } from "../../services/medicine-service";
+import { useRef, useState, useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+
+// Utils/service/hooks
+import client from "../../utils/auth";
+import useForm from "../../hooks/useForm";
+import { theadAllMedicine } from "../../utils/dataObject";
+import {
+  convertMedicineFormData,
+  getMedicineByName,
+  handleDeleteMedicine,
+  handleEditMedicineService,
+  useGetAllMedicine
+} from "../../services/medicine-service";
+import {
+  validateExtImage,
+  validateFormIsChanges,
+  validateMedicineForm
+} from "../../utils/validation";
+import useDebounce from "../../hooks/useDebounce";
+
+// Components
+import { EditImage } from "./components/EditImage";
+import { Button } from "../../components/ui/Button";
 import { RowTable } from "../../components/Table/RowTable";
+import { ErrorMsg } from "../../components/Errors/ErrorMsg";
+import { Transparent } from "../../components/ui/Container";
 import { ImageModal } from "../Patient/components/ImageModal";
-import { useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { CustomModal } from "../../components/ui/Modal/Modal";
+import "./drug-page.css";
+import { PostImage } from "./components/PostImage";
+import { MedicineTableContainer } from "./components/MedicineTableContainer";
 
 const initState = {
   modalImg: null,
   imageSrc: null,
+  searchMedicine: '',
+  offset: null,
 }
 
 export const MedicinePage = () => {
   const {
     form,
     setForm,
+    handleInput
   } = useForm(initState)
   const [editedData, setEditedData] = useState(null);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
+  const [offset, setOffset] = useState(null);
 
   const { ref, inView } = useInView();
   const {
@@ -50,26 +70,15 @@ export const MedicinePage = () => {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const handleDelete = async (med_id) => {
-    try {
-      const res = await client.delete(`/admins/medicines/${med_id}`);
-      if (res.status === 201) {
-        queryClient.invalidateQueries({ queryKey: ["allMedicines"] });
-        toast.success("Anda berhasil menghapus produk", { delay: 800 });
-      }
-    } catch (error) {
-      toast.error("Anda gagal menghapus produk", { delay: 800 });
 
-    } finally {
-      setEditModal(false);
-    }
-  };
 
-  const handleModal = (table) => {
+  const handleModal = (table, offset) => {
     setEditModal(true);
     setEditedData(table);
+    setOffset(offset)
   };
-  const handleModalLink = (src) => {
+  const handleModalLink = (e, src) => {
+    e.stopPropagation();
     setForm((prev) => ({
       ...prev,
       modalImg: true,
@@ -100,33 +109,80 @@ export const MedicinePage = () => {
       setAddModal(false)
     }
   }
-  const handleEditMedicine = async (data) => {
-    const formData = convertMedicineFormData(data);
-    try {
-      const res = await client.put(`/admins/medicines/${data?.id}`, formData);
-      if (res.status === 200) {
-        queryClient.invalidateQueries({ queryKey: ["allMedicines"] });
-        toast.success("Anda berhasil mengubah produk", { delay: 800 });
-      }
-    } catch (error) {
-      toast.error("Anda gagal mengubah produk", { delay: 800 });
-    } finally {
-      setEditModal(false)
+
+  // fungsi hapus delete produk
+  const mutateDelete = useMutation({
+    mutationFn: handleDeleteMedicine,
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (newData) => {
+      const pageIndex = data?.pages?.findIndex(item => item?.pagination?.offset === offset);
+      queryClient.setQueryData(['allMedicines'], oldData => {
+        if (oldData) {
+          const updatedResults = [...oldData.pages];
+          updatedResults[pageIndex].results = updatedResults[pageIndex].results.filter((result) => result?.id !== newData.id);
+          return {
+            ...oldData,
+            pages: updatedResults
+          };
+        }
+
+        return oldData;
+      });
+
+      toast.success('Anda berhasil menghapus produk')
+    },
+    onSettled: () => {
+      setEditModal(false);
     }
+  });
+
+
+  const handleDelete = async (med_id, offset) => {
+    mutateDelete.mutate({
+      id: med_id,
+      offset: offset
+    })
+  };
+
+  // Search feature
+  const [filterData, setFilterData] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+
+  const debouncedValue = useDebounce(form?.searchMedicine, 500);
+  useEffect(() => {
+    if (debouncedValue !== '') {
+      getMedicineByName(
+        setLoadingSearch,
+        setFilterData,
+        debouncedValue
+      )
+    }
+  }, [debouncedValue]);
+
+  const handleEditMedicine = (data) => {
+    handleEditMedicineService(data, queryClient, setEditModal)
   }
 
   return (
     <>
-      <MedicineTableContainer thead={theadAllMedicine} setAddModal={setAddModal}>
+      <MedicineTableContainer
+        name={'searchMedicine'}
+        handleInput={handleInput}
+        inputValue={form.searchMedicine}
+        thead={theadAllMedicine}
+        setAddModal={setAddModal}>
         <RowTable
-          ifEmpty={"Tidak ada data dokter!"}
+          ifEmpty={"Tidak ada data obat!"}
           isError={isError}
           isFetch={isFetchingNextPage}
+          isDebounce={debouncedValue !== ''}
+          data={debouncedValue !== '' ? filterData : data?.pages}
+          totalRow={8}
           reffer={ref}
           refetch={refetch}
-          isPending={isPending}
-          data={data?.pages}
-          totalRow={7}
+          isPending={isPending || loadingSearch}
           totalCol={10}
           renderItem={(data, index, offset) => {
             return (
@@ -141,14 +197,14 @@ export const MedicinePage = () => {
                 <td>{data?.merk}</td>
                 <td>{data?.category}</td>
                 <td>{data?.type}</td>
-                <td>{data?.price}</td>
                 <td>{data?.stock}</td>
+                <td>{`Rp. ${data?.price.toLocaleString('id-ID')}`}</td>
                 <td>
                   {!data?.image
                     ? '-'
                     : <Button
                       className={'p-0 text-primary fw-semibold'}
-                      onClick={() => handleModalLink(data?.image)}>Link</Button>
+                      onClick={(e) => handleModalLink(e, data?.image)}>Link</Button>
                   }
                 </td>
               </tr>
@@ -160,12 +216,14 @@ export const MedicinePage = () => {
         <MedicineModal
           title={'Informasi Produk'}
           data={editedData}
+          offset={form.offset}
           handleDelete={handleDelete}
           handleAction={handleEditMedicine}
           setEditModal={setEditModal} />
       }
       {addModal &&
         <MedicineModal
+          offset={form.offset}
           title={'Tambah Produk'}
           data={form}
           forModal={'post'}
@@ -182,7 +240,16 @@ export const MedicinePage = () => {
   );
 };
 
-const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, handleDelete }) => {
+const MedicineModal = ({
+  title,
+  data,
+  setEditModal,
+  forModal,
+  handleAction,
+  handleDelete,
+  offset
+}) => {
+  const [clickImg, setClickImg] = useState(false);
   const [imagePreview, setImagePreview] = useState(data?.image);
   let initState = {
     id: data?.id ?? '',
@@ -191,47 +258,123 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
     merk: data?.merk ?? '',
     category: data?.category ?? '',
     type: data?.type ?? '',
-    stock: data?.stock ?? 0,
-    price: data?.price ?? 0,
+    stock: data?.stock ?? '',
+    price: data?.price ?? '',
     details: data?.details ?? '',
     image: data?.image ?? null,
   }
-
+  let errorState = {
+    code: '',
+    name: '',
+    merk: '',
+    category: '',
+    type: '',
+    stock: '',
+    price: '',
+    details: '',
+    image: null,
+  }
   const {
     form,
     setForm,
-    handleInput
-  } = useForm(initState);
+    handleInput,
+    errors,
+    setErrors
+  } = useForm(initState, errorState);
   const imageUploadRef = useRef(null);
-  const handleImageChange = (e) => {
+  const [isFormChanged, setIsFormChanged] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  
+  const queryClient = useQueryClient();
+  const handleImageChange = (e, status) => {
     const file = e.target.files[0];
-    setForm({
-      ...form,
-      image: file
-    });
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
     if (file) {
-      reader.readAsDataURL(file);
+      if (!validateExtImage(file)) {
+        setErrors({
+          ...errors,
+          image: 'Hanya file dengan ekstensi .jpg, .jpeg, dan .png yang diperbolehkan.'
+        });
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setForm((prevForm) => ({
+            ...prevForm,
+            image: file
+          }));
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            image: ''
+          }))
+          setImagePreview(reader.result);
+          if (status === 'put') {
+            handleEditImage(data?.id, file)
+            queryClient.invalidateQueries({ queryKey: ['allMedicines']})
+          }
+        };
+
+        reader.readAsDataURL(file);
+      }
     } else {
       setImagePreview(null);
     }
   };
+  
+  const handleEditImage = async (id, file) => {
+    const data = new FormData();
+    data.append("image", file)
+    try {
+      const res = await client.put(`/admins/medicines/${id}/image`, data);
+      if (res?.status === 200) {
+      toast.success('Anda berhasil merubah gambar produk')
+      }
+    } catch (error) {
+      toast.error('Gagal mengganti gambar baru, harap coba lagi!')
+    } finally {
+      setClickImg(false);
+    }
+  }
 
   const handlePlaceholderClick = () => {
     imageUploadRef.current.click();
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateMedicineForm(form, setErrors)) {
+      handleAction(form)
+    }
+  }
+
+  useEffect(() => {
+    const isChanged = validateFormIsChanges(form, data);
+    setIsFormChanged(isChanged);
+  }, [form, data]);
+
+  const handleDeleteAction = () => {
+    handleDelete(data?.id, offset);
+    setDeleteConfirm(false);
+  }
+
   return (
     <>
+      {deleteConfirm &&
+        <Transparent
+          disabled={true}
+          style={{ zIndex: 55 }}
+        >
+          <CustomModal
+            title={'Hapus Produk?'}
+            content={'Apabila anda menghapus Produk, data keseluruhan produk akan hilang'}
+            confirmAction={handleDeleteAction}
+            cancelAction={() => setDeleteConfirm(false)}
+          />
+        </Transparent>
+      }
       <div
         className="modal-backdrop"
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.25)',
-          zIndex: '1030'
+          zIndex: '50'
         }}>
       </div>
       <div
@@ -239,7 +382,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
         tabIndex="-1"
         role="dialog"
         aria-hidden="true"
-        style={{ display: "block", zIndex: '1040' }}
+        style={{ display: "block", zIndex: '51' }}
       >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content rounded-4 border-0">
@@ -254,48 +397,25 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
               />
             </div>
             <div className="modal-body px-5">
-              <div className="mb-3 row">
-                <div className="col-sm-9 text-center">
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="imageUpload"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    ref={imageUploadRef}
-                    style={{ display: "none" }}
+              {forModal === 'post'
+                ? <PostImage 
+                  handleImageChange={handleImageChange}
+                  imageUploadRef={imageUploadRef}
+                  handlePlaceholderClick={handlePlaceholderClick}
+                  imagePreview={imagePreview}
+                  errors={errors} />
+                : <EditImage
+                  setClickImg={setClickImg}
+                  clickImg={clickImg}
+                  imagePreview={imagePreview}
+                  setForm={setForm}
+                  data={data}
+                  handleImageChange={handleImageChange}
+                  setImagePreview={setImagePreview}
+                  errors={errors}
                   />
-                  <div
-                    className="d-flex align-items-center justify-content-center mb-5 mt-3"
-                    onClick={handlePlaceholderClick}
-                  >
-                    {imagePreview ? (
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="mt-2 img-fluid border-primary rounded p-1"
-                        style={{
-                          maxWidth: "125px",
-                          marginLeft: "6rem",
-                          border: "1px dashed",
-                        }}
-                      />
-                    ) : (
-                      <img
-                        src={AddPhoto}
-                        alt="Placeholder"
-                        className="mt-2 img-fluid p-4 rounded border-primary"
-                        style={{
-                          maxWidth: "125px",
-                          marginLeft: "6rem",
-                          border: "1px dashed",
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-
+                
+              }
               <form>
                 <div className="mb-3 row">
                   <label htmlFor="code" className="col-sm-3 col-form-label ">
@@ -310,9 +430,9 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.code}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.code} />
                   </div>
                 </div>
-
                 <div className="mb-3 row">
                   <label htmlFor="name" className="col-sm-3 col-form-label">
                     Nama
@@ -326,6 +446,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.name}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.name} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -341,6 +462,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.merk}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.merk} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -359,6 +481,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.category}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.category} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -374,6 +497,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.type}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.type} />
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -389,6 +513,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.stock}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.stock} />
                   </div>
                 </div>
 
@@ -398,13 +523,14 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                   </label>
                   <div className="col-sm-9">
                     <input
-                      type="number"
+                      type="text"
                       className="form-control"
                       id="price"
                       name="price"
                       value={form.price}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.price} />
                   </div>
                 </div>
 
@@ -424,6 +550,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                       value={form.details}
                       onChange={handleInput}
                     />
+                    <ErrorMsg msg={errors.details} />
                   </div>
                 </div>
               </form>
@@ -432,7 +559,8 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
             <div className="modal-footer">
               <div className="d-flex flex-row gap-3 justify-content-start w-100 align-items-center">
                 <Button
-                  onClick={() => handleAction(form)}
+                  disabled={!isFormChanged}
+                  onClick={handleSubmit}
                   style={{ width: '7.125rem' }}
                   className={'btn-primary text-white fw-semibold'}
                 >
@@ -441,7 +569,7 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
                 <Button
                   disabled={forModal === 'post'}
                   type="button"
-                  onClick={() => handleDelete(data?.id)}
+                  onClick={() => setDeleteConfirm(true)}
                   className="btn-outline-primary fw-semibold border-2 text-nowrap"
                 >
                   Hapus Produk
@@ -455,84 +583,4 @@ const MedicineModal = ({ title, data, setEditModal, forModal, handleAction, hand
   )
 }
 
-export const MedicineTableContainer = ({
-  children,
-  handleInput,
-  inputValue,
-  setAddModal,
-  thead,
-  pageFor,
-  className
-}) => {
-  return (
-    <div className={`table-responsive rounded-4 p-4 ${className}`}>
-      {pageFor === 'homepage'
-        ?
-        <div className="d-flex flex-row justify-content-between align-items-center mb-4">
-          <h3 className="card-title text-nowrap fs-2 fw-semibold">Daftar Obat</h3>
-          <Link to={'/medicines'} className=" text-decoration-none text-nowrap fw-semibold">Lihat Semua</Link>
-        </div>
-        : <div className="d-flex flex-column flex-md-row gap-3 gap-md-0 justify-content-md-between align-items-md-center mb-4">
 
-          <div className="position-relative mt-3 mt-md-0">
-            <Input
-              name={name}
-              onChange={(e) => handleInput(e)}
-              value={inputValue}
-              type={'text'}
-              placeholder={'Nama, Merk, Kode'}
-              className={'rounded-5 ps-5 border-0 bg-white py-2'}
-            />
-            <img
-              src={search}
-              className="position-absolute searchIcon"
-              alt="Search"
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setAddModal(true)}
-            className="btn btn-primary rounded-3 btn-md text-white"
-            style={{
-              height: "2.8125rem",
-              display: "flex",
-              width: "13.25rem",
-              padding: "0.25rem 0.625rem",
-              alignItems: "center",
-            }}
-          >
-            <img src={plus} alt="" className="me-2" />
-            Tambah Produk Baru
-          </button>
-        </div>
-      }
-
-      <div
-        className="table-responsive table-wrapper"
-        style={{
-          height: 'fit-content',
-          minHeight: '13rem',
-          maxHeight: `calc(100vh - 45rem)`
-        }}>
-        <table className="table table-borderless table-striped align-middle" >
-          <thead className='sticky-top z-0 '>
-            <tr>
-              {thead?.map((item, index) => (
-                <th
-                  key={index}
-                  scope="col">
-                  {item}
-                </th>
-              ))
-              }
-            </tr>
-          </thead>
-          <tbody>
-            {children}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}

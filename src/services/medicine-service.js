@@ -1,9 +1,10 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import client from "../utils/auth";
+import { toast } from "react-toastify";
 
-export const useGetAllMedicine = (userId) => {
+export const useGetAllMedicine = () => {
   return useInfiniteQuery({
-    queryKey: ['allMedicines', userId],
+    queryKey: ['allMedicines'],
     queryFn: getAllMedicines,
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -12,6 +13,18 @@ export const useGetAllMedicine = (userId) => {
     },
   })
 }
+
+export const handleDeleteMedicine = async (newData) => {
+  try {
+    const res = await client.delete(`/admins/medicines/${newData.id}`);
+    if (res?.status === 200) {
+      return newData;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 const getAllMedicines = async ({ pageParam = 0 }) => {
   try {
     const offset = pageParam * 10;
@@ -22,6 +35,22 @@ const getAllMedicines = async ({ pageParam = 0 }) => {
     throw error;
   }
 };
+
+export const getMedicineByName = async (setLoadingSearch, setFilterData, query) => {
+  
+  try {
+    setLoadingSearch(true);
+    const data = await client.get(`/admins/medicines?offset=0&limit=10&name=${query}`);
+    setFilterData(data && data?.data?.results ? data.data.results : []);
+  } catch (error) {
+    if (error.response.status === 404) {
+      setFilterData([]);
+    }
+    console.error("Error fetching user data:", error);
+  } finally {
+    setLoadingSearch(false);
+  }
+}
 
 export const convertMedicineFormData = (form) => {
   const data = new FormData();
@@ -36,3 +65,18 @@ export const convertMedicineFormData = (form) => {
   data.append("details", form.details);
   return data;
 };
+
+export const handleEditMedicineService = async (data, queryClient, setEditModal) => {
+  const formData = convertMedicineFormData(data);
+  try {
+    const res = await client.put(`/admins/medicines/${data?.id}`, formData);
+    if (res.status === 200) {
+      queryClient.invalidateQueries({ queryKey: ["allMedicines"] });
+      toast.success("Anda berhasil mengubah produk", { delay: 800 });
+    }
+  } catch (error) {
+    toast.error("Anda gagal mengubah produk", { delay: 800 });
+  } finally {
+    setEditModal(false)
+  }
+}

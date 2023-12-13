@@ -94,6 +94,25 @@ p {
   cursor: pointer;
 }
 
+/* Styling scroll bar for Chrome */
+::-webkit-scrollbar {
+  width: 2px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F2F2F2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #BDBDBD;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6E6E6E;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) { 
 	.bubble {
