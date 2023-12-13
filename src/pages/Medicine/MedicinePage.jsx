@@ -34,7 +34,7 @@ import { CustomModal } from "../../components/ui/Modal/Modal";
 import "./drug-page.css";
 import { PostImage } from "./components/PostImage";
 import { MedicineTableContainer } from "./components/MedicineTableContainer";
-import { Spinner, SpinnerSM } from "../../components/Loader/Spinner";
+import { SpinnerSM } from "../../components/Loader/Spinner";
 
 const initState = {
   modalImg: null,
