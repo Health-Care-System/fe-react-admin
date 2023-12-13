@@ -40,7 +40,7 @@ export const getMedicineByName = async (setLoadingSearch, setFilterData, query) 
   
   try {
     setLoadingSearch(true);
-    const data = await client.get(`/admins/medicines?offset=0&limit=10&name=${query}&merk=${query}&code=${query}`);
+    const data = await client.get(`/admins/medicines?offset=0&limit=10&name=${query}`);
     setFilterData(data && data?.data?.results ? data.data.results : []);
   } catch (error) {
     if (error.response.status === 404) {

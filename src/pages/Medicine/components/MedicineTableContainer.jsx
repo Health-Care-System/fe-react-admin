@@ -30,7 +30,7 @@ export const MedicineTableContainer = ({
               onChange={(e) => handleInput(e)}
               value={inputValue}
               type={'text'}
-              placeholder={'Nama, Merk, Kode'}
+              placeholder={'Cari nama produk'}
               className={'rounded-5 ps-5 border-0 bg-white py-2'}
             />
             <img

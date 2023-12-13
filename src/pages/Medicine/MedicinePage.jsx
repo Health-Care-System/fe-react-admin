@@ -179,7 +179,7 @@ export const MedicinePage = () => {
           isFetch={isFetchingNextPage}
           isDebounce={debouncedValue !== ''}
           data={debouncedValue !== '' ? filterData : data?.pages}
-          totalRow={7}
+          totalRow={8}
           reffer={ref}
           refetch={refetch}
           isPending={isPending || loadingSearch}
@@ -197,8 +197,8 @@ export const MedicinePage = () => {
                 <td>{data?.merk}</td>
                 <td>{data?.category}</td>
                 <td>{data?.type}</td>
-                <td>{data?.price}</td>
                 <td>{data?.stock}</td>
+                <td>{`Rp. ${data?.price.toLocaleString('id-ID')}`}</td>
                 <td>
                   {!data?.image
                     ? '-'
