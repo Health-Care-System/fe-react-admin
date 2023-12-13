@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Components
-import { StatusBtn } from "../components/StatusBtn";
+import { StatusInfo } from "../components/StatusBtn";
 import { ImageModal } from "../components/ImageModal";
 import { Button } from "../../../components/ui/Button";
 import { Transparent } from "../../../components/ui/Container";
@@ -206,8 +206,7 @@ const TableDoctorDetails = () => {
                   }
                 </td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn
-                    id={data?.transaction_id}
+                  <TransactionStatus
                     status={data?.payment_status}
                   />
                 </td>
@@ -289,8 +288,7 @@ const TableDrugDetails = () => {
                 <td>{`Rp ${item?.medicine_transaction?.total_price.toLocaleString('ID-id')}`}</td>
                 <td>{date}</td>
                 <td className="d-flex justify-content-center">
-                  <StatusBtn
-                    id={item?.id}
+                  <TransactionStatus
                     status={item?.payment_status} />
                 </td>
               </tr>
@@ -333,6 +331,24 @@ const TableDetailsContainer = ({ thead, title, children }) => {
             </tbody>
           </table>
         </div>
+      </div>
+    </>
+  )
+}
+
+const TransactionStatus = ({ status }) => {
+  if (status === 'success') {
+    return <StatusInfo status={'Diterima'} color={'#d0fad0'} />
+  }
+
+  if (status === 'cancelled') {
+    return <StatusInfo status={'Ditolak'} color={'#fddcd2'} />
+  }
+
+  return (
+    <>
+      <div className="px-4 rounded-5 bg-warning-subtle" style={{ width: 'fit-content' }}>
+        <p className={`fw-semibold text-warning`}>Menunggu</p>
       </div>
     </>
   )

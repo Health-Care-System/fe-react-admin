@@ -114,10 +114,10 @@ export const MedicineTable = () => {
     })
     )
   }
-  
+
   const [filterData, setFilterData] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
-  
+
   const debouncedValue = useDebounce(form?.searchMedicine, 500);
   useEffect(() => {
     if (debouncedValue !== '') {
@@ -125,10 +125,10 @@ export const MedicineTable = () => {
         setLoadingSearch,
         setFilterData,
         debouncedValue
-        )
+      )
     }
   }, [debouncedValue]);
-  
+
   return (
     <>
       <TableContainer
@@ -185,4 +185,5 @@ export const MedicineTable = () => {
     </>
   )
 }
+
 
