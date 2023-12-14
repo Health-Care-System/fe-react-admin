@@ -74,7 +74,10 @@ export const EditDoctor = () => {
           profile_picture:
             "Hanya file dengan ekstensi .jpg, .jpeg, dan .png yang diperbolehkan.",
         });
+
       } else {
+        setIsPhotoDeleted(false);
+
         const reader = new FileReader();
         reader.onload = (e) => {
           const dataURL = e.target.result;
