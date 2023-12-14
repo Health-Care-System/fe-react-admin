@@ -105,6 +105,7 @@ export const ForgotPassword = () => {
                 </label>
                 <Input
                   name="email"
+                  maxLength="1"
                   type="email"
                   onChange={handleInputChange}
                   placeholder="Masukkan email disini"
@@ -134,7 +135,7 @@ export const ForgotPassword = () => {
               />
               <div className="row g-1 gap-3">{inputs}</div>
               <p className="fs-3 text-center ">
-                jika Anda belum menerima kode {" "}
+                jika Anda belum menerima kode{" "}
                 <span
                   style={{ cursor: "pointer" }}
                   className="text-primary fw-semibold "
@@ -142,15 +143,15 @@ export const ForgotPassword = () => {
                   Resend
                 </span>
               </p>
-            </div>
-            <div className="row mt-3 ">
-              <Button
-                type="submit"
-                className="bg-primary  text-white p-2 rounded-3 justify-content-center align-items-center"
-                onClick={handleOtpSubmit}
-              >
-                Verifikasi dan Lanjutkan
-              </Button>
+              <div className="row mt-3 ">
+                <Button
+                  type="submit"
+                  className="bg-primary  text-white p-2 rounded-3 justify-content-center align-items-center"
+                  onClick={handleOtpSubmit}
+                >
+                  Verifikasi dan Lanjutkan
+                </Button>
+              </div>
             </div>
           </section>
         );
@@ -163,6 +164,26 @@ export const ForgotPassword = () => {
                 title="Masukkan Password Baru"
                 paragraf="kata sandi baru Anda harus berbeda dengan kata sandi yang digunakan sebelumnya"
               />
+              <label className="form-label fw-medium">Password</label>
+              <div className="input-group">
+                <Input
+                  type={form.showPassword ? "text" : "password"}
+                  className="form-control form-control-lg"
+                  name="password"
+                  value={form.password}
+                  placeholder="Masukkan password"
+                  onChange={handleInputChange}
+                />
+                <span
+                  className="input-group-text"
+                  onClick={togglePasswordVisibility}
+                >
+                  <img
+                    src={visibility}
+                    alt={form.showPassword ? "hide" : "show"}
+                  />
+                </span>
+              </div>
               <label className="form-label fw-medium">Password</label>
               <div className="input-group">
                 <Input
