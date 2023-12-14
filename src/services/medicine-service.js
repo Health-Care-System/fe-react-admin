@@ -66,8 +66,9 @@ export const convertMedicineFormData = (form) => {
   return data;
 };
 
-export const handleEditMedicineService = async (data, queryClient, setEditModal) => {
+export const handleEditMedicineService = async (data, queryClient, setEditModal, handleChange) => {
   const formData = convertMedicineFormData(data);
+  handleChange('loadingEdit', true);
   try {
     const res = await client.put(`/admins/medicines/${data?.id}`, formData);
     if (res.status === 200) {
@@ -77,6 +78,7 @@ export const handleEditMedicineService = async (data, queryClient, setEditModal)
   } catch (error) {
     toast.error("Anda gagal mengubah produk", { delay: 800 });
   } finally {
-    setEditModal(false)
+    setEditModal(false);
+    handleChange('loadingEdit', false);
   }
 }

@@ -18,8 +18,10 @@ export const EditImageOptions = ({
 }) => {
   const queryClient = useQueryClient()
   const [deleteModal, setDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const deleteImage = async () => {
     try {
+      setLoading(true);
       const res = await client.delete(`/admins/medicines/${id}/image`);
       if (res.status === 200) {
         setForm((prev) => ({
@@ -36,6 +38,7 @@ export const EditImageOptions = ({
     } finally {
       setDeleteModal(false)
       setClickImg(false)
+      setLoading(false)
     }
   }
     
@@ -72,6 +75,7 @@ export const EditImageOptions = ({
           style={{ zIndex: 55}}
         >
           <CustomModal
+            disabled={loading}
             title={'Hapus Foto?'}
             content={'Apabila anda menghapus Foto, maka foto produk akan hilang'}
             confirmAction={deleteImage}

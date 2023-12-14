@@ -12,6 +12,13 @@ const useForm = (initialState, initialError) => {
           [name]: value
       })
   }
+  
+  const handleChange = (name, value) => {
+    setForm(prevForm => ({
+      ...prevForm,
+      [name]: value
+    }));
+  };
 
   return {
     form,
@@ -20,6 +27,7 @@ const useForm = (initialState, initialError) => {
     setErrors,
     handleInput,
     setLoading,
+    handleChange,
     loading
   }
 }
