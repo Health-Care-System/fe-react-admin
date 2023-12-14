@@ -41,6 +41,7 @@ const initState = {
   imageSrc: null,
   searchMedicine: '',
   offset: null,
+  loadingEdit: false,
 }
 
 export const MedicinePage = () => {
@@ -49,7 +50,8 @@ export const MedicinePage = () => {
     setForm,
     handleInput,
     loading,
-    setLoading
+    setLoading,
+    handleChange,
   } = useForm(initState)
   const [editedData, setEditedData] = useState(null);
   const [editModal, setEditModal] = useState(false);
@@ -166,8 +168,10 @@ export const MedicinePage = () => {
   }, [debouncedValue]);
 
   const handleEditMedicine = (data) => {
-    handleEditMedicineService(data, queryClient, setEditModal)
+    handleEditMedicineService(data, queryClient, setEditModal, handleChange)
   }
+  
+  console.log(form.loadingEdit)
 
   return (
     <>
@@ -221,7 +225,7 @@ export const MedicinePage = () => {
           title={'Informasi Produk'}
           data={editedData}
           offset={form.offset}
-          loading={loading || mutateDelete.isPending}
+          loading={loading || mutateDelete.isPending || form.loadingEdit}
           handleDelete={handleDelete}
           handleAction={handleEditMedicine}
           setEditModal={setEditModal} />
