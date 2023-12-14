@@ -4,7 +4,10 @@ import Input from "../../components/ui/Form/Input";
 import { Select } from "../../components/ui/Form/Select";
 import "./doctor.css";
 import useForm from "../../hooks/useForm";
-import { validateExtImage } from "../../utils/validation";
+import {
+  validateEditDoctorForm,
+  validateExtImage,
+} from "../../utils/validation";
 import { ErrorMsg } from "../../components/Errors/ErrorMsg";
 import { CustomModal } from "../../components/ui/Modal/Modal";
 import { Transparent } from "../../components/ui/Container";
@@ -22,37 +25,7 @@ export const EditDoctor = () => {
   const queryClient = useQueryClient();
 
   const [modalDelete, setModalDelete] = useState(false);
-
-  const handleDeletePhoto = () => {
-    if (!form.tempImage) {
-      toast.error("Belum ada foto yang diinputkan", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return;
-    }
-    setModalDelete(true);
-  };
-
-  const handleDelete = () => {
-    setForm({
-      ...form,
-      profile_picture: null,
-      tempImage: null,
-    });
-    setErrors({
-      ...errors,
-      profile_picture: null,
-    });
-
-    setModalDelete(false);
-  };
+  const [isPhotoDeleted, setIsPhotoDeleted] = useState(false);
 
   const initialState = {
     profile_picture: state.profile_picture || null,
@@ -107,8 +80,12 @@ export const EditDoctor = () => {
           const dataURL = e.target.result;
           setForm({
             ...form,
-            profile_picture: file,
-            tempImage: dataURL,
+            profile_picture: dataURL, // Update profile_picture dengan dataURL gambar
+            tempImage: dataURL, // Juga perbarui tempImage dengan dataURL
+          });
+          setErrors({
+            ...errors,
+            profile_picture: null, // Reset pesan kesalahan
           });
         };
         reader.readAsDataURL(file);
@@ -127,19 +104,58 @@ export const EditDoctor = () => {
   };
 
   const handlePut = async () => {
-    const res = await handlePutDoctor(form, idDoctor, setErrors, setLoading);
-    console.log(res);
-    if (res) {
-      navigate("/doctors");
-      queryClient.invalidateQueries({ queryKey: ["doctors"] });
-      toast.success("Dokter berhasil diedit!", {
-        delay: 800,
-      });
-    } else {
-      toast.error("Dokter gagal diedit!", {
-        delay: 800,
-      });
+    if (!form.profile_picture) {
+      toast.error("Anda perlu mengunggah foto");
+      return;
     }
+
+    // Check jika email tidak berubah, maka lewati validasi email
+    const isEmailChanged = form.email == initialState.email;
+
+    if (isEmailChanged || validateEditDoctorForm(form, setErrors)) {
+      try {
+        setLoading(true);
+        const res = await handlePutDoctor(
+          form,
+          idDoctor,
+          setErrors,
+          setLoading
+        );
+        if (res) {
+          navigate("/doctors");
+          queryClient.invalidateQueries({ queryKey: ["doctors"] });
+          toast.success("Dokter berhasil diedit!", { delay: 800 });
+        } else {
+          toast.error("Dokter gagal diedit!", { delay: 800 });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleDeletePhoto = () => {
+    if (!form.profile_picture && !form.tempImage) {
+      toast.error("Belum ada foto yang diunggah");
+      return;
+    }
+    setModalDelete(true);
+  };
+
+  const handleDelete = () => {
+    setForm({
+      ...form,
+      profile_picture: null,
+      tempImage: null,
+    });
+    setErrors({
+      ...errors,
+      profile_picture: null,
+    });
+    setModalDelete(false);
+    setIsPhotoDeleted(true);
   };
 
   return (
@@ -147,35 +163,62 @@ export const EditDoctor = () => {
       <div className="my-3 d-flex flex-column flex-lg-row align-items-center align-items-lg-start justify-content-lg-center gap-3  ">
         <div className="d-flex flex-column align-items-start gap-3 mb-3 ">
           <div>
-            {form.photo_profile ? (
-              <>
-                <div
-                  className="rounded bg-secondary-subtle mb-3 mx-auto "
+            {isPhotoDeleted ? (
+              <div
+                className="rounded bg-secondary-subtle mb-3 mx-auto "
+                style={{
+                  padding: "3.1875rem 2rem",
+                  maxHeight: "16.125rem",
+                  maxWidth: "13.75rem",
+                }}
+              >
+                <img
+                  src={Photo}
+                  alt="photo"
                   style={{
-                    padding: "3.1875rem 2rem",
-                    maxHeight: "16.125rem",
-                    maxWidth: "13.75rem",
+                    maxHeight: "9.75rem",
+                    maxWidth: "9.75rem",
+                    height: "9.75rem",
+                    width: "9.75rem",
                   }}
-                >
-                  <img
-                    src={Photo}
-                    alt="photo"
-                    style={{ maxHeight: "9.75rem", maxWidth: "9.75rem", height: "9.75rem", width: "9.75rem" }}
-                  />
-                </div>
-              </>
+                />
+              </div>
+            ) : form.photo_profile ? (
+              <div
+                className="rounded bg-secondary-subtle mb-3 mx-auto "
+                style={{
+                  padding: "3.1875rem 2rem",
+                  maxHeight: "16.125rem",
+                  maxWidth: "13.75rem",
+                }}
+              >
+                <img
+                  src={Photo}
+                  alt="photo"
+                  style={{
+                    maxHeight: "9.75rem",
+                    maxWidth: "9.75rem",
+                    height: "9.75rem",
+                    width: "9.75rem",
+                  }}
+                />
+              </div>
             ) : (
-              <>
-                <div className="rounded mb-3 ">
-                  <img
-                    src={form.profile_picture}
-                    alt="photo"
-                    className="rounded-4 object-fit-cover "
-                    style={{ maxHeight: "13.75rem", maxWidth: "16.125rem", height: "16.125rem", width: "13.75rem"  }}
-                  />
-                </div>
-              </>
+              <div className="rounded mb-3 ">
+                <img
+                  src={form.profile_picture}
+                  alt="photo"
+                  className="rounded-4 object-fit-cover "
+                  style={{
+                    maxHeight: "13.75rem",
+                    maxWidth: "16.125rem",
+                    height: "16.125rem",
+                    width: "13.75rem",
+                  }}
+                />
+              </div>
             )}
+
             <ErrorMsg msg={errors.profile_picture} />
             <div className="btn-group-vertical float-end">
               <label htmlFor="upload-photo" className="btn btn-light">
@@ -354,8 +397,9 @@ export const EditDoctor = () => {
         </div>
       </div>
       <div className="d-flex justify-content-center align-items-center gap-3 my-3 ">
-        <Link to={'/doctors'}
-          style={{ width: '5.375rem'}}
+        <Link
+          to={"/doctors"}
+          style={{ width: "5.375rem" }}
           className="btn btn-outline-primary border-2 fw-semibold "
           disabled={loading}
         >
@@ -365,6 +409,7 @@ export const EditDoctor = () => {
           className="bg-primary border-3 text-white "
           type="submit"
           onClick={handlePut}
+          disabled={!form.profile_picture}
         >
           {loading ? (
             <span
@@ -377,7 +422,7 @@ export const EditDoctor = () => {
         </Button>
       </div>
 
-      {form.tempImage && modalDelete && (
+      {modalDelete && (
         <Transparent
           disabled={true}
           className="min-vw-100 position-fixed end-0"
