@@ -385,7 +385,7 @@ export const CreateDoctor = () => {
                 type="number"
                 className="form-control p-3 col-12 col-lg input-styles "
                 onChange={(e) => handleInput(e)}
-                placeholder="Spesialis"
+                placeholder="No STR"
                 name="no_str"
                 value={form.no_str}
               />
