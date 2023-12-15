@@ -4,7 +4,7 @@ import { Transparent } from "../../../components/ui/Container";
 import { CustomModal } from "../../../components/ui/Modal/Modal";
 import infoIcon from '../../../assets/icon/warning-icon.svg'
 
-export const StatusBtn = ({ status, handleAction, id, offset }) => {
+export const StatusBtn = ({ status, handleAction, id, offset, isPending }) => {
   const [modalConfirm, setModalConfirm] = useState(false);
   const [modalCancel, setModalCancel] = useState(false);
 
@@ -45,6 +45,7 @@ export const StatusBtn = ({ status, handleAction, id, offset }) => {
           className='min-vw-100'
         >
           <CustomModal
+            disabled={isPending}
             icon={infoIcon}
             title={'Terima Pembayaran?'}
             content={'Apabila anda menerima transaksi pembayaran pasien, maka status akan berubah menjadi Diterima.'}
@@ -59,6 +60,7 @@ export const StatusBtn = ({ status, handleAction, id, offset }) => {
           className='min-vw-100'
         >
           <CustomModal
+            disabled={isPending}
             title={'Tolak Pembayaran?'}
             content={'Apabila anda menolak transaksi pembayaran pasien, maka status akan berubah menjadi Ditolak.'}
             confirmAction={(e) => handleAction('cancelled', id, offset, e)}
