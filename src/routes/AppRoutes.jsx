@@ -3,7 +3,6 @@ import { HomePage } from '../pages/Home/HomePage';
 import { Layout } from '../layout';
 import { PatientPage } from '../pages/Patient/PatientPage';
 import { DoctorPage } from '../pages/Doctor/DoctorPage';
-import { SettingPage } from '../pages/Setting/SettingPage';
 import { LoginPage } from '../pages/Login/LoginPage';
 import { CreateDoctor } from '../pages/Doctor/CreateDoctor';
 import { DetailDoctor } from '../pages/Doctor/DetailDoctor';
@@ -32,7 +31,6 @@ const AppRoutes = () => (
         <Route path="/doctors/create-doctor" element={<CreateDoctor />} />
         <Route path="/doctors/detail-doctor/:id" element={<DetailDoctor />} />
         <Route path="/doctors/edit-doctor/:id" element={<EditDoctor />} />
-        <Route path="/settings" element={<SettingPage />} />
       </Route>
     </Route>
   </Routes>

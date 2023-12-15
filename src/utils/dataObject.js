@@ -54,10 +54,6 @@ export const navbarTitle = [
     route: 'doctors',
     title: 'Kelola Dokter',
   },
-  {
-    route: 'settings',
-    title: 'Pengaturan',
-  },
 ]
 
 export const drugTransaction = [
