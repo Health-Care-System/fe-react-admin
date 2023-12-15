@@ -167,6 +167,7 @@ export const DoctorTable = () => {
                 </td>
                 <td className="d-flex justify-content-center">
                   <StatusBtn
+                    isPending={mutation.isPending}
                     id={item?.transaction_id}
                     handleAction={handleEdit}
                     status={item?.payment_status}
