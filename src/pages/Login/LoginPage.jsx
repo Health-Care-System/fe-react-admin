@@ -10,6 +10,7 @@ import Banner from '../../assets/image/banner.png';
 import visibility from '../../assets/icon/visibility.svg';
 import { handleLogin } from '../../services/login-service';
 import useForm from '../../hooks/useForm';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
   return (
@@ -46,6 +47,9 @@ const initError = {
 }
 
 const LoginForm = () => {
+
+  const navigate = useNavigate()
+
   const {
     form,
     setForm,
@@ -75,6 +79,10 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleLogin(form, setErrors, setForm, setLoading);
+  }
+
+  const OnNavigate = () => {
+    navigate('/forgot-password')
   }
 
   return (
@@ -115,7 +123,7 @@ const LoginForm = () => {
       <div className="d-flex justify-content-between mb-3">
         <div className="form-check p-3 g-col-6">
         </div>
-        <div className="p-2 g-col-6">
+        <div className="p-2 g-col-6" onClick={OnNavigate}>
           <img src={lock} alt="lock" />
           <label className="form-check-label">Lupa Kata Sandi</label>
         </div>
