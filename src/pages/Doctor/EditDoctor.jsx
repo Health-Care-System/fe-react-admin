@@ -51,6 +51,7 @@ export const EditDoctor = () => {
     no_str: "",
   };
 
+  const [existEmail, setExistEmail] = useState(state?.email);
   const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
     useForm(initialState, initialError);
 
@@ -122,12 +123,13 @@ export const EditDoctor = () => {
           form,
           idDoctor,
           setErrors,
-          setLoading
+          setLoading,
+          existEmail
         );
         if (res) {
-          navigate("/doctors");
           queryClient.invalidateQueries({ queryKey: ["doctors"] });
           toast.success("Dokter berhasil diedit!", { delay: 800 });
+          navigate("/doctors");
         } else {
           toast.error("Dokter gagal diedit!", { delay: 800 });
         }
