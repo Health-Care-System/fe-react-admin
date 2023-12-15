@@ -166,6 +166,7 @@ export const MedicineTable = () => {
                 <td>{date}</td>
                 <td className="d-flex justify-content-center">
                   <StatusBtn
+                    isPending={mutation.isPending}
                     id={item?.id}
                     handleAction={handleEdit}
                     status={item?.payment_status}
