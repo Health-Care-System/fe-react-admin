@@ -19,11 +19,13 @@ export const prepareDoctorData = (form) => {
   return data;
 };
 
-const prepareEditDoctorData = (form) => {
+const prepareEditDoctorData = (form, existEmail) => {
   const data = new FormData();
   data.append("profile_picture", form.profile_picture);
   data.append("fullname", form.fullname);
-  data.append("email", form.email);
+  if (form.email !== existEmail) {
+    data.append("email", form.email);
+  }
   data.append("gender", form.gender);
   data.append("specialist", form.specialist);
   data.append("price", form.price);
@@ -58,9 +60,10 @@ export const handlePutDoctor = async (
   form,
   idDoctor,
   setError,
-  setLoading
+  setLoading,
+  existEmail
 ) => {
-  const data = prepareEditDoctorData(form);
+  const data = prepareEditDoctorData(form, existEmail);
   if (validateEditDoctorForm(form, setError)) {
     try {
       setLoading(true);
