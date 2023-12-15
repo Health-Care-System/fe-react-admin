@@ -14,11 +14,13 @@ import { PrivateRoute } from './PrivateRoute';
 import { PatientDetails } from '../pages/Patient/Patient/PatientDetails';
 import React from 'react';
 import { MedicinePage } from '../pages/Medicine/MedicinePage';
+import { ForgotPassword } from '../pages/ForgotPassword/ForgotPassword';
 
 const MemoizedPatientData = React.memo(PatientData)
 const AppRoutes = () => (
   <Routes>
     <Route path="/login" element={<LoginPage />} />
+    <Route path='/forgot-password' element={<ForgotPassword />} />
     <Route element={<PrivateRoute />}>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />

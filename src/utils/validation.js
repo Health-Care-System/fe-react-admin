@@ -133,8 +133,9 @@ export const validateExtImage = (file) => {
 
 export const validateEditDoctorForm = (formData, setErrors) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const numberRegex = /^-?\d+\.?\d*$/;
   let valid = true;
-  const newErrors = { 
+  const newErrors = {
     fullname: "",
     email: "",
     gender: "",
@@ -143,35 +144,48 @@ export const validateEditDoctorForm = (formData, setErrors) => {
     experience: "",
     alumnus: "",
     no_str: "",
-   };
+  };
 
-   if(!formData.fullname) {
-    newErrors.fullname = 'Nama Dokter wajib diisi!'
+  if (!formData.fullname) {
+    newErrors.fullname = "Nama Dokter wajib diisi!";
     valid = false;
-   }
-
-   if (!formData.email) {
-    newErrors.email = 'Email wajib diisi!';
-    valid = false;
-  } else if (!emailRegex.test(formData.email)) {
-    newErrors.email = 'Format email tidak valid!';
+  } else if (numberRegex.test(formData.fullname)) {
+    newErrors.fullname = "Nama Dokter tidak boleh terdiri dari angka!";
     valid = false;
   }
 
-  if(!formData.gender) {
-    newErrors.gender = 'Gender wajib diisi!';
+  if (!formData.email) {
+    newErrors.email = "Email wajib diisi!";
+    valid = false;
+  } else if (
+    !emailRegex.test(formData.email) ||
+    numberRegex.test(formData.email)
+  ) {
+    newErrors.email = "Format email tidak valid!";
     valid = false;
   }
 
-  if(!formData.specialist) {
-    newErrors.specialist = 'Spesialis wajib diisi!';
+  if (!formData.gender) {
+    newErrors.gender = "Gender wajib diisi!";
     valid = false;
   }
 
-  if(!formData.price) {
+  if (!formData.specialist) {
+    newErrors.specialist = "Spesialis wajib diisi!";
+    valid = false;
+  } else if (numberRegex.test(formData.specialist)) {
+    newErrors.specialist = "Spesialis tidak boleh terdiri dari angka!";
+    valid = false;
+  }
+
+  if (!formData.price) {
     newErrors.price = 'Biaya Konsultasi wajib diisi!';
     valid = false;
+  } else if (isNaN(parseFloat(formData.price))) {
+    newErrors.price = 'Biaya Konsultasi harus berupa angka!';
+    valid = false;
   }
+  
 
   if(!formData.experience) {
     newErrors.experience = 'Pengalaman wajib diisi!';
@@ -185,6 +199,9 @@ export const validateEditDoctorForm = (formData, setErrors) => {
 
   if(!formData.no_str) {
     newErrors.no_str = 'Nomor STR wajib diisi!';
+    valid = false;
+  } else if (isNaN(parseFloat(formData.no_str))) {
+    newErrors.no_str = 'Nomor STR harus berupa angka!';
     valid = false;
   }
 
