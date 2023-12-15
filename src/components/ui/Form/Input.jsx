@@ -1,6 +1,6 @@
 // Input.js
 const Input = (props) => {
-  const { type, className, name, placeholder, value, onChange, defaultChecked } = props;
+  const { type, className, name, placeholder, value, onChange, defaultChecked, maxLength } = props;
 
   return (
     <input
@@ -9,6 +9,7 @@ const Input = (props) => {
       name={name}
       placeholder={placeholder}
       value={value}
+      maxLength={maxLength}
       onChange={onChange}
       defaultChecked={defaultChecked && defaultChecked}
     />

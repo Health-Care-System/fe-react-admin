@@ -23,11 +23,11 @@ export const DetailDoctor = () => {
             const res = await client.delete(`/admins/doctor/${data.id}`);
             if (res?.status === 200) {
                 navigate('/doctors')
-                toast.success('Anda berhasil menghapus pasien!', {
+                toast.success('Anda berhasil menghapus dokter!', {
                     delay: 800
                 });
             } else {
-                throw new Error('Gagal menghapus data pasien!');
+                throw new Error('Gagal menghapus data dokter!');
             }
         } catch (error) {
             toast.error(error?.response?.data?.meta?.message, {
