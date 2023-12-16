@@ -62,7 +62,7 @@ export const MedicineTableContainer = ({
         className="table-responsive table-wrapper"
         style={{
           height: 'fit-content',
-          minHeight: '15.5rem',
+          minHeight: '13rem',
           maxHeight: `calc(100vh - ${maxHeight ?? '14rem'})`
         }}>
         <table className="table table-borderless table-striped align-middle" >
