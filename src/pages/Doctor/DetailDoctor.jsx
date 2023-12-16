@@ -1,14 +1,15 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import backIcon from "../../assets/icon/arrow-right.svg";
-import PhotoAvatar from "../../assets/icon/Photo.svg";
-import { Button } from "../../components/ui/Button";
-import "./doctor.css";
-import { toast } from "react-toastify";
-import client from "../../utils/auth";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import client from "../../utils/auth";
+import { Button } from "../../components/ui/Button";
 import { Transparent } from "../../components/ui/Container";
 import { CustomModal } from "../../components/ui/Modal/Modal";
+import ImageWithFallback from "../../components/Errors/ImageWithFallback";
+import backIcon from "../../assets/icon/arrow-right.svg";
+import noImage from '../../assets/image/image_not_available.png'
 
+import "./doctor.css";
 
 export const DetailDoctor = () => {
     const navigate = useNavigate();
@@ -49,47 +50,46 @@ export const DetailDoctor = () => {
                     <h3 className="fs-2 mb-0 fw-semibold" style={{ fontWeight: 700}}>Detail Dokter</h3>
                 </div>
                 <div className="d-flex flex-row flex-wrap gap-3 align-items-start custom-margin-left">
-                    <img
-                        src={data.profile_picture || PhotoAvatar}
+                    <ImageWithFallback
+                        src={data?.profile_picture}
+                        fallback={noImage}
                         alt="photo avatar"
                         className="rounded-2 object-fit-cover "
-                        style={{ maxWidth: "13.75rem", maxHeight: "16.625rem" }}
-                    />
-
+                        style={{ maxWidth: "13.75rem", maxHeight: "16.625rem" }}/>
                     <div className=" custom-margin-table" >
                         <table className="table">
                             <tbody>
                                 <tr>
                                     <th className="header-cell">Nama</th>
-                                    <td>{data.fullname}</td>
+                                    <td>{data?.fullname}</td>
                                 </tr>
                                 <tr>
                                     <th>Jenis Kelamin</th>
-                                    <td>{data.gender}</td>
+                                    <td>{data?.gender}</td>
                                 </tr>
                                 <tr>
                                     <th>Email</th>
-                                    <td>{data.email}</td>
+                                    <td>{data?.email}</td>
                                 </tr>
                                 <tr>
                                     <th>Biaya</th>
-                                    <td>{data.price}</td>
+                                    <td>{data?.price}</td>
                                 </tr>
                                 <tr>
                                     <th>Spesialis</th>
-                                    <td>{data.specialist}</td>
+                                    <td>{data?.specialist}</td>
                                 </tr>
                                 <tr>
                                     <th>Pengalaman</th>
-                                    <td>{data.experience}</td>
+                                    <td>{data?.experience}</td>
                                 </tr>
                                 <tr>
                                     <th>Alumnus</th>
-                                    <td>{data.alumnus}</td>
+                                    <td>{data?.alumnus}</td>
                                 </tr>
                                 <tr>
                                     <th>No STR</th>
-                                    <td>{data.no_str}</td>
+                                    <td>{data?.no_str}</td>
                                 </tr>
 
 
@@ -99,14 +99,16 @@ export const DetailDoctor = () => {
                 </div>
                 <div className="d-flex flex-row justify-content-center align-items-center gap-3 ">
                     <Link
-                        to={`/doctors/edit-doctor/${data.id}`}
+                        to={`/doctors/edit-doctor/${data?.id}`}
                         state={data}
                     >
                         <Button className="btn-primary border-2 border-primary text-white fw-semibold px-4 ">
                             Edit
                         </Button>
                     </Link>
-                    <Button className="btn-trasparent border-2 border-primary text-primary fw-semibold px-3 " onClick={() => setModalDelete(true)}>
+                    <Button 
+                        className="btn-trasparent border-2 border-primary text-primary fw-semibold px-3 " 
+                        onClick={() => setModalDelete(true)}>
                         Hapus
                     </Button>
                 </div>

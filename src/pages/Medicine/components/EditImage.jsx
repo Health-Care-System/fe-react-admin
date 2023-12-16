@@ -1,6 +1,9 @@
 import AddPhoto from '../../../assets/icon/AddPhoto.svg'
 import { ErrorMsg } from '../../../components/Errors/ErrorMsg'
 import { EditImageOptions } from '../../../components/ui/Modal/EditImageOptions'
+import noImage from '../../../assets/image/image_not_available.png'
+import ImageWithFallback from '../../../components/Errors/ImageWithFallback'
+
 export const EditImage = ({
   setClickImg,
   clickImg,
@@ -20,15 +23,14 @@ export const EditImage = ({
           <div
             onClick={() => setClickImg(!clickImg)}
             className="d-flex mx-auto p-0 mb-3 ">
-            <img
+            <ImageWithFallback
               src={imagePreview}
-              alt="Preview"
+              fallback={noImage}
               className={`mt-2 mx-auto img-fluid rounded ${!imagePreview && 'p-3 border-primary'}`}
               style={{
                 maxWidth: "125px",
                 border: `${imagePreview ? '1px solid black' : '1px dashed'}`,
-              }}
-            />
+              }}/>
           </div>
           <div className=' text-center'>
             <ErrorMsg  msg={errors?.image} />

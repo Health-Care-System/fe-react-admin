@@ -1,21 +1,23 @@
-import Photo from "../../assets/icon/Upload-Image.svg";
-import { Button } from "../../components/ui/Button";
-import Input from "../../components/ui/Form/Input";
-import { Select } from "../../components/ui/Form/Select";
-import "./doctor.css";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { handlePutDoctor } from "../../services/doctor-sevices";
 import useForm from "../../hooks/useForm";
 import {
   validateEditDoctorForm,
   validateExtImage,
 } from "../../utils/validation";
+import { Button } from "../../components/ui/Button";
+import Input from "../../components/ui/Form/Input";
+import { Select } from "../../components/ui/Form/Select";
+import { Transparent } from "../../components/ui/Container";
 import { ErrorMsg } from "../../components/Errors/ErrorMsg";
 import { CustomModal } from "../../components/ui/Modal/Modal";
-import { Transparent } from "../../components/ui/Container";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import { handlePutDoctor } from "../../services/doctor-sevices";
+import ImageWithFallback from "../../components/Errors/ImageWithFallback";
+import Photo from "../../assets/icon/Upload-Image.svg";
+import noImage from '../../assets/image/image_not_available.png'
+import "./doctor.css";
 
 export const EditDoctor = () => {
   // Distract const dari data useLocation
@@ -51,7 +53,6 @@ export const EditDoctor = () => {
     no_str: "",
   };
 
-  const [existEmail, setExistEmail] = useState(state?.email);
   const { form, setForm, errors, setErrors, handleInput, setLoading, loading } =
     useForm(initialState, initialError);
 
@@ -124,7 +125,7 @@ export const EditDoctor = () => {
           idDoctor,
           setErrors,
           setLoading,
-          existEmail
+          state?.email
         );
         if (res) {
           queryClient.invalidateQueries({ queryKey: ["doctors"] });
@@ -210,8 +211,9 @@ export const EditDoctor = () => {
               </div>
             ) : (
               <div className="rounded mb-3 ">
-                <img
-                  src={form.profile_picture}
+                <ImageWithFallback
+                  src={form?.profile_picture}
+                  fallback={noImage}
                   alt="photo"
                   className="rounded-4 object-fit-cover "
                   style={{
@@ -413,6 +415,7 @@ export const EditDoctor = () => {
         <Button
           className="bg-primary border-3 text-white "
           type="submit"
+          style={{ width: "5.375rem" }}
           onClick={handlePut}
           disabled={!form.profile_picture}
         >

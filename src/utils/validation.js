@@ -324,3 +324,70 @@ export const validateFormIsChanges = (form, data) => {
   
   return valid;
 }
+
+export const forgotPasswordEmailValidation = (formData, setError) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  let valid = true;
+  const newErrors = { email: ''};
+
+  if (!formData.email) {
+    newErrors.email = 'Email wajib diisi!';
+    valid = false;
+  } else if (!emailRegex.test(formData.email)) {
+    newErrors.email = 'Format email tidak valid!';
+    valid = false;
+  }
+  
+  setError(newErrors)
+  return valid;
+}
+
+export const handleVerifyOTPError = (error, setErrors) => {
+  if (error.response) {
+    const field = error?.response?.data?.meta?.message;
+    switch (field) {
+      case 'failed to get OTP not found':
+        setErrors({
+          otpError: 'OTP yang anda inputkan tidak valid'
+        });
+        break;
+      default:
+        setErrors({
+          email: 'Maaf, permintaan anda tidak dapat kami proses saat ini. Harap coba lagi',
+        });
+    }
+  }
+};
+
+export const passwordValidation = (formData, setError) => {
+  let valid = true;
+  const newErrors = { password: '', confirmPassword: ''};
+
+  if (!formData.password) {
+    newErrors.password = 'Password wajib diisi!';
+    valid = false;
+  } else if (formData.password.length < 8) {
+    newErrors.password = 'Password harus memiliki setidaknya 8 karakter!';
+    valid = false;
+  } else if (!/(?=.*[a-z])(?=.*\d)/.test(formData.password)) {
+    if (/^[a-zA-Z]+$/.test(formData.password)) {
+      newErrors.password = 'Password harus mengandung setidaknya satu angka!';
+    } else if (/^\d+$/.test(formData.password)) {
+      newErrors.password = 'Password harus mengandung setidaknya satu huruf!';
+    } else {
+      newErrors.password = 'Password harus mengandung setidaknya satu huruf dan satu angka!';
+    }
+    valid = false;
+  }
+
+  if (!formData.confirmPassword) {
+    newErrors.confirmPassword = 'Konfirmasi Password wajib diisi!';
+    valid = false;
+  } else if (formData.confirmPassword !== formData.password) {
+    newErrors.confirmPassword = 'Konfirmasi Password harus sama dengan password';
+    valid = false;
+  }
+
+  setError(newErrors);
+  return valid;
+}
