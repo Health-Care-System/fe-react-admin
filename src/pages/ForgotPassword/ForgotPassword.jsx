@@ -1,79 +1,110 @@
+// packages
 import { useState } from "react";
-import Arrow from "../../assets/icon/arrow-left.svg";
-import { Button } from "../../components/ui/Button";
-import Input from "../../components/ui/Form/Input";
-import "./ForgotPassword.css";
-import visibility from "../../assets/icon/visibility.svg";
-
-import useForm from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 
+// Service/ hooks / utils
+import client from "../../utils/auth";
+import useForm from "../../hooks/useForm";
+import { getOTP, verifyOTP } from "../../services/auth-service";
+import { handleResetPasswordError } from "../../utils/response-handler";
+import { forgotPasswordEmailValidation, passwordValidation } from "../../utils/validation";
+
+// Components
+import Input from "../../components/ui/Form/Input";
+import { Button } from "../../components/ui/Button";
+import { ErrorMsg } from "../../components/Errors/ErrorMsg";
+
+// Assets
+import Arrow from "../../assets/icon/arrow-left.svg";
+import visibility from "../../assets/icon/visibility.svg";
+import "./ForgotPassword.css";
+
+const initState = {
+  email: "",
+  password: "",
+  confirmPassword: "",
+  otp: ['', '', '', ''],
+  showPassword: false,
+  showPasswordConfirm: false,
+  loadingStep1: false,
+  loadingStep2: false,
+  loadingStep3: false,
+};
 export const ForgotPassword = () => {
   const [step, setStep] = useState(1);
-  const [otp, setOtp] = useState(["", "", ""]);
   const navigate = useNavigate();
-  const initState = {
-    email: "",
-    password: "",
-    showPassword: false,
-  };
 
   const initError = {
     email: "",
     password: "",
+    confirmPassword: "",
+    otpError: "",
     default: "",
   };
 
-  const { form, setForm } = useForm(initState, initError);
+  const { form, handleInput, handleChange, setErrors, errors } = useForm(initState, initError);
+  const [isOTPEmpty, setIsOTPEmpty] = useState(true);
 
-  const numberOfInputs = 4;
-
-  const inputs = Array.from({ length: numberOfInputs }, (_, index) => (
-    <Input
-      key={index}
-      name="otp"
-      type="number"
-      onChange={(e) => handleOtpChange(index, e.target.value)}
-      className="rounded col justify-content-center align-items-center p-2 border border-1 text-center"
-    />
-  ));
-
-  const handleInputChange = (event) => {
-    const { name, value, type, checked } = event.target;
-    const inputValue = type === "checkbox" ? checked : value;
-
-    setForm((prevData) => ({
-      ...prevData,
-      [name]: inputValue,
-    }));
-  };
-
-  const togglePasswordVisibility = () => {
-    setForm((prev) => ({
-      ...prev,
-      showPassword: !prev.showPassword,
-    }));
-  };
-
-  const handleEmailSubmit = (e) => {
+  // Step 1: get otp by email
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    setStep(2);
+    if (forgotPasswordEmailValidation(form, setErrors)) {
+      getOTP(form, setStep, handleChange)
+    }
   };
 
+  // Step 2: record otp input & verify OTP validation
+  const handleOtpChange = (index, value) => {
+    const updatedOtp = [...form.otp];
+    updatedOtp[index] = value;
+
+    handleChange('otp', updatedOtp);
+
+    const isAllFilled = updatedOtp.every((digit) => digit !== '');
+    if (isAllFilled) {
+      setIsOTPEmpty(false);
+    } else {
+      setIsOTPEmpty(true);
+    }
+  };
   const handleOtpSubmit = (e) => {
     e.preventDefault();
-    setStep(3);
+    verifyOTP(form, handleChange, setStep, setErrors)
   };
 
-  const handleNewPasswordSubmit = (e) => {
+  // Step 3: regiester new password
+  const handleResetPassword = (e) => {
     e.preventDefault();
-    alert("Password berhasil diperbarui!");
+    if (passwordValidation(form, setErrors)) {
+      createNewPassword(form)
+    }
+  }
+  const createNewPassword = async () => {
+    handleChange('loadingStep3', true)
+    try {
+      const body = {
+        email: form.email,
+        otp: form.otp.join(''),
+        password: form.password,
+      };
+
+      const res = await client.post('/admins/change-password', body);
+      if (res?.status === 200) {
+        navigate('/login');
+      }
+    } catch (error) {
+      handleResetPasswordError(error)
+    } finally {
+      handleChange('loadingStep3', false)
+    }
   };
 
-  const handleOtpChange = (index, value) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+
+  const togglePasswordVisibility = () => {
+    handleChange('showPassword', !form.showPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    handleChange('showPasswordConfirm', !form.showPasswordConfirm);
   };
 
   const goToLoginPage = () => {
@@ -90,32 +121,35 @@ export const ForgotPassword = () => {
     switch (step) {
       case 1:
         return (
-          <section className="container-fluid w-100 ">
-            <HeaderForgotPassword goBack={goToLoginPage}/>
-            <div className="justify-content-center mx-md-auto content-password ">
-              <div className="row justify-content-center align-items-center mt-4 ">
+          <section className="container-fluid w-100 bg-light">
+            <HeaderForgotPassword goBack={goToLoginPage} />
+            <div className="justify-content-center mx-auto content-password ">
+              <div className="d-flex justify-content-center align-items-center mt-4 ">
                 <ContentForgotPassword
                   title="Masukkan Email disini"
                   paragraf="Masukkan alamat email yang terkait dengan akun Anda"
                 />
               </div>
-              <div className=" row">
+              <div>
                 <label className="text-secondary fs-3 fw-medium col-11 m-0 p-0 py-2">
                   Email
                 </label>
                 <Input
                   name="email"
-                  maxLength="1"
                   type="email"
-                  onChange={handleInputChange}
+                  onChange={handleInput}
                   placeholder="Masukkan email disini"
                   className="rounded col-12 justify-content-center align-items-center p-2 border border-1  "
                 />
+                {errors.email &&
+                  <ErrorMsg msg={errors.email} />
+                }
               </div>
-              <div className="row mt-3 ">
+              <div className="d-flex mt-3 w-100">
                 <Button
+                  disabled={!form.email || form.loadingStep1}
                   type="submit"
-                  className="bg-secondary text-white p-2  rounded-3 justify-content-center align-items-center"
+                  className="btn-primary text-white w-100"
                   onClick={handleEmailSubmit}
                 >
                   Lanjutkan
@@ -126,17 +160,32 @@ export const ForgotPassword = () => {
         );
       case 2:
         return (
-          <section className="container-fluid w-100 ">
+          <section className="container-fluid bg-light">
             <HeaderForgotPassword goBack={goToPreviousStep} />
             <div className="justify-content-center mx-md-auto content-password ">
               <ContentForgotPassword
                 title="Dapatkan Kode"
                 paragraf="Silakan masukkan 4 digit kode yang dikirimkan ke email Anda"
               />
-              <div className="row g-1 gap-3">{inputs}</div>
+              <div className="d-flex flex-row">
+                {form.otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    className="form-control-lg bg-white shadow-sm border-0 form-color w-25 m-2 text-center"
+                    type="text"
+                    maxLength="1"
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                  />
+                ))}
+              </div>
+              {errors.otpError &&
+                <ErrorMsg msg={errors.otpError} />
+              }
               <p className="fs-3 text-center ">
                 jika Anda belum menerima kode{" "}
                 <span
+                  onClick={handleEmailSubmit}
                   style={{ cursor: "pointer" }}
                   className="text-primary fw-semibold "
                 >
@@ -145,6 +194,7 @@ export const ForgotPassword = () => {
               </p>
               <div className="row mt-3 ">
                 <Button
+                  disabled={isOTPEmpty || form.loadingStep2}
                   type="submit"
                   className="bg-primary  text-white p-2 rounded-3 justify-content-center align-items-center"
                   onClick={handleOtpSubmit}
@@ -159,7 +209,7 @@ export const ForgotPassword = () => {
         return (
           <section className="container-fluid w-100 ">
             <HeaderForgotPassword goBack={goToPreviousStep} />
-            <div className="justify-content-center mx-md-auto content-password ">
+            <div className="justify-content-center mx-auto content-password ">
               <ContentForgotPassword
                 title="Masukkan Password Baru"
                 paragraf="kata sandi baru Anda harus berbeda dengan kata sandi yang digunakan sebelumnya"
@@ -172,7 +222,7 @@ export const ForgotPassword = () => {
                   name="password"
                   value={form.password}
                   placeholder="Masukkan password"
-                  onChange={handleInputChange}
+                  onChange={handleInput}
                 />
                 <span
                   className="input-group-text"
@@ -183,32 +233,39 @@ export const ForgotPassword = () => {
                     alt={form.showPassword ? "hide" : "show"}
                   />
                 </span>
+                {errors.password &&
+                  <ErrorMsg msg={errors.password} />
+                }
               </div>
-              <label className="form-label fw-medium">Password</label>
+              <label className="form-label fw-medium">Konfirmasi Password</label>
               <div className="input-group">
                 <Input
-                  type={form.showPassword ? "text" : "password"}
+                  type={form.showPasswordConfirm ? "text" : "password"}
                   className="form-control form-control-lg"
-                  name="password"
-                  value={form.password}
+                  name="confirmPassword"
+                  value={form.confirmPassword}
                   placeholder="Masukkan password"
-                  onChange={handleInputChange}
+                  onChange={handleInput}
                 />
                 <span
                   className="input-group-text"
-                  onClick={togglePasswordVisibility}
+                  onClick={toggleConfirmPasswordVisibility}
                 >
                   <img
                     src={visibility}
-                    alt={form.showPassword ? "hide" : "show"}
+                    alt={form.showPasswordConfirm ? "hide" : "show"}
                   />
                 </span>
+                {errors.confirmPassword &&
+                  <ErrorMsg msg={errors.confirmPassword} />
+                }
               </div>
-              <div className="row mt-3 ">
+              <div className="mt-3 w-100">
                 <Button
-                  type="submit"
-                  className="bg-primary  text-white p-2 rounded-3 justify-content-center align-items-center"
-                  onClick={handleNewPasswordSubmit}
+                  disabled={form.loadingStep3}
+                  type="button"
+                  className="btn-primary w-100 text-white"
+                  onClick={handleResetPassword}
                 >
                   Pulihkan Password
                 </Button>
