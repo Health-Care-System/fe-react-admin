@@ -53,3 +53,30 @@ export const handleRegisterDoctorError = (error, setErrors) => {
   }
 };
 
+export const handleResetPasswordError = (error, setErrors) => {
+  if (error.response) {
+    const field = error?.response?.data?.meta?.message;
+    switch (field) {
+      case 'Invalid request':
+        setErrors({
+          confirmPassword: 'Input form tidak valid'
+        });
+        break;
+      case 'failed to get OTP verification failed':
+        setErrors({
+          confirmPassword: 'Gagal memverifikasi kode OTP, harap coba lagi!'
+        });
+        break;
+      case 'failed to get update password':
+        setErrors({
+          confirmPassword: 'Gagal untuk memperbarui pasword baru, harap coba lagi beberapa saat lagi!'
+        });
+        break;
+      default:
+        setErrors({
+          email: 'Maaf, permintaan anda tidak dapat kami proses saat ini. Harap coba lagi',
+        });
+    }
+  }
+};
+

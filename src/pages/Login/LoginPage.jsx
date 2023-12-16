@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+import useForm from '../../hooks/useForm';
 // Components
 import Input from '../../components/ui/Form/Input';
 import { Button } from '../../components/ui/Button';
@@ -9,8 +11,6 @@ import Logo from '../../assets/image/logo.png';
 import Banner from '../../assets/image/banner.png';
 import visibility from '../../assets/icon/visibility.svg';
 import { handleLogin } from '../../services/login-service';
-import useForm from '../../hooks/useForm';
-import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
   return (
@@ -47,9 +47,6 @@ const initError = {
 }
 
 const LoginForm = () => {
-
-  const navigate = useNavigate()
-
   const {
     form,
     setForm,
@@ -80,11 +77,6 @@ const LoginForm = () => {
     e.preventDefault();
     handleLogin(form, setErrors, setForm, setLoading);
   }
-
-  const OnNavigate = () => {
-    navigate('/forgot-password')
-  }
-
   return (
     <form className="mt-4" onSubmit={handleSubmit}>
       <div className="mb-3">
@@ -123,9 +115,9 @@ const LoginForm = () => {
       <div className="d-flex justify-content-between mb-3">
         <div className="form-check p-3 g-col-6">
         </div>
-        <div className="p-2 g-col-6" onClick={OnNavigate}>
+        <div className="p-2 g-col-6">
           <img src={lock} alt="lock" />
-          <label className="form-check-label">Lupa Kata Sandi</label>
+          <Link to={'/forgot-password'} className=" text-black">Lupa Kata Sandi</Link>
         </div>
       </div>
       <div className="d-flex flex-column gap-3">
