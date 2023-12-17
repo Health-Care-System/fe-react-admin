@@ -6,8 +6,6 @@ import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useGetAllDoctorData } from "../../services/doctor-sevices";
 import { RowTable } from "../../components/Table/RowTable";
-import ImageWithFallback from "../../components/Errors/ImageWithFallback";
-import avatar from '../../assets/icon/user.png'
 
 export const DoctorPage = () => {
   return (
@@ -93,11 +91,10 @@ export const DoctorData = ({ forPage, maxHeight }) => {
                     <td>
                       <div className="d-flex gap-2 align-items-center ">
                         <div>
-                        <ImageWithFallback 
+                        <img 
                           src={data?.profile_picture} 
                           width={24} 
                           height={24} 
-                          fallback={avatar} 
                           className={'object-fit-cover rounded-circle'} />
                         </div>
                         <p>{data?.fullname}</p>
