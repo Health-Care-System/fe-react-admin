@@ -211,13 +211,13 @@ export const EditDoctor = () => {
               <div className="rounded mb-3 ">
                 <img
                   src={form?.profile_picture}
-                  alt="photo"
-                  className="rounded-4 object-fit-cover "
+                  alt=""
+                  className="rounded-4 bg-secondary-subtle object-fit-cover "
                   style={{
                     maxHeight: "13.75rem",
                     maxWidth: "16.125rem",
-                    height: "16.125rem",
-                    width: "13.75rem",
+                    minHeight: "16.125rem",
+                    minWidth: "13.75rem",
                   }}
                 />
               </div>
