@@ -145,6 +145,7 @@ export const DoctorTable = () => {
           data={debouncedValue !== '' ? filterData : data?.pages}
           isFetch={isFetchingNextPage}
           reffer={ref}
+          totalRow={8}
           ifEmpty={'Tidak ada riwayat transaksi konsultasi dokter!'}
           renderItem={(item, index, offset) => {
             const date = formatDate(item?.created_at);

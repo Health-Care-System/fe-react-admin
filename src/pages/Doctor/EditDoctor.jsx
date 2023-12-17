@@ -14,9 +14,7 @@ import { Select } from "../../components/ui/Form/Select";
 import { Transparent } from "../../components/ui/Container";
 import { ErrorMsg } from "../../components/Errors/ErrorMsg";
 import { CustomModal } from "../../components/ui/Modal/Modal";
-import ImageWithFallback from "../../components/Errors/ImageWithFallback";
 import Photo from "../../assets/icon/Upload-Image.svg";
-import noImage from '../../assets/image/image_not_available.png'
 import "./doctor.css";
 
 export const EditDoctor = () => {
@@ -128,7 +126,7 @@ export const EditDoctor = () => {
           state?.email
         );
         if (res) {
-          queryClient.invalidateQueries({ queryKey: ["doctors"] });
+          queryClient.invalidateQueries({ queryKey: ['doctors'] });
           toast.success("Dokter berhasil diedit!", { delay: 800 });
           navigate("/doctors");
         } else {
@@ -211,16 +209,15 @@ export const EditDoctor = () => {
               </div>
             ) : (
               <div className="rounded mb-3 ">
-                <ImageWithFallback
+                <img
                   src={form?.profile_picture}
-                  fallback={noImage}
-                  alt="photo"
-                  className="rounded-4 object-fit-cover "
+                  alt=""
+                  className="rounded-4 bg-secondary-subtle object-fit-cover "
                   style={{
                     maxHeight: "13.75rem",
                     maxWidth: "16.125rem",
-                    height: "16.125rem",
-                    width: "13.75rem",
+                    minHeight: "16.125rem",
+                    minWidth: "13.75rem",
                   }}
                 />
               </div>
