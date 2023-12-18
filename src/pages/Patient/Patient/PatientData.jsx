@@ -76,7 +76,7 @@ export const PatientData = ({ maxHeight, forPage }) => {
         )
     }
   }, [debouncedValue]);
-  
+    
   return (
     <TableContainer
       name={'search'}
