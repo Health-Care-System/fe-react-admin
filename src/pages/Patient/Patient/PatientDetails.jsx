@@ -186,7 +186,7 @@ const TableDoctorDetails = () => {
           ifEmpty={'Riwayat Transaksi Konsultasi Dokter masih kosong!'}
           search={''}
           totalRow={7}
-          totalCol={5}
+          totalCol={2}
           renderItem={(data, index) => {
             const date = formatDate(data?.created_at);
             const subTotal = data?.price?.toLocaleString('ID-id');
@@ -278,7 +278,7 @@ const TableDrugDetails = () => {
           search={''}
           ifEmpty={'Riwayat transaksi pembelian obat masih kosong!'}
           totalRow={5}
-          totalCol={5}
+          totalCol={2}
           renderItem={(item, index) => {
             const date = formatDate(item?.created_at)
             return (

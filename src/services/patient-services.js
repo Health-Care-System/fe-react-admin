@@ -2,7 +2,6 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import client from "../utils/auth";
 import { useGetQuery } from "../hooks/useGetQuery";
 import { genderFormat, month, titleUserDetail } from "../utils/dataObject";
-import { formatDate } from "../utils/helpers";
 
 // semua data transaksiki konsultasi dokter
 export const useGetAllDoctorTransaction = () => {
