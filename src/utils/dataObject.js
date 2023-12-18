@@ -254,3 +254,8 @@ export const optionsDoctorSpesialist = [
   { value: "Mata", label: "Dokter Mata" },
   { value: "Bedah", label: "Spesialis Bedah" },
 ];
+
+export const month = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+]
