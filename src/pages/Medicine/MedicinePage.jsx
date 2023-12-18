@@ -171,8 +171,6 @@ export const MedicinePage = () => {
     handleEditMedicineService(data, queryClient, setEditModal, handleChange)
   }
   
-  console.log(form.loadingEdit)
-
   return (
     <>
       <MedicineTableContainer
