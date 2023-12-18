@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import client from "../utils/auth";
 import { useGetQuery } from "../hooks/useGetQuery";
-import { genderFormat, titleUserDetail } from "../utils/dataObject";
+import { genderFormat, month, titleUserDetail } from "../utils/dataObject";
 import { formatDate } from "../utils/helpers";
 
 // semua data transaksiki konsultasi dokter
@@ -65,7 +65,7 @@ const getDoctorTransactionByUserID = async ({ pageParam = 0, userId }) => {
   try {
     const offset = pageParam * 3;
     const res = await client.get(`/admins/doctor-payment/${userId}?offset=${offset}&limit=3`);
-    
+
     return res.data;
   } catch (error) {
     if (error.response && error.response.status === 404) return null;
@@ -133,14 +133,16 @@ export const useGetPatientsDetails = (userId) => {
     fullname,
     email,
     gender,
-    birtdate,
+    birthdate,
     blood_type,
     weight,
     height
   } = data?.results ?? {};
-  const date = formatDate[birtdate]
+  let newDate = new Date(birthdate);
+  const date = newDate.getDate() + ' ' +
+    month[newDate.getMonth()] + ' ' +
+    newDate.getFullYear();
   const values = [id, fullname, email, genderFormat[gender], date, blood_type, weight, height];
-
   const dataUser = titleUserDetail.map((label, index) => ({
     label,
     value: values[index],
