@@ -152,6 +152,7 @@ export const MedicineTable = () => {
           isFetch={isFetchingNextPage}
           search={form.search}
           totalRow={6}
+          totalCol={4}
           ifEmpty={'Tidak ada riwayat transaksi!'}
           renderItem={(item, index, offset) => {
             const date = formatDate(item?.created_at)
